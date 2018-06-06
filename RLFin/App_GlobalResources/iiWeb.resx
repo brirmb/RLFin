@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AltDateFormat" xml:space="preserve">
+    <value>yy-mm-dd</value>
+  </data>
+  <data name="At" xml:space="preserve">
+    <value>@</value>
+  </data>
+  <data name="CancelButton" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="CIDCaption" xml:space="preserve">
+    <value>配置</value>
+  </data>
+  <data name="ConfigTitle" xml:space="preserve">
+    <value>配置管理</value>
+  </data>
+  <data name="ConfirmMessage" xml:space="preserve">
+    <value>确定继续吗？</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>&amp;copy; 版权所有</value>
+  </data>
+  <data name="CreateButton" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="DateFormat" xml:space="preserve">
+    <value>yy-mm-dd</value>
+  </data>
+  <data name="DeleteButton" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="EditCaption" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="EmptyData" xml:space="preserve">
+    <value>(无数据)</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>您好，</value>
+  </data>
+  <data name="InvalidParameterErrorMessage" xml:space="preserve">
+    <value>参数无效！</value>
+  </data>
+  <data name="KeyCaption" xml:space="preserve">
+    <value>代码</value>
+  </data>
+  <data name="LoginErrorMessage" xml:space="preserve">
+    <value>账号无效或密码错误！</value>
+  </data>
+  <data name="LogoutButton" xml:space="preserve">
+    <value>注销</value>
+  </data>
+  <data name="NameCaption" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="OKButton" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="PageDescription" xml:space="preserve">
+    <value>系统名。[FavNet.cn 专业IT技术服务]提供技术支持 [Plusii 您的企业附加值]旗下品牌</value>
+  </data>
+  <data name="PageKeywords" xml:space="preserve">
+    <value>系统名,FavNet.cn,专业IT技术服务,Plusii,您的企业附加值</value>
+  </data>
+  <data name="PasswordCaption" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="Powered" xml:space="preserve">
+    <value>Powered by &lt;a title="专业IT技术服务" href="http://www.favnet.cn" target="_blank"&gt;Plusii&lt;/a&gt;</value>
+  </data>
+  <data name="RemarkCaption" xml:space="preserve">
+    <value>备注</value>
+  </data>
+  <data name="ReportButton" xml:space="preserve">
+    <value>导出报表</value>
+  </data>
+  <data name="RequiredFieldValidationErrorMessage" xml:space="preserve">
+    <value>请填写必要项！</value>
+  </data>
+  <data name="SystemName" xml:space="preserve">
+    <value>iiWeb框架构建系统</value>
+  </data>
+  <data name="UIDCaption" xml:space="preserve">
+    <value>工号</value>
+  </data>
+  <data name="UserIDCaption" xml:space="preserve">
+    <value>账号</value>
+  </data>
+  <data name="UserTitle" xml:space="preserve">
+    <value>用户管理</value>
+  </data>
+  <data name="WelcomeDescription" xml:space="preserve">
+    <value>请点击菜单开始 ...</value>
+  </data>
+  <data name="WelcomeTitle" xml:space="preserve">
+    <value>欢迎使用</value>
+  </data>
+  <data name="DeleteErrorMessage" xml:space="preserve">
+    <value>删除失败！</value>
+  </data>
+  <data name="NotSelectMessage" xml:space="preserve">
+    <value>未选取任何项！</value>
+  </data>
+  <data name="ConfigDetailTitle" xml:space="preserve">
+    <value>配置详情</value>
+  </data>
+  <data name="CreateErrorMessage" xml:space="preserve">
+    <value>新增失败！</value>
+  </data>
+  <data name="UpdateErrorMessage" xml:space="preserve">
+    <value>更新失败！</value>
+  </data>
+  <data name="ExistedErrorMessage" xml:space="preserve">
+    <value>数据已存在！</value>
+  </data>
+  <data name="Property1Caption" xml:space="preserve">
+    <value>(属性1)</value>
+  </data>
+  <data name="AuthorityCaption" xml:space="preserve">
+    <value>权限</value>
+  </data>
+  <data name="RoleCaption" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="UserDetailTitle" xml:space="preserve">
+    <value>用户详情</value>
+  </data>
+  <data name="CheckAllCaption" xml:space="preserve">
+    <value>全选</value>
+  </data>
+  <data name="AuthorityDetailTitle" xml:space="preserve">
+    <value>权限管理</value>
+  </data>
+  <data name="Inherited" xml:space="preserve">
+    <value> (角色继承)</value>
+  </data>
+  <data name="ConfirmPasswordCaption" xml:space="preserve">
+    <value>确认密码</value>
+  </data>
+  <data name="PasswordTitle" xml:space="preserve">
+    <value>修改密码</value>
+  </data>
+  <data name="PasswordChangedMessage" xml:space="preserve">
+    <value>成功！请牢记您的新密码</value>
+  </data>
+  <data name="ConfirmPasswordErrorMessage" xml:space="preserve">
+    <value>密码和确认密码必须一致！</value>
+  </data>
+  <data name="BadParameterErrorMessage" xml:space="preserve">
+    <value>非法参数！</value>
+  </data>
+</root>

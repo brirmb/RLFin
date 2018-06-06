@@ -1,0 +1,548 @@
+﻿body
+{
+	margin: 0px;
+}
+body, input, select, textarea
+{
+	font-family: "微软雅黑", Verdana;
+	font-size: 13px;
+	color: #333333;
+}
+ul
+{
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+}
+li
+{
+    float: left;
+}
+a
+{
+	color: #336699;
+	text-decoration: underline;
+}
+a:hover
+{
+	color: #CC3300;
+	text-decoration: none;
+}
+
+/* 容器 */
+.Page
+{
+    margin: 15px;
+}
+.Dialog
+{
+}
+
+.Title
+{
+    width: 98%;
+    font-size: 15px;
+    color: #CC3300;
+    font-weight: bold;
+}
+.Operating
+{
+    margin: 20px 0px 0px 0px;
+	width: 98%;
+}
+.List
+{
+	margin: 20px 0px 0px 0px;
+	width: 98%;
+}
+.Text
+{
+    margin: 5px 0px 0px 0px;
+	width: 98%;
+	line-height: 150%;
+}
+
+.Caption
+{
+	padding: 5px 0px 0px 0px;
+	width: 120px;
+	height: 30px;
+	font-weight: bold;
+}
+.CaptionRightAlign
+{
+    text-align: right;
+    padding: 5px 15px 0px 0px;
+    width: 105px;
+}
+.Content
+{
+	width: 200px;
+	height: 35px;
+}
+.Content input[type=text], .Content input[type=password], .Content textarea, .Content .Panel
+{
+	width: 80%;
+}
+.Content input[type=file], .Content select
+{
+	width: 84%;
+}
+.ContentLong
+{
+	width: 520px;
+	height: 35px;
+}
+.ContentLong input[type=text], .ContentLong input[type=password], .ContentLong textarea, .ContentLong .Panel
+{
+	width: 92.3%;
+}
+.ContentLong input[type=file], .ContentLong select
+{
+	width: 93.8%;
+}
+.LineFeed
+{
+    font-size: 0px;
+    line-height: 0px;
+    float: none;
+    clear: both;
+}
+.Button
+{
+	padding: 5px 0px 0px 0px;
+	height: 30px;
+	float: none;
+	clear: both;
+}
+
+/* 控件 */
+input[type=text], input[type=password], textarea, input[type=file]
+{
+	padding: 3px;
+	border: 1px solid #999999;
+}
+select
+{
+    padding: 1px;
+    border: 1px solid #999999;
+}
+.Panel
+{
+    padding: 3px;
+    height: 19px;
+    border: 1px solid #999999;
+    overflow: auto;
+}
+input[type=text][disabled], input[type=password][disabled], textarea[disabled], input[type=file][disabled], select[disabled]
+{
+    background-color: #EEEEEE;
+}
+input[type=text][readonly], input[type=password][readonly], textarea[readonly]
+{
+    color: #666666;
+}
+
+.Required
+{
+    background-image: url('Images/iiWeb_Required.png');
+    background-repeat: no-repeat;
+    background-position: 1px 1px;
+}
+.Integer
+{
+}
+.Float
+{
+}
+.Date
+{
+}
+.CheckAll
+{
+}
+.Check
+{
+}
+
+/* 控件切换 */
+input[type=text].Focused, input[type=password].Focused, textarea.Focused, input[type=file].Focused, select.Focused, .Panel.Focused
+{
+    border: 1px solid #669933;
+}
+.ValidationError, input[type=text].ValidationError, input[type=password].ValidationError, textarea.ValidationError, input[type=file].ValidationError, select.ValidationError
+{
+    border: 1px solid #FF9900;
+}
+.Highlighted
+{
+    color: #CC3300;
+}
+.Pointer
+{
+    cursor: pointer;
+}
+
+/* 图片按钮 */
+a.ImageButton
+{
+    display: block;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    background-image: url('Images/iiWeb_ImageButton.png');
+    background-repeat: no-repeat;
+    text-indent: -99999px;
+}
+a.ImageButton[disabled]
+{
+    background-image: url('Images/iiWeb_ImageButtonDisabled.png');
+}
+a.ImageButtonOK
+{
+    background-position: 0px 0px;
+}
+a.ImageButtonOK:hover
+{
+    background-position: 0px -16px;
+}
+a.ImageButtonDelete
+{
+    background-position: -16px 0px;
+}
+a.ImageButtonDelete:hover
+{
+    background-position: -16px -16px;
+}
+a.ImageButtonEdit
+{
+    background-position: -32px 0px;
+}
+a.ImageButtonEdit:hover
+{
+    background-position: -32px -16px;
+}
+a.ImageButtonSave
+{
+    background-position: -48px 0px;
+}
+a.ImageButtonSave:hover
+{
+    background-position: -48px -16px;
+}
+a.ImageButtonCancel
+{
+    background-position: -64px 0px;
+}
+a.ImageButtonCancel:hover
+{
+    background-position: -64px -16px;
+}
+a.ImageButtonDetail
+{
+    background-position: -80px 0px;
+}
+a.ImageButtonDetail:hover
+{
+    background-position: -80px -16px;
+}
+a.ImageButtonPicture
+{
+    background-position: -96px 0px;
+}
+a.ImageButtonPicture:hover
+{
+    background-position: -96px -16px;
+}
+a.ImageButtonOpen
+{
+    background-position: -112px 0px;
+}
+a.ImageButtonOpen:hover
+{
+    background-position: -112px -16px;
+}
+a.ImageButtonPC
+{
+    background-position: -128px 0px;
+}
+a.ImageButtonPC:hover
+{
+    background-position: -128px -16px;
+}
+a.ImageButtonLock
+{
+    background-position: -144px 0px;
+}
+a.ImageButtonLock:hover
+{
+    background-position: -144px -16px;
+}
+
+/* 对话框 */
+.DialogIcon
+{
+    display: block;
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    background-image: url('Images/iiWeb_DialogIcon.png');
+    background-repeat: no-repeat;
+    text-indent: -99999px;
+}
+.DialogIconInfo
+{
+    background-position: 0px 0px;
+}
+.DialogIconWarning
+{
+    background-position: -48px 0px;
+}
+.DialogIconError
+{
+    background-position: -96px 0px;
+}
+
+/* 网格 */
+.GridView
+{
+	width: 100%;
+}
+.GridView th, .GridView td
+{
+    padding: 2px 5px 2px 5px;
+    text-align: left;
+}
+.GridViewHeader
+{
+	font-weight: bold;
+	color: #FFFFFF;
+	height: 30px;
+	background-color: #336699;
+	background-image: url('Images/iiWeb_GridViewHeader.png');
+	background-repeat: repeat-x;
+}
+.GridViewAlternatingRow
+{
+	background-color: #EEEEEE;
+}
+.GridViewEmptyDataRow
+{
+    color: #FFFFFF;
+    height: 30px;
+    background-color: #336699;
+    background-image: url('Images/iiWeb_GridViewHeader.png');
+    background-repeat: repeat-x;
+    font-size: 12px;
+}
+.GridViewSelectedRow
+{
+    color: #CC3300;
+    font-style: italic;
+}
+
+/* 阴影 */
+.Shadow
+{
+    display: block;
+    width: 20px;
+    overflow: hidden;
+    background-image: url('Images/iiWeb_Shadow.png');
+    background-repeat: repeat-y;
+    text-indent: -99999px;
+}
+.ShadowLeft
+{
+    background-position: 0px 0px;
+}
+.ShadowRight
+{
+    background-position: -20px 0px;
+}
+
+
+/* iiWeb登录 */
+.iiLogin
+{
+    margin: 150px auto auto auto;
+	width: 400px;
+}
+
+.iiLoginSide
+{
+    width: 20px;
+    height: 235px;
+}
+.iiLoginCenter
+{
+	width: 360px;
+	height: 235px;
+}
+
+.iiLoginTop
+{
+    margin: 0px 0px 20px 0px;
+    padding: 25px 0px 0px 15px;
+    width: 345px;
+    height: 50px;
+    background-color: #336699;
+    font-size: 17px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+.iiLoginBottom
+{
+    margin: 10px 0px 0px 0px;
+	padding: 5px 0px 0px 0px;
+	width: 360px;
+	height: 20px;
+	font-size: 12px;
+	background-color: #336699;
+	color: #FFFFFF;
+	text-align: center;
+}
+.iiLoginTop a, .iiLoginBottom a
+{
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+.iiLoginTop a:hover, .iiLoginBottom a:hover
+{
+	color: #FFFF00;
+	text-decoration: none;
+}
+
+/* iiWeb页眉 */
+.iiHeader
+{
+	width: 100%;
+	height: 60px;
+	background-color: #EEEEEE;
+	color: #336699;
+}
+.iiHeaderLeft
+{
+	padding: 10px 0px 0px 10px;
+	height: 50px;
+	font-size: 30px;
+	font-weight: bold;
+}
+.iiHeaderCenter
+{
+	padding: 27px 0px 0px 10px;
+	height: 33px;
+	color: #666666;
+}
+.iiHeaderRight
+{
+	padding: 37px 5px 0px 0px;
+	height: 23px;
+	font-size: 12px;
+	text-align: right;
+	float: right;
+}
+
+/* iiWeb工具条 */
+.iiToolbar
+{
+	width: 100%;
+	height: 30px;
+	background-color: #336699;
+	color: #FFFFFF;
+}
+.iiToolbar a
+{
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+.iiToolbar a:hover
+{
+	color: #FFFF00;
+	text-decoration: none;
+}
+.iiToolbarLeft
+{
+	padding: 6px 0px 0px 10px;
+	width: 190px;
+	height: 24px;
+	overflow: hidden;
+}
+.iiToolbarCenter
+{
+	padding: 6px 0px 0px 0px;
+	height: 24px;
+}
+.iiToolbarRight
+{
+	padding: 7px 5px 0px 0px;
+	height: 23px;
+	font-size: 12px;
+	float: right;
+	text-align: right;
+}
+
+/* iiWeb页脚 */
+.iiFooter
+{
+	padding: 2px 0px 0px 0px;
+	width: 100%;
+	height: 18px;
+	font-size: 12px;
+	background-color: #336699;
+	color: #FFFFFF;
+	text-align: center;
+}
+
+/* iiWeb分隔 */
+.iiSplitter
+{
+}
+a.SplitterButton
+{
+    display: block;
+    width: 10px;
+	height: 50px;
+    overflow: hidden;
+    background-image: url('Images/iiWeb_SplitterButton.png');
+    background-repeat: no-repeat;
+    text-indent: -99999px;
+}
+a.SplitterButtonCollapse
+{
+    background-position: 0px 0px;
+}
+a.SplitterButtonCollapse:hover
+{
+    background-position: 0px -50px;
+}
+a.SplitterButtonExpand
+{
+    background-position: -10px 0px;
+}
+a.SplitterButtonExpand:hover
+{
+    background-position: -10px -50px;
+}
+
+/* iiWeb欢迎 */
+.iiWelcome .Title, .iiWelcome .Text
+{
+    color: #CCCCCC;
+}
+
+/* iiWeb导航 */
+.iiNavigator a
+{
+    padding: 3px 5px 2px 5px;
+	display: block;
+	height: 20px;
+	border: 1px solid #FFFFFF;
+	color: #333333;
+	/* 圆角 */
+	-moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
+}
+.iiNavigator a:hover
+{
+	color: #CC3300;
+	border-color: #CCCCCC;
+}
