@@ -1,6 +1,0 @@
-F:\MyBooks\RD\Rbosoft\无锡瑞尔\RLFin\RLFin\bin\RLFin.dll.config
-F:\MyBooks\RD\Rbosoft\无锡瑞尔\RLFin\RLFin\bin\RLFin.dll
-F:\MyBooks\RD\Rbosoft\无锡瑞尔\RLFin\RLFin\bin\RLFin.pdb
-F:\MyBooks\RD\Rbosoft\无锡瑞尔\RLFin\RLFin\obj\Debug\RLFin.csprojResolveAssemblyReference.cache
-F:\MyBooks\RD\Rbosoft\无锡瑞尔\RLFin\RLFin\obj\Debug\RLFin.dll
-F:\MyBooks\RD\Rbosoft\无锡瑞尔\RLFin\RLFin\obj\Debug\RLFin.pdb
