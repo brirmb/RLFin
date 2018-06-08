@@ -18,23 +18,8 @@
                     <li class="Caption">工令号
                     </li>
                     <li class="Content">
-                        <asp:TextBox ID="Supplier" runat="server"></asp:TextBox>
-                    </li>
-                    <li class="Caption">原料编号
-                    </li>
-                    <li class="Content">
-                        <asp:TextBox ID="ProductNo" runat="server"></asp:TextBox>
-                    </li>
-                    <li class="LineFeed"></li>
-                    <li class="Caption">入厂日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 从
-                    </li>
-                    <li class="Content">
-                        <asp:TextBox ID="InspectDateFrom" runat="server" CssClass="Date"></asp:TextBox>
-                    </li>
-                    <li class="Caption">到
-                    </li>
-                    <li class="Content">
-                        <asp:TextBox ID="InspectDateTo" runat="server" CssClass="Date"></asp:TextBox>
+                        <asp:DropDownList ID="drpNo" runat="server">
+                        </asp:DropDownList>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="Button">
