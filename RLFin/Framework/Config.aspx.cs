@@ -50,16 +50,16 @@ namespace RLFin.Framework
 
                 #region 获取参数
 
-                string id = Request.QueryString["ID"];
-                if (id != null && id.Trim().Length != 0)
-                {
-                    this.CurrentID = id;
-                }
-                else
-                {
-                    this.ShowErrorMessage(this.GetGlobalResourceString("InvalidParameterErrorMessage"));
-                    return;
-                }
+                //string id = Request.QueryString["ID"];
+                //if (id != null && id.Trim().Length != 0)
+                //{
+                //    this.CurrentID = id;
+                //}
+                //else
+                //{
+                //    this.ShowErrorMessage(this.GetGlobalResourceString("InvalidParameterErrorMessage"));
+                //    return;
+                //}
 
                 #endregion
 
@@ -101,12 +101,12 @@ namespace RLFin.Framework
 
             //配置
             iiGlobal.BindListItems(CID, configs.DefaultView, "Name", "Key", false);
-            try
-            {
-                CID.SelectedValue = this.CurrentID;
-            }
-            catch { }
-            CID.Enabled = false;
+            //try
+            //{
+            //    CID.SelectedValue = this.CurrentID;
+            //}
+            //catch { }
+            //CID.Enabled = false;
 
             #endregion
 

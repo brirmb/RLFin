@@ -13,13 +13,13 @@ namespace Resources {
     
     
     /// <summary>
-    ///   强类型资源类，用于查找本地化字符串等。
+    ///   一个强类型的资源类，用于查找已本地化的字符串等等。
     /// </summary>
     // 此类是由 StronglyTypedResourceBuilder
     // 类通过类似于 ResGen 或 Visual Studio 的工具自动生成的。
-    // 若要添加或删除成员，请编辑 .ResX 文件，然后重新运行 ResGen
+    // 若要添加或移除成员，请编辑 .ResX 文件，然后重新运行 ResGen
     // (以 /str 作为命令选项)，或重新生成 Visual Studio 项目。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Web.Application.StronglyTypedResourceProxyBuilder", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Web.Application.StronglyTypedResourceProxyBuilder", "12.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class iiWeb {
@@ -47,8 +47,8 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   覆盖当前线程的 CurrentUICulture 属性
-        ///   使用此强类型的资源类的资源查找。
+        ///   为使用此强类型资源类的所有资源查找重写当前线程的 CurrentUICulture 
+        /// 属性。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static global::System.Globalization.CultureInfo Culture {
@@ -61,7 +61,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 yy-mm-dd 的本地化字符串。
+        ///   查找类似 yy-mm-dd 的本地化字符串。
         /// </summary>
         internal static string AltDateFormat {
             get {
@@ -70,7 +70,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 @ 的本地化字符串。
+        ///   查找类似 @ 的本地化字符串。
         /// </summary>
         internal static string At {
             get {
@@ -79,7 +79,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 权限 的本地化字符串。
+        ///   查找类似 权限 的本地化字符串。
         /// </summary>
         internal static string AuthorityCaption {
             get {
@@ -88,7 +88,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 权限管理 的本地化字符串。
+        ///   查找类似 权限管理 的本地化字符串。
         /// </summary>
         internal static string AuthorityDetailTitle {
             get {
@@ -97,7 +97,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 非法参数！ 的本地化字符串。
+        ///   查找类似 非法参数！ 的本地化字符串。
         /// </summary>
         internal static string BadParameterErrorMessage {
             get {
@@ -106,7 +106,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 取消 的本地化字符串。
+        ///   查找类似 取消 的本地化字符串。
         /// </summary>
         internal static string CancelButton {
             get {
@@ -115,7 +115,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 全选 的本地化字符串。
+        ///   查找类似 全选 的本地化字符串。
         /// </summary>
         internal static string CheckAllCaption {
             get {
@@ -124,7 +124,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 配置 的本地化字符串。
+        ///   查找类似 配置 的本地化字符串。
         /// </summary>
         internal static string CIDCaption {
             get {
@@ -133,7 +133,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 配置详情 的本地化字符串。
+        ///   查找类似 配置详情 的本地化字符串。
         /// </summary>
         internal static string ConfigDetailTitle {
             get {
@@ -142,7 +142,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 配置管理 的本地化字符串。
+        ///   查找类似 配置管理 的本地化字符串。
         /// </summary>
         internal static string ConfigTitle {
             get {
@@ -151,7 +151,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 确定继续吗？ 的本地化字符串。
+        ///   查找类似 确定继续吗？ 的本地化字符串。
         /// </summary>
         internal static string ConfirmMessage {
             get {
@@ -160,7 +160,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 确认密码 的本地化字符串。
+        ///   查找类似 确认密码 的本地化字符串。
         /// </summary>
         internal static string ConfirmPasswordCaption {
             get {
@@ -169,7 +169,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 密码和确认密码必须一致！ 的本地化字符串。
+        ///   查找类似 密码和确认密码必须一致！ 的本地化字符串。
         /// </summary>
         internal static string ConfirmPasswordErrorMessage {
             get {
@@ -178,7 +178,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 &amp;copy; 版权所有 的本地化字符串。
+        ///   查找类似 &amp;copy; 版权所有 的本地化字符串。
         /// </summary>
         internal static string Copyright {
             get {
@@ -187,7 +187,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 新增 的本地化字符串。
+        ///   查找类似 新增 的本地化字符串。
         /// </summary>
         internal static string CreateButton {
             get {
@@ -196,7 +196,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 新增失败！ 的本地化字符串。
+        ///   查找类似 新增失败！ 的本地化字符串。
         /// </summary>
         internal static string CreateErrorMessage {
             get {
@@ -205,7 +205,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 yy-mm-dd 的本地化字符串。
+        ///   查找类似 yy-mm-dd 的本地化字符串。
         /// </summary>
         internal static string DateFormat {
             get {
@@ -214,7 +214,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 删除 的本地化字符串。
+        ///   查找类似 删除 的本地化字符串。
         /// </summary>
         internal static string DeleteButton {
             get {
@@ -223,7 +223,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 删除失败！ 的本地化字符串。
+        ///   查找类似 删除失败！ 的本地化字符串。
         /// </summary>
         internal static string DeleteErrorMessage {
             get {
@@ -232,7 +232,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 编辑 的本地化字符串。
+        ///   查找类似 编辑 的本地化字符串。
         /// </summary>
         internal static string EditCaption {
             get {
@@ -241,7 +241,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 (无数据) 的本地化字符串。
+        ///   查找类似 (无数据) 的本地化字符串。
         /// </summary>
         internal static string EmptyData {
             get {
@@ -250,7 +250,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 数据已存在！ 的本地化字符串。
+        ///   查找类似 数据已存在！ 的本地化字符串。
         /// </summary>
         internal static string ExistedErrorMessage {
             get {
@@ -259,7 +259,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 您好， 的本地化字符串。
+        ///   查找类似 您好， 的本地化字符串。
         /// </summary>
         internal static string Hello {
             get {
@@ -268,7 +268,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似  (角色继承) 的本地化字符串。
+        ///   查找类似  (角色继承) 的本地化字符串。
         /// </summary>
         internal static string Inherited {
             get {
@@ -277,7 +277,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 参数无效！ 的本地化字符串。
+        ///   查找类似 参数无效！ 的本地化字符串。
         /// </summary>
         internal static string InvalidParameterErrorMessage {
             get {
@@ -286,7 +286,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 代码 的本地化字符串。
+        ///   查找类似 代码 的本地化字符串。
         /// </summary>
         internal static string KeyCaption {
             get {
@@ -295,7 +295,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 账号无效或密码错误！ 的本地化字符串。
+        ///   查找类似 账号无效或密码错误！ 的本地化字符串。
         /// </summary>
         internal static string LoginErrorMessage {
             get {
@@ -304,7 +304,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 注销 的本地化字符串。
+        ///   查找类似 注销 的本地化字符串。
         /// </summary>
         internal static string LogoutButton {
             get {
@@ -313,7 +313,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 名称 的本地化字符串。
+        ///   查找类似 名称 的本地化字符串。
         /// </summary>
         internal static string NameCaption {
             get {
@@ -322,7 +322,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 未选取任何项！ 的本地化字符串。
+        ///   查找类似 未选取任何项！ 的本地化字符串。
         /// </summary>
         internal static string NotSelectMessage {
             get {
@@ -331,7 +331,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 确定 的本地化字符串。
+        ///   查找类似 确定 的本地化字符串。
         /// </summary>
         internal static string OKButton {
             get {
@@ -340,7 +340,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 系统名。[FavNet.cn 专业IT技术服务]提供技术支持 [Plusii 您的企业附加值]旗下品牌 的本地化字符串。
+        ///   查找类似 系统名。[FavNet.cn 专业IT技术服务]提供技术支持 [Plusii 您的企业附加值]旗下品牌 的本地化字符串。
         /// </summary>
         internal static string PageDescription {
             get {
@@ -349,7 +349,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 系统名,FavNet.cn,专业IT技术服务,Plusii,您的企业附加值 的本地化字符串。
+        ///   查找类似 系统名,FavNet.cn,专业IT技术服务,Plusii,您的企业附加值 的本地化字符串。
         /// </summary>
         internal static string PageKeywords {
             get {
@@ -358,7 +358,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 密码 的本地化字符串。
+        ///   查找类似 密码 的本地化字符串。
         /// </summary>
         internal static string PasswordCaption {
             get {
@@ -367,7 +367,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 成功！请牢记您的新密码 的本地化字符串。
+        ///   查找类似 成功！请牢记您的新密码 的本地化字符串。
         /// </summary>
         internal static string PasswordChangedMessage {
             get {
@@ -376,7 +376,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 修改密码 的本地化字符串。
+        ///   查找类似 修改密码 的本地化字符串。
         /// </summary>
         internal static string PasswordTitle {
             get {
@@ -385,7 +385,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 Powered by &lt;a title=&quot;专业IT技术服务&quot; href=&quot;http://www.favnet.cn&quot; target=&quot;_blank&quot;&gt;Plusii&lt;/a&gt; 的本地化字符串。
+        ///   查找类似 Powered by &lt;a title=&quot;专业IT技术服务&quot; href=&quot;http://www.favnet.cn&quot; target=&quot;_blank&quot;&gt;Plusii&lt;/a&gt; 的本地化字符串。
         /// </summary>
         internal static string Powered {
             get {
@@ -394,7 +394,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 (属性1) 的本地化字符串。
+        ///   查找类似 (属性1) 的本地化字符串。
         /// </summary>
         internal static string Property1Caption {
             get {
@@ -403,7 +403,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 备注 的本地化字符串。
+        ///   查找类似 备注 的本地化字符串。
         /// </summary>
         internal static string RemarkCaption {
             get {
@@ -412,7 +412,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 导出报表 的本地化字符串。
+        ///   查找类似 导出报表 的本地化字符串。
         /// </summary>
         internal static string ReportButton {
             get {
@@ -421,7 +421,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 请填写必要项！ 的本地化字符串。
+        ///   查找类似 请填写必要项！ 的本地化字符串。
         /// </summary>
         internal static string RequiredFieldValidationErrorMessage {
             get {
@@ -430,7 +430,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 角色 的本地化字符串。
+        ///   查找类似 角色 的本地化字符串。
         /// </summary>
         internal static string RoleCaption {
             get {
@@ -439,7 +439,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 iiWeb框架构建系统 的本地化字符串。
+        ///   查找类似 Fin财务管理系统 的本地化字符串。
         /// </summary>
         internal static string SystemName {
             get {
@@ -448,7 +448,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 工号 的本地化字符串。
+        ///   查找类似 工号 的本地化字符串。
         /// </summary>
         internal static string UIDCaption {
             get {
@@ -457,7 +457,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 更新失败！ 的本地化字符串。
+        ///   查找类似 更新失败！ 的本地化字符串。
         /// </summary>
         internal static string UpdateErrorMessage {
             get {
@@ -466,7 +466,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 用户详情 的本地化字符串。
+        ///   查找类似 用户详情 的本地化字符串。
         /// </summary>
         internal static string UserDetailTitle {
             get {
@@ -475,7 +475,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 账号 的本地化字符串。
+        ///   查找类似 账号 的本地化字符串。
         /// </summary>
         internal static string UserIDCaption {
             get {
@@ -484,7 +484,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 用户管理 的本地化字符串。
+        ///   查找类似 用户管理 的本地化字符串。
         /// </summary>
         internal static string UserTitle {
             get {
@@ -493,7 +493,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 请点击菜单开始 ... 的本地化字符串。
+        ///   查找类似 请点击菜单开始 ... 的本地化字符串。
         /// </summary>
         internal static string WelcomeDescription {
             get {
@@ -502,7 +502,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 欢迎使用 的本地化字符串。
+        ///   查找类似 欢迎使用 的本地化字符串。
         /// </summary>
         internal static string WelcomeTitle {
             get {

@@ -69,6 +69,21 @@ a:hover
 	height: 30px;
 	font-weight: bold;
 }
+.CaptionSmall
+{
+	padding: 5px 0px 0px 0px;
+	width: 50px;
+	height: 30px;
+	font-weight: bold;
+}
+.CaptionMiddle
+{
+	padding: 5px 0px 0px 0px;
+	width: 80px;
+	height: 30px;
+	font-weight: bold;
+}
+
 .CaptionRightAlign
 {
     text-align: right;
@@ -88,6 +103,35 @@ a:hover
 {
 	width: 84%;
 }
+
+.ContentMiddle
+{
+	width: 120px;
+	height: 35px;
+}
+.ContentMiddle input[type=text], .ContentMiddle input[type=password], .ContentMiddle textarea, .ContentMiddle .Panel
+{
+	width: 72%;
+}
+.ContentMiddle input[type=file], .ContentMiddle select
+{
+	width: 84%;
+}
+
+.ContentSmall
+{
+	width: 90px;
+	height: 35px;
+}
+.ContentSmall input[type=text], .ContentSmall input[type=password], .ContentSmall textarea, .ContentSmall .Panel
+{
+	width: 70%;
+}
+.ContentSmall input[type=file], .ContentSmall select
+{
+	width: 84%;
+}
+
 .ContentLong
 {
 	width: 520px;

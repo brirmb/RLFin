@@ -5,6 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <%--  <script src="../jquery-1.4.1-vsdoc.js"></script>
+    <script src="ContractEdit.aspx.js"></script>--%>
     <title>合同明细维护</title>
 </head>
 <body>
@@ -17,75 +19,75 @@
                 <ul>
                     <li class="Caption">工令号
                     </li>
-                    <li class="Content">
-                        <asp:TextBox ID="Serial" runat="server"></asp:TextBox>
+                    <li class="ContentMiddle">
+                        <asp:TextBox ID="ORDNO" runat="server" CssClass="Required" Enabled="false"></asp:TextBox>
                     </li>
-                    <li class="Caption">合同名称
-                    </li>
-                    <li class="Content">
-                        <asp:DropDownList ID="RecordCode" runat="server" ToolTip="选取原料检测报告带出茶多酚和碎茶平均值" AutoPostBack="True" OnSelectedIndexChanged="RecordCode_SelectedIndexChanged"></asp:DropDownList>
-                    </li>
-                    <li class="LineFeed"></li>
-                    <li class="Caption">币别
+                    <li class="CaptionMiddle">合同名称
                     </li>
                     <li class="Content">
-                        <asp:DropDownList ID="ProductNo" runat="server" CssClass="Required" OnSelectedIndexChanged="ProductNo_SelectedIndexChanged"
-                            AutoPostBack="True">
+                        <asp:TextBox ID="ORDNAME" runat="server" CssClass="Required"></asp:TextBox>
+                    </li>
+                    <li class="CaptionMiddle">币别
+                    </li>
+                    <li class="ContentSmall">
+                        <asp:DropDownList ID="CURR" runat="server" CssClass="Required">
+                            <asp:ListItem>RMB</asp:ListItem>
                         </asp:DropDownList>
-                    </li>
-                    <li class="Caption">签订日期
-                    </li>
-                    <li class="Content">
-                        <asp:TextBox ID="ProductCode" runat="server" CssClass="Required" Enabled="false"></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="Caption">客户代码
                     </li>
-                    <li class="Content">
-                        <asp:DropDownList ID="Supplier" runat="server" CssClass=""></asp:DropDownList>
+                    <li class="ContentMiddle">
+                        <asp:TextBox ID="CUSTNO" runat="server" CssClass="Required"></asp:TextBox><asp:LinkButton ID="selCust" Style="display: inline-block;" runat="server" CssClass="ImageButton ImageButtonDetail" ToolTip="选择客户"></asp:LinkButton>
                     </li>
-                    <li class="Caption">客户名称
+                    <li class="CaptionMiddle">客户名称
                     </li>
                     <li class="Content">
-                        <asp:TextBox ID="WarehouseDate" runat="server" CssClass="Required Date"></asp:TextBox>
+                        <asp:TextBox ID="CUSTNAME" runat="server" CssClass=""></asp:TextBox>
+                    </li>
+                    <li class="CaptionMiddle">合同总金额
+                    </li>
+                    <li class="ContentMiddle">
+                        <asp:TextBox ID="ORDAMT" runat="server" CssClass="Required Float"></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
-                    <li class="Caption">合同总金额
+                    <li class="Caption">签订日期
+                    </li>
+                    <li class="ContentMiddle">
+                        <asp:TextBox ID="SIGNDATE" runat="server" CssClass="Required Date"></asp:TextBox>
+                    </li>
+                    <li class="CaptionMiddle">交货日期
                     </li>
                     <li class="Content">
-                        <asp:TextBox ID="Specification" runat="server" CssClass="Required Float"></asp:TextBox>
+                        <asp:TextBox ID="DELIVERYDATE" runat="server" CssClass="Required Date"></asp:TextBox>
                     </li>
-                    <li class="Caption">交货日期
+                    <li class="CaptionMiddle">质保期限
                     </li>
-                    <li class="Content">
-                        <asp:TextBox ID="Quantity" runat="server" CssClass="Required Float"></asp:TextBox>
+                    <li class="ContentSmall">
+                        <asp:DropDownList ID="PROTECTTERM" runat="server" CssClass="Required">
+                            <asp:ListItem>1</asp:ListItem>
+                        </asp:DropDownList>年
                     </li>
                     <li class="LineFeed"></li>
                     <li class="Caption">结算方式(预付款
                     </li>
-                    <li class="Content">
-                        <asp:TextBox ID="CDF" runat="server"></asp:TextBox>
+                    <li class="ContentSmall">
+                        <asp:TextBox ID="SCH_YF" runat="server" CssClass="Required Float"></asp:TextBox>%
                     </li>
-                    <li class="Caption">进度款
+                    <li class="CaptionSmall">进度款
                     </li>
-                    <li class="Content">
-                        <asp:TextBox ID="SC" runat="server"></asp:TextBox>
+                    <li class="ContentSmall">
+                        <asp:TextBox ID="SCH_JD" runat="server" CssClass="Required Float"></asp:TextBox>%
                     </li>
-                    <li class="Caption">提货款
+                    <li class="CaptionSmall">提货款
                     </li>
-                    <li class="Content">
-                        <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+                    <li class="ContentSmall">
+                        <asp:TextBox ID="SCH_TH" runat="server" CssClass="Required Float"></asp:TextBox>%
                     </li>
-                    <li class="Caption">质保金
+                    <li class="CaptionSmall">质保金
                     </li>
-                    <li class="Content">
-                        <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox>
-                    </li>
-                    <li class="LineFeed"></li>
-                    <li class="Caption">质保期限
-                    </li>
-                    <li class="Content">
-                        <asp:DropDownList ID="DropDownList1" runat="server" CssClass=""></asp:DropDownList>
+                    <li class="ContentSmall">
+                        <asp:TextBox ID="SCH_ZB" runat="server" CssClass="Required Float"></asp:TextBox>%)
                     </li>
                     <li class="LineFeed"></li>
                     <li class="Caption">备注
@@ -93,65 +95,92 @@
                     <li class="ContentLong">
                         <asp:TextBox ID="Remark" runat="server"></asp:TextBox>
                     </li>
-                    <li class="Button">
-                          <asp:Button ID="CreateRow" runat="server" Text="添加行" OnClick="CreateRow_Click" />
-                        <asp:Button ID="DeleteRow" runat="server" Text="删除行" OnClick="DeleteRow_Click" />
-                    </li>
+                    <li class="LineFeed"></li>
                 </ul>
             </div>
-               <div class="List">
+            <%-- <div style="padding-top: 20px; margin-bottom: -10px;">
+                <asp:Button ID="CreateRow" runat="server" Text="添加行" OnClick="CreateRow_Click" />
+                <asp:Button ID="DeleteRow" runat="server" Text="删除行" OnClick="DeleteRow_Click" />
+            </div>--%>
+            <div class="List">
+                <div style="">
+                    <asp:Button ID="CreateRow" runat="server" Text="添加行" OnClick="CreateRow_Click" />
+                    <asp:Button ID="DeleteRow" runat="server" Text="删除行" OnClick="DeleteRow_Click" />
+                </div>
                 <asp:GridView ID="List" runat="server" EmptyDataText="<%$ Resources:iiWeb, EmptyData %>"
-                    EnableModelValidation="True" DataKeyNames="ID,IsCalculate" PageSize="100" AllowPaging="false" OnRowDataBound="List_RowDataBound">
+                    EnableModelValidation="True" DataKeyNames="SEQ" PageSize="100" AllowPaging="false" OnRowDataBound="List_RowDataBound" ShowFooter="true" OnPreRender="List_PreRender" OnLoad="List_Load">
                     <Columns>
-                        <asp:TemplateField HeaderText="删除">
+                        <asp:TemplateField HeaderText="删除" HeaderStyle-Width="5%">
                             <ItemTemplate>
                                 <input type="checkbox" id="RowCheck" runat="server" class="Check" title="<%$ Resources:iiWeb, DeleteButton %>" />
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="序号">
+                        <asp:TemplateField HeaderText="序号" HeaderStyle-Width="5%">
                             <ItemTemplate>
-                                <asp:Label ID="Label1" runat="server" Text="<%# Container.DataItemIndex +1%>"></asp:Label>
+                                <asp:Label ID="SEQ" runat="server" Text="<%# Container.DataItemIndex +1%>"></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="批次" HeaderStyle-Width="5%">
+                        <asp:TemplateField HeaderText="名称" HeaderStyle-Width="15%">
                             <ItemTemplate>
-                                <asp:TextBox ID="Batch" runat="server" Text='<%# Eval("Batch").ToString().Trim() %>' Width="90%"></asp:TextBox>
+                                <%#Eval("ITEMNO") %>
                             </ItemTemplate>
+                            <FooterTemplate>
+                                <asp:TextBox ID="ITEMNO" runat="server" Width="90%" CssClass="Required"></asp:TextBox>
+                            </FooterTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="茶多酚(%)">
+                        <asp:TemplateField HeaderText="图号/代号" HeaderStyle-Width="15%">
                             <ItemTemplate>
-                                <asp:TextBox ID="CDF" runat="server" Text='<%# Eval("CDF").ToString().Trim() %>' Width="90%"></asp:TextBox>
+                                <%#Eval("DRAWNO") %>
                             </ItemTemplate>
+                            <FooterTemplate>
+                                <asp:TextBox ID="DRAWNO" runat="server" Width="90%" CssClass="Required"></asp:TextBox>
+                            </FooterTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="水分(%)">
+                        <asp:TemplateField HeaderText="数量" HeaderStyle-Width="8%">
                             <ItemTemplate>
-                                <asp:TextBox ID="SF" runat="server" Text='<%# Eval("SF").ToString().Trim() %>' Width="90%"></asp:TextBox>
+                                <%#Eval("ORDQTY") %>
                             </ItemTemplate>
+                            <FooterTemplate>
+                                <asp:TextBox ID="ORDQTY" runat="server" Width="90%" CssClass="Required Integer sum1"></asp:TextBox>
+                            </FooterTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="灰分(%)">
+                        <asp:TemplateField HeaderText="单位" HeaderStyle-Width="8%">
                             <ItemTemplate>
-                                <asp:TextBox ID="HF" runat="server" Text='<%# Eval("HF").ToString().Trim() %>' Width="90%"></asp:TextBox>
+                                <%#Eval("UM") %>
                             </ItemTemplate>
+                            <FooterTemplate>
+                                <asp:DropDownList ID="UM" runat="server" CssClass="Required">
+                                </asp:DropDownList>
+                            </FooterTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="茶梗(%)">
+                        <asp:TemplateField HeaderText="单价" HeaderStyle-Width="8%">
                             <ItemTemplate>
-                                <asp:TextBox ID="CG" runat="server" Text='<%# Eval("CG").ToString().Trim() %>' Width="90%"></asp:TextBox>
+                                <%#Eval("UNITPRICE") %>
                             </ItemTemplate>
+                            <FooterTemplate>
+                                <asp:TextBox ID="UNITPRICE" runat="server" Width="90%" CssClass="Required Float sum2"></asp:TextBox>
+                            </FooterTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="碎茶(%)">
+                        <asp:TemplateField HeaderText="总价" HeaderStyle-Width="8%">
                             <ItemTemplate>
-                                <asp:TextBox ID="SC" runat="server" Text='<%# Eval("SC").ToString().Trim() %>' Width="90%"></asp:TextBox>
+                                <%#Eval("AMT") %>
                             </ItemTemplate>
+                            <FooterTemplate>
+                                <asp:TextBox ID="AMT" runat="server" Width="90%" CssClass="Required Float sum3"></asp:TextBox>
+                            </FooterTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="备注" HeaderStyle-Width="15%">
+                        <asp:TemplateField HeaderText="备注" HeaderStyle-Width="20%">
                             <ItemTemplate>
-                                <asp:TextBox ID="Remark" runat="server" Text='<%# Eval("Remark").ToString().Trim() %>' Width="90%"></asp:TextBox>
+                                <%#Eval("Remark") %>
                             </ItemTemplate>
+                            <FooterTemplate>
+                                <asp:TextBox ID="Remark" runat="server" Width="90%"></asp:TextBox>
+                            </FooterTemplate>
                         </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
             </div>
-             <div class="Operating">
+            <div class="Operating">
                 <ul>
                     <li class="Button">
                         <asp:Button ID="OKButton" runat="server" Text="<%$ Resources:iiWeb, OKButton %>"

@@ -10,10 +10,10 @@
     <div>
         <div class="iiHeader">
             <ul>
-                <li class="iiHeaderLeft">
+                <li class="iiHeaderLeft" style="display:none">
                     <asp:Label ID="SystemID" runat="server"></asp:Label>
                 </li>
-                <li class="iiHeaderCenter">
+                <li class="iiHeaderLeft">
                     <asp:Label ID="SystemName" runat="server" Text="<%$ Resources:iiWeb, SystemName %>"></asp:Label></li>
                 <li class="iiHeaderRight">
                     <asp:Label ID="Powered" runat="server" Text="<%$ Resources:iiWeb, Powered %>"></asp:Label></li>

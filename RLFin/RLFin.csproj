@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -46,12 +47,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\..\..\3rdPackage\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\..\..\3rdPackage\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="Plusii.iiWeb, Version=2.2.5381.39701, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\new bin package\Plusii.iiWeb.dll</HintPath>
@@ -110,7 +105,10 @@
     <Content Include="Default.aspx" />
     <Content Include="Framework\AuthorityDetail.aspx" />
     <Content Include="Web\Contract.aspx" />
+    <Content Include="Web\SelectCust.aspx" />
+    <EmbeddedResource Include="Web\Contract.aspx.js" />
     <Content Include="Web\ContractEdit.aspx" />
+    <EmbeddedResource Include="Web\ContractEdit.aspx.js" />
     <Content Include="Web\Receivable.aspx" />
     <EmbeddedResource Include="Framework\AuthorityDetail.aspx.js" />
     <Content Include="Framework\Config.aspx" />
@@ -291,6 +289,13 @@
     <Compile Include="Web\Receivable.aspx.designer.cs">
       <DependentUpon>Receivable.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Web\SelectCust.aspx.cs">
+      <DependentUpon>SelectCust.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\SelectCust.aspx.designer.cs">
+      <DependentUpon>SelectCust.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_GlobalResources\iiWeb.resx">
@@ -302,7 +307,6 @@
   <ItemGroup>
     <Content Include="App_Themes\Default\iiWeb.skin" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>

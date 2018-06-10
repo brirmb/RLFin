@@ -7,10 +7,10 @@
 // </自动生成>
 //------------------------------------------------------------------------------
 
-namespace RLFin.Framework {
+namespace RLFin.Web {
     
     
-    public partial class Header {
+    public partial class SelectCust {
         
         /// <summary>
         /// form1 控件。
@@ -22,66 +22,57 @@ namespace RLFin.Framework {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// SystemID 控件。
+        /// PageTitle 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SystemID;
+        protected global::System.Web.UI.WebControls.Label PageTitle;
         
         /// <summary>
-        /// SystemName 控件。
+        /// NameCaption 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SystemName;
+        protected global::System.Web.UI.WebControls.Label NameCaption;
         
         /// <summary>
-        /// Powered 控件。
+        /// Name 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Powered;
+        protected global::System.Web.UI.WebControls.TextBox Name;
         
         /// <summary>
-        /// Hello 控件。
+        /// SearchButton 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Hello;
+        protected global::System.Web.UI.WebControls.Button SearchButton;
         
         /// <summary>
-        /// UserName 控件。
+        /// OkButton 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label UserName;
+        protected global::System.Web.UI.WebControls.Button OkButton;
         
         /// <summary>
-        /// LogoutButton 控件。
+        /// List 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink LogoutButton;
-        
-        /// <summary>
-        /// SystemVersion 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SystemVersion;
+        protected global::System.Web.UI.WebControls.GridView List;
     }
 }

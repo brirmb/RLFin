@@ -8,6 +8,7 @@ using System.Web.UI.WebControls;
 using Plusii.iiWeb;
 using Plusii.iiWeb.Framework;
 using RLFin.Common;
+using RLFin.Models;
 
 namespace RLFin.Web
 {
@@ -60,14 +61,14 @@ namespace RLFin.Web
             #region 页面内容
 
             //数据源
-            DataTable configs;
-            using (iiConfig configProvider = new iiConfig())
-            {
-                configs = configProvider.GetList("Config");
-            }
+            //DataTable configs;
+            //using (ContractProvider contProvider = new ContractProvider())
+            //{
+            //    configs = contProvider.GetOrnoList();
+            //}
 
             //配置
-            iiGlobal.BindListItems(CID, configs.DefaultView, "Name", "Key", false);
+            //LocalGlobal.BindListItems(drpNo, configs.DefaultView, "ordno", "ordno", true);
 
             #endregion
 
@@ -84,13 +85,9 @@ namespace RLFin.Web
         /// </summary>
         private void BindList()
         {
-            using (iiUser userProvider = new iiUser())
+            using (ContractProvider contProvider = new ContractProvider())
             {
-                List.DataSource = userProvider.GetList(
-                    UID.Text, Name.Text, Remark.Text,
-                    string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
-                    RoleSelector1.RIDList
-                    );
+                List.DataSource = contProvider.GetContractHeadInfo(ORDNO.Text.Trim());
             }
             List.DataBind();
         }
@@ -108,14 +105,14 @@ namespace RLFin.Web
                 case DataControlRowType.DataRow:
                     #region 数据绑定
 
-                    //数据
-                    string rowStatus = ((DataRowView)e.Row.DataItem)["Status"].ToString().Trim();
+                    ////数据
+                    //string rowStatus = ((DataRowView)e.Row.DataItem)["Status"].ToString().Trim();
 
-                    //控件
-                    HtmlInputCheckBox rowCheckControl = (HtmlInputCheckBox)e.Row.FindControl("RowCheck");
+                    ////控件
+                    //HtmlInputCheckBox rowCheckControl = (HtmlInputCheckBox)e.Row.FindControl("RowCheck");
 
-                    //指派
-                    rowCheckControl.Disabled = (rowStatus == "S");
+                    ////指派
+                    //rowCheckControl.Disabled = (rowStatus == "S");
 
                     #endregion
                     break;
@@ -172,25 +169,25 @@ namespace RLFin.Web
             bool deleted = false;
             using (iiUser userProvider = new iiUser())
             {
-                foreach (GridViewRow row in List.Rows)
-                {
-                    HtmlInputCheckBox rowCheckControl = (HtmlInputCheckBox)row.FindControl("RowCheck");
-                    if (rowCheckControl.Checked)
-                    {
-                        try
-                        {
-                            //删除
-                            userProvider.Delete(List.DataKeys[row.RowIndex]["ID"].ToString().Trim());
-                        }
-                        catch (Exception error)
-                        {
-                            this.ShowErrorMessage(this.GetGlobalResourceString("DeleteErrorMessage") + error.Message);
-                            return;
-                        }
-                        //有项被删除
-                        deleted = true;
-                    }
-                }
+                //foreach (GridViewRow row in List.Rows)
+                //{
+                //    HtmlInputCheckBox rowCheckControl = (HtmlInputCheckBox)row.FindControl("RowCheck");
+                //    if (rowCheckControl.Checked)
+                //    {
+                //        try
+                //        {
+                //            //删除
+                //            userProvider.Delete(List.DataKeys[row.RowIndex]["ID"].ToString().Trim());
+                //        }
+                //        catch (Exception error)
+                //        {
+                //            this.ShowErrorMessage(this.GetGlobalResourceString("DeleteErrorMessage") + error.Message);
+                //            return;
+                //        }
+                //        //有项被删除
+                //        deleted = true;
+                //    }
+                //}
             }
             if (deleted)
             {

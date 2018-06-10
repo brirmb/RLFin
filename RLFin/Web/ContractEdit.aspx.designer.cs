@@ -31,121 +31,130 @@ namespace RLFin.Web {
         protected global::System.Web.UI.WebControls.Label PageTitle;
         
         /// <summary>
-        /// Serial 控件。
+        /// ORDNO 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Serial;
+        protected global::System.Web.UI.WebControls.TextBox ORDNO;
         
         /// <summary>
-        /// RecordCode 控件。
+        /// ORDNAME 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList RecordCode;
+        protected global::System.Web.UI.WebControls.TextBox ORDNAME;
         
         /// <summary>
-        /// ProductNo 控件。
+        /// CURR 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ProductNo;
+        protected global::System.Web.UI.WebControls.DropDownList CURR;
         
         /// <summary>
-        /// ProductCode 控件。
+        /// CUSTNO 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ProductCode;
+        protected global::System.Web.UI.WebControls.TextBox CUSTNO;
         
         /// <summary>
-        /// Supplier 控件。
+        /// selCust 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList Supplier;
+        protected global::System.Web.UI.WebControls.LinkButton selCust;
         
         /// <summary>
-        /// WarehouseDate 控件。
+        /// CUSTNAME 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox WarehouseDate;
+        protected global::System.Web.UI.WebControls.TextBox CUSTNAME;
         
         /// <summary>
-        /// Specification 控件。
+        /// ORDAMT 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Specification;
+        protected global::System.Web.UI.WebControls.TextBox ORDAMT;
         
         /// <summary>
-        /// Quantity 控件。
+        /// SIGNDATE 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Quantity;
+        protected global::System.Web.UI.WebControls.TextBox SIGNDATE;
         
         /// <summary>
-        /// CDF 控件。
+        /// DELIVERYDATE 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox CDF;
+        protected global::System.Web.UI.WebControls.TextBox DELIVERYDATE;
         
         /// <summary>
-        /// SC 控件。
+        /// PROTECTTERM 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox SC;
+        protected global::System.Web.UI.WebControls.DropDownList PROTECTTERM;
         
         /// <summary>
-        /// TextBox1 控件。
+        /// SCH_YF 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox1;
+        protected global::System.Web.UI.WebControls.TextBox SCH_YF;
         
         /// <summary>
-        /// TextBox2 控件。
+        /// SCH_JD 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox2;
+        protected global::System.Web.UI.WebControls.TextBox SCH_JD;
         
         /// <summary>
-        /// DropDownList1 控件。
+        /// SCH_TH 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
+        protected global::System.Web.UI.WebControls.TextBox SCH_TH;
+        
+        /// <summary>
+        /// SCH_ZB 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox SCH_ZB;
         
         /// <summary>
         /// Remark 控件。
