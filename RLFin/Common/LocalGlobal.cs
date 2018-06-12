@@ -2,6 +2,9 @@
 using RLFin.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
@@ -15,6 +18,13 @@ namespace RLFin.Common
 
         public static readonly string UploadPhysicalPath = LocalGlobal.PhysicalPath + "\\Upload";
         public static readonly string UploadVirtualPath = LocalGlobal.VirtualPath + "/Upload";
+
+        public static SqlConnection DbConnect()
+        {
+            SqlConnection con = new SqlConnection(iiGlobal.Base64Decrypt(ConfigurationManager.AppSettings["DB"]));
+            return con;
+        }
+
 
         public static string GenerateGuid()
         {
@@ -39,7 +49,7 @@ namespace RLFin.Common
         /// 生成新工令号
         /// </summary>
         /// <returns></returns>
-        public static string NewOrno()
+        public static string NewOrno(bool isNew)
         {
             var dateModel = GetDateModel();
 
@@ -52,6 +62,11 @@ namespace RLFin.Common
                 if (ornoSys != null && ornoSys.Rows.Count > 0)
                 {
                     no = dateModel.YearMonStr + ornoSys.Rows[0]["val2"].ToString();
+                    if (!isNew)
+                    {
+                        var val2 = Convert.ToInt32(ornoSys.Rows[0]["val2"].ToString()) + 1;
+                        contProvider.UpdateSysOrnoInfo(val2.ToString().PadLeft(3, '0'), dateModel.YearStr);
+                    }
                 }
                 else
                 {

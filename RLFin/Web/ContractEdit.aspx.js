@@ -7,10 +7,11 @@ function iiWeb_DialogCallback(command, args) {
             $(args.host.frameElement.parentNode).dialog("close");
 
             var returnStr = args.returnStr;
-
             alert(returnStr);
-            //触发后台方法
-            //$("#SelectSparepart2").click();
+            var cust = returnStr.split(',');
+            $('#CUSTNO').val(cust[0]);
+            $('#CUSTNAME').val(cust[1]);
+
             break;
         case "Close": //关闭
             $(args.frameElement.parentNode).dialog("close");

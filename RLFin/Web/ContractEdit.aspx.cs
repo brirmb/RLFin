@@ -3,6 +3,7 @@ using RLFin.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -89,7 +90,7 @@ namespace RLFin.Web
             if (this.CurrentID.Length == 0)
             {
                 //新增
-                ORDNO.Text = LocalGlobal.NewOrno();
+                ORDNO.Text = LocalGlobal.NewOrno(true);
                 ORDNAME.Text = "加工定做合同";
             }
             else
@@ -266,57 +267,59 @@ namespace RLFin.Web
             {
                 this.ShowErrorMessage("比例输入不正确，请确保各项总额为100！");
             }
-
             var signDate = Convert.ToDateTime(SIGNDATE.Text.Trim()).ToString("yyyyMMdd");
             var deliverDate = Convert.ToDateTime(DELIVERYDATE.Text.Trim()).ToString("yyyyMMdd");
-            return;
-            //using (iiUser userProvider = new iiUser())
-            //{
-            //    if (this.CurrentID.Length == 0)
-            //    {
-            //        //新增
-            //        if (userProvider.GetItem(UID.Text) == null) //不存在
-            //        {
-            //            try
-            //            {
-            //                userProvider.Create(UID.Text, Name.Text, Password.Text, Remark.Text,
-            //                    string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
-            //                    RoleSelector1.RIDList
-            //                    );
-            //            }
-            //            catch (Exception error)
-            //            {
-            //                this.ShowErrorMessage(this.GetGlobalResourceString("CreateErrorMessage") + error.Message);
-            //                return;
-            //            }
-            //        }
-            //        else
-            //        {
-            //            this.ShowWarningMessage(this.GetGlobalResourceString("ExistedErrorMessage"));
-            //            return;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        //编辑
-            //        try
-            //        {
-            //            if (Password.Text.Length != 0) //要修改密码
-            //            {
-            //                userProvider.Update(UID.Text, Password.Text);
-            //            }
-            //            userProvider.Update(UID.Text, Name.Text, Remark.Text,
-            //                string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
-            //                RoleSelector1.RIDList
-            //                );
-            //        }
-            //        catch (Exception error)
-            //        {
-            //            this.ShowErrorMessage(this.GetGlobalResourceString("UpdateErrorMessage") + error.Message);
-            //            return;
-            //        }
-            //    }
-            //}
+
+            SqlConnection con = LocalGlobal.DbConnect();
+            con.Open();
+            SqlTransaction tran = con.BeginTransaction();//使用事务
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = con;
+            cmd.Transaction = tran;
+
+            using (ContractProvider contProvider = new ContractProvider())
+            {
+                if (this.CurrentID.Length == 0)
+                {
+                    //新增
+                    if (userProvider.GetItem(UID.Text) == null) //不存在
+                    {
+                        try
+                        {
+                            //cmd.CommandText = "update bb set moneys=moneys-'" + Convert.ToInt32(TextBox1.Text) + "' where ID='1'";
+                            //cmd.ExecuteNonQuery();
+                            //cmd.CommandText = "update bb set moneys=moneys+' aa ' where ID='2'";
+                            //cmd.ExecuteNonQuery();
+                            tran.Commit();//如果sql命令都执行成功，则执行commit这个方法，执行这些操作
+                        }
+                        catch (Exception error)
+                        {
+                            tran.Rollback();
+                            this.ShowErrorMessage(this.GetGlobalResourceString("CreateErrorMessage") + error.Message);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        this.ShowWarningMessage(this.GetGlobalResourceString("ExistedErrorMessage"));
+                        return;
+                    }
+                }
+                else
+                {
+                    //编辑
+                    try
+                    {
+
+                    }
+                    catch (Exception error)
+                    {
+                        this.ShowErrorMessage(this.GetGlobalResourceString("UpdateErrorMessage") + error.Message);
+                        return;
+                    }
+                }
+            }
+
             //回调
             this.DialogCallback("'CloseRefresh'", "window");
         }
