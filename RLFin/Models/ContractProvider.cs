@@ -104,6 +104,15 @@ namespace RLFin.Models
         }
 
         /// <summary>
+        /// 删除合同明细Sql
+        /// </summary>
+        public string DeleteContractDetailSql(string no)
+        {
+            string sql = string.Format("DELETE FROM CONTRATDETAIL WHERE OLID='Y' AND ORDNO=N'{0}' ", no);
+            return sql;
+        }
+
+        /// <summary>
         /// 新增收款进度头表sql
         /// </summary>
         public string InsertArprocessSql(string orNo, string orName, string custNo, string custName, string curr, string orAmt, string sysUsername, string strDate, string strTime)

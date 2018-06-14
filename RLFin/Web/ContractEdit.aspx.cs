@@ -257,18 +257,16 @@ namespace RLFin.Web
         /// </summary>
         protected void OKButton_Click(object sender, EventArgs e)
         {
-            var count = this.List.Rows.Count.ToString();
-            var name = ((DataBoundLiteralControl)List.Rows[0].Cells[2].Controls[0]).Text;
-
-            this.ShowErrorMessage(count + "," + name.Trim().Length);
-
             var totalPer = Convert.ToDecimal(SCH_YF.Text.Trim()) + Convert.ToDecimal(SCH_JD.Text.Trim()) + Convert.ToDecimal(SCH_TH.Text.Trim()) + Convert.ToDecimal(SCH_ZB.Text.Trim());
             if (totalPer != 100)
             {
                 this.ShowErrorMessage("比例输入不正确，请确保各项总额为100！");
+                return;
             }
+
             var signDate = Convert.ToDateTime(SIGNDATE.Text.Trim()).ToString("yyyyMMdd");
             var deliverDate = Convert.ToDateTime(DELIVERYDATE.Text.Trim()).ToString("yyyyMMdd");
+            var dateModel = LocalGlobal.GetDateModel();
 
             SqlConnection con = LocalGlobal.DbConnect();
             con.Open();
@@ -282,28 +280,71 @@ namespace RLFin.Web
                 if (this.CurrentID.Length == 0)
                 {
                     //新增
-                    if (userProvider.GetItem(UID.Text) == null) //不存在
+                    try
                     {
-                        try
+                        string orno = LocalGlobal.NewOrno(false);
+
+                        #region 合同、收款进度头表
+
+                        cmd.CommandText = contProvider.InsertContractSql(orno, ORDNAME.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), CURR.SelectedValue.Trim(), signDate, deliverDate, PROTECTTERM.SelectedValue.Trim(), SCH_YF.Text.Trim(), SCH_JD.Text.Trim(), SCH_TH.Text.Trim(), SCH_ZB.Text.Trim(), ORDAMT.Text.Trim(), Remark.Text.Trim(), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.ExecuteNonQuery();
+
+                        cmd.CommandText = contProvider.InsertArprocessSql(orno, ORDNAME.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), CURR.SelectedValue.Trim(), ORDAMT.Text.Trim(), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.ExecuteNonQuery();
+
+                        #endregion
+
+                        #region 收款进度明细
+
+                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T1", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_YF.Text.Trim()), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T2", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_JD.Text.Trim()), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T3", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_TH.Text.Trim()), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T4", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_ZB.Text.Trim()), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T5", Util.ToDecimal(ORDAMT.Text.Trim()), 0, LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.ExecuteNonQuery();
+
+                        #endregion
+
+                        #region 合同明细
+
+                        cmd.CommandText = contProvider.DeleteContractDetailSql(orno);
+                        cmd.ExecuteNonQuery();
+
+                        bool flag = true;
+                        if (List.Rows.Count == 1)
                         {
-                            //cmd.CommandText = "update bb set moneys=moneys-'" + Convert.ToInt32(TextBox1.Text) + "' where ID='1'";
-                            //cmd.ExecuteNonQuery();
-                            //cmd.CommandText = "update bb set moneys=moneys+' aa ' where ID='2'";
-                            //cmd.ExecuteNonQuery();
-                            tran.Commit();//如果sql命令都执行成功，则执行commit这个方法，执行这些操作
+                            var name = ((DataBoundLiteralControl)List.Rows[0].Cells[2].Controls[0]).Text.Trim();
+                            if (name.Length == 0) //自动创建的空行
+                            {
+                                flag = false;
+                            }
                         }
-                        catch (Exception error)
+
+                        if (flag)
                         {
-                            tran.Rollback();
-                            this.ShowErrorMessage(this.GetGlobalResourceString("CreateErrorMessage") + error.Message);
-                            return;
+                            for (int i = 0; i < List.Rows.Count; i++)
+                            {
+                                var row = List.Rows[i];
+                                cmd.CommandText = contProvider.InsertContractDetailSql(orno, ((Label)row.FindControl("SEQ")).Text.Trim(), ((DataBoundLiteralControl)row.Cells[2].Controls[0]).Text.Trim(), ((DataBoundLiteralControl)row.Cells[4].Controls[0]).Text.Trim(), ((DataBoundLiteralControl)row.Cells[3].Controls[0]).Text.Trim(), ((DataBoundLiteralControl)row.Cells[5].Controls[0]).Text.Trim(), ((DataBoundLiteralControl)row.Cells[6].Controls[0]).Text.Trim(), ((DataBoundLiteralControl)row.Cells[7].Controls[0]).Text.Trim(), ((DataBoundLiteralControl)row.Cells[8].Controls[0]).Text.Trim());
+
+                                cmd.ExecuteNonQuery();
+                            }
+
                         }
+
+                        #endregion
                     }
-                    else
+                    catch (Exception error)
                     {
-                        this.ShowWarningMessage(this.GetGlobalResourceString("ExistedErrorMessage"));
+                        tran.Rollback();
+                        this.ShowErrorMessage(this.GetGlobalResourceString("CreateErrorMessage") + error.Message);
                         return;
                     }
+
                 }
                 else
                 {
@@ -318,6 +359,8 @@ namespace RLFin.Web
                         return;
                     }
                 }
+
+                tran.Commit();
             }
 
             //回调
