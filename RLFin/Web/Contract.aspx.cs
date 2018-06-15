@@ -9,6 +9,7 @@ using Plusii.iiWeb;
 using Plusii.iiWeb.Framework;
 using RLFin.Common;
 using RLFin.Models;
+using System.Data.SqlClient;
 
 namespace RLFin.Web
 {
@@ -144,51 +145,72 @@ namespace RLFin.Web
         /// <summary>
         /// 确定
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         protected void OKButton_Click(object sender, EventArgs e)
         {
             this.BindList();
         }
+
         /// <summary>
         /// 取消
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         protected void CancelButton_Click(object sender, EventArgs e)
         {
             this.Initialize();
         }
+
         /// <summary>
         /// 删除
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         protected void DeleteButton_Click(object sender, EventArgs e)
         {
             bool deleted = false;
-            using (iiUser userProvider = new iiUser())
+            var dateModel = LocalGlobal.GetDateModel();
+
+            SqlConnection con = LocalGlobal.DbConnect();
+            con.Open();
+            SqlTransaction tran = con.BeginTransaction();//使用事务
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = con;
+            cmd.Transaction = tran;
+
+            try
             {
-                //foreach (GridViewRow row in List.Rows)
-                //{
-                //    HtmlInputCheckBox rowCheckControl = (HtmlInputCheckBox)row.FindControl("RowCheck");
-                //    if (rowCheckControl.Checked)
-                //    {
-                //        try
-                //        {
-                //            //删除
-                //            userProvider.Delete(List.DataKeys[row.RowIndex]["ID"].ToString().Trim());
-                //        }
-                //        catch (Exception error)
-                //        {
-                //            this.ShowErrorMessage(this.GetGlobalResourceString("DeleteErrorMessage") + error.Message);
-                //            return;
-                //        }
-                //        //有项被删除
-                //        deleted = true;
-                //    }
-                //}
+                using (ContractProvider contProvider = new ContractProvider())
+                {
+                    foreach (GridViewRow row in List.Rows)
+                    {
+                        HtmlInputCheckBox rowCheckControl = (HtmlInputCheckBox)row.FindControl("RowCheck");
+                        if (rowCheckControl.Checked)
+                        {
+                            string orno = List.DataKeys[row.RowIndex]["ORDNO"].ToString().Trim();
+
+                            //合同
+                            cmd.CommandText = contProvider.DeleteContractSql(orno);
+                            cmd.ExecuteNonQuery();
+                            cmd.CommandText = contProvider.DeleteContractDetailSql(orno);
+                            cmd.ExecuteNonQuery();
+
+                            //收款进度
+                            cmd.CommandText = contProvider.DeleteArprocessSql(orno, LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                            cmd.ExecuteNonQuery();
+                            cmd.CommandText = contProvider.DeleteArprocessDetailSql(orno, LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                            cmd.ExecuteNonQuery();
+
+                            //有项被删除
+                            deleted = true;
+                        }
+                    }
+                }
             }
+            catch (Exception error)
+            {
+                tran.Rollback();
+                this.ShowErrorMessage(this.GetGlobalResourceString("DeleteErrorMessage") + error.Message);
+                return;
+            }
+
+            tran.Commit();
+
             if (deleted)
             {
                 this.BindList();

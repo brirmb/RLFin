@@ -54,12 +54,12 @@ namespace RLFin.Models
         /// <summary>
         /// 删除合同
         /// </summary>
-        public int DeleteContract(string no)
+        public string DeleteContractSql(string no)
         {
             string sql = string.Format("DELETE FROM CONTRACT WHERE OHID='Y' AND ORDNO= N'{0}' ",
                 no
                 );
-            return this.Execute(sql);
+            return sql;
         }
 
         /// <summary>
@@ -126,19 +126,19 @@ namespace RLFin.Models
         /// <summary>
         /// 更新收款进度头表Sql
         /// </summary>
-        public int UpdateArprocessSql(string orNo, string orName, string custNo, string custName, string curr, string orAmt, string sysUsername, string strDate, string strTime)
+        public string UpdateArprocessSql(string orNo, string orName, string custNo, string custName, string curr, string orAmt, string sysUsername, string strDate, string strTime)
         {
             string sql = string.Format("UPDATE arprocess SET scust=N'{1}',scnme=N'{2}',scont=N'{3}',scurr=N'{4}',stotal=N'{5}',sref=' ', createuser=N'{6}',createdate=N'{7}',createtime=N'{8}',lastuser=N'{9}',lastudate=N'{10}',lastutime=N'{11}' WHERE sid='SI' and ORDNO=N'{0}' ", orNo, custNo, custName, orName, curr, orAmt, sysUsername, strDate, strTime, sysUsername, strDate, strTime);
-            return this.Execute(sql);
+            return sql;  //this.Execute(sql);
         }
 
         /// <summary>
         /// 删除收款进度头表
         /// </summary>
-        public int DeleteArprocess(string no, string sysUsername, string strDate, string strTime)
+        public string DeleteArprocessSql(string no, string sysUsername, string strDate, string strTime)
         {
             string sql = string.Format("UPDATE arprocess SET sid='SD',lastuser=N'{1}',lastudate=N'{2}',lastutime=N'{3}' WHERE sid='SI' and ORDNO=N'{0}' ", no, sysUsername, strDate, strTime);
-            return this.Execute(sql);
+            return sql;
         }
 
         /// <summary>
@@ -162,10 +162,10 @@ namespace RLFin.Models
         /// <summary>
         /// 删除收款进度明细表
         /// </summary>
-        public int UpdateArprocessDetail(string no, string sysUsername, string strDate, string strTime)
+        public string DeleteArprocessDetailSql(string no, string sysUsername, string strDate, string strTime)
         {
             string sql = string.Format("UPDATE arprocess_l SET lid='LD',lastuser=N'{1}',lastudate=N'{2}',lastutime=N'{3}' WHERE lid='LI' and ORDNO=N'{0}' ", no, sysUsername, strDate, strTime);
-            return this.Execute(sql);
+            return sql;
         }
 
         /// <summary>
