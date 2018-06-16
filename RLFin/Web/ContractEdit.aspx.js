@@ -7,7 +7,7 @@ function iiWeb_DialogCallback(command, args) {
             $(args.host.frameElement.parentNode).dialog("close");
 
             var returnStr = args.returnStr;
-            alert(returnStr);
+            //alert(returnStr);
             var cust = returnStr.split(',');
             $('#CUSTNO').val(cust[0]);
             $('#CUSTNAME').val(cust[1]);
@@ -22,6 +22,17 @@ function iiWeb_DialogCallback(command, args) {
 // 初始化
 
 $(function () {
+    // 1合同维护，2直接开票
+    var pageType = getQueryStringByName('pageType');
+    if (pageType == 2) {
+        $('#cpFP').show();
+        $('#FP').show();
+        $('#DeleteRow').hide();
+    } else {
+        $('#cpFP').hide();
+        $('#FP').hide();
+        $('#DeleteRow').show();
+    }
 
     //选择客户
     $("#selCust").click(function () {
@@ -36,6 +47,17 @@ $(function () {
     // 表单验证
     $("#CreateRow").click(function () {
         if (iiWeb_ValidateRequiredField($('#List'))) {
+            return true;
+        }
+        else {
+            iiWeb_ShowTip(this, iiWeb_RequiredFieldValidationErrorMessage);
+            return false;
+        }
+    });
+
+    // 表单验证
+    $("#OKButton").click(function () {
+        if (ValidateRequiredFieldNew($('#dvCont'))) {
             return true;
         }
         else {
@@ -82,3 +104,36 @@ function Sum() {
     price = $.trim(price) == '' ? 0 : parseFloat(price);
     $('.sum3').val(price * qty);
 }
+
+//根据QueryString参数名称获取值
+function getQueryStringByName(name) {
+    var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+    if (result == null || result.length < 1) {
+        return "";
+    }
+    return result[1];
+}
+
+var ValidateRequiredFieldNew = function (parent) {
+    /// <summary>
+    /// 验证必要栏位
+    /// </summary>
+    if (typeof (parent) != "object") {
+        parent = document;
+    }
+    var result = true;
+    $(parent).find(".Required:visible").each(function () {
+        var value = $(this).val();
+        if (!value || value.length == 0) {
+            $(this).addClass("ValidationError");
+            if (result) {
+                $(this).focus(); //友好性焦点
+            }
+            result = false;
+        }
+        else {
+            $(this).removeClass("ValidationError");
+        }
+    });
+    return result;
+};

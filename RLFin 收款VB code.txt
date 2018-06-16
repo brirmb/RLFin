@@ -1,0 +1,83 @@
+
+//收款
+
+ Select Case strItem
+        Case "预收款": Cnn = "T1"
+        Case "进度款": Cnn = "T2"
+        Case "提货款": Cnn = "T3"
+        Case "质保金": Cnn = "T4"
+        Case "其它": Cnn = "T5"
+    End Select
+
+Private Sub cboItem_Click()
+    strSql = " select max(lseq)+1,lper,lsamt from arprocess_l " & _
+             " where lid='LI' and ordno='" & txt1SO.Text & "' and lflag='" & Cnn(cboItem.Text) & "' " & _
+             " group by lper,lsamt"
+    Set rsRs = cnnAdmdb.Execute(strSql)
+    If Not rsRs.EOF Then
+        txtSeq.Text = rsRs.Fields(0).Value
+        txtPer.Text = rsRs.Fields(1).Value
+        txtYamt.Text = rsRs.Fields(2).Value
+    End If
+End Sub
+
+ If MsgBox("确定要删除吗？", vbYesNo, "系统信息") = vbYes Then
+        strSql = "delete from arprocess_l " & _
+                "where ordno='" & txt1SO & "' and lflag='" & Cnn(grdUnit.Columns(0).Value) & "' and lseq=" & grdUnit.Columns(1).Value
+        cnnAdmdb.Execute strSql
+        grdUnit.RemoveItem (grdUnit.Row)
+
+//查询
+Public Function ExeInquiry() As Boolean
+    Dim strSql As String
+    Dim rsInquiry As ADODB.Recordset
+    ExeInquiry = False
+    
+    grdHead.ZOrder 0
+    strSql = "SELECT *,(select sum(lramt) from arprocess_l where arprocess_l.ordno=arprocess.ordno) amt,(stotal-(select sum(lramt) from arprocess_l where arprocess_l.ordno=arprocess.ordno)) lamt FROM arprocess WHERE 1=1 "
+    If Len(Trim(txtCust.Text)) <> 0 Then
+        strSql = strSql & " AND scust like '%" & Trim(txtCust.Text) & "%'"
+    End If
+    If Len(Trim(txtCustName.Text)) <> 0 Then
+        strSql = strSql & "AND scnme like '%" & Trim(txtCustName.Text) & "%' "
+    End If
+    If Len(Trim(txtModNo.Text)) <> 0 Then
+        strSql = strSql & "AND ordno like '%" & Trim(txtModNo.Text) & "%' "
+    End If
+    If Len(Trim(txtSoNo.Text)) <> 0 Then
+        strSql = strSql & "AND scont like '%" & Trim(txtSoNo.Text) & "%' "
+    End If
+    If Len(Trim(txtTotal.Text)) <> 0 Then
+        strSql = strSql & "AND stotal like '%" & Trim(txtTotal.Text) & "%' "
+    End If
+    If Len(cboCurH.Text) <> 0 Then
+        strSql = strSql & "AND scurr = '" & Trim(cboCurH.Text) & "' "
+    End If
+    strSql = strSql & " AND sid='SI' order by ordno"
+    Set rsInquiry = cnnAdmdb.Execute(strSql)
+    grdHead.Redraw = False
+    grdDetail.Redraw = False
+    grdHead.RemoveAll
+    grdDetail.RemoveAll
+    Do While Not rsInquiry.EOF
+        grdHead.AddItem rsInquiry.Fields("ordno").Value & _
+                vbTab & rsInquiry.Fields("scust").Value & _
+                vbTab & rsInquiry.Fields("scnme").Value & _
+                vbTab & rsInquiry.Fields("scont").Value & _
+                vbTab & rsInquiry.Fields("scurr").Value & _
+                vbTab & Format(rsInquiry.Fields("stotal").Value, "#,###.00") & _
+                vbTab & Format(rsInquiry.Fields("amt").Value, "#,###.00") & _
+                vbTab & Format(rsInquiry.Fields("lamt").Value, "#,###.00")
+                
+        rsInquiry.MoveNext
+    Loop
+    Set rsInquiry = Nothing
+    grdHead.Redraw = True
+    grdDetail.Redraw = True
+        
+    ExeInquiry = True
+    Exit Function
+ErrInquiry:
+    MsgBox "查询记录出错!" + Err.Description, vbExclamation, "提示:"
+    Screen.MousePointer = vbDefault
+End Function

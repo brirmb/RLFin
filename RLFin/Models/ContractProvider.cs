@@ -9,12 +9,15 @@ namespace RLFin.Models
 {
     public class ContractProvider : LocalDbProvider
     {
+
+        #region 合同、收款
+
         /// <summary>
-        /// 获取工令号
+        /// 查询合同概况
         /// </summary>
-        public DataTable GetOrnoList()
+        public DataTable GetContractHeadList(string no)
         {
-            string sql = "SELECT ordno FROM contract  order by 1 ";
+            string sql = string.Format(" SELECT ORDNO,ORDNAME,CUSTNO,CUSTNAME,CURR,SIGNDATE, DELIVERYDATE,PROTECTTERM,SCH_YF,SCH_JD,SCH_TH,SCH_ZB,ORDAMT,REMARK  FROM contract WHERE OHID='Y' AND ORDNO Like N'{0}%' ", no);
 
             return this.Query(sql);
         }
@@ -34,7 +37,7 @@ namespace RLFin.Models
         /// </summary>
         public string InsertContractSql(string orNo, string orName, string custNo, string custName, string curr, string signDate, string deliverDate, string term, string yf, string jd, string th, string zb, string orAmt, string remark, string sysUsername, string strDate, string strTime)
         {
-            string sql = string.Format("INSERT INTO CONTRACT (ohid,ordno,ordname,custno,custname,curr,SignDate,DeliveryDate,ProtectTerm,sch_yf,sch_JD,sch_TH,sch_ZB,ordamt,Remark,createuser,createdate,createtime,lastuser,lastudate,lastutime) VALUES('Y',N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{7}',N'{8}',N'{9}',N'{10}',N'{11}',N'{12}',N'{13}',N'{14}',N'{15}',N'{16}',N'{17}',N'{18}',N'{19}' ",
+            string sql = string.Format("INSERT INTO CONTRACT (ohid,ordno,ordname,custno,custname,curr,SignDate,DeliveryDate,ProtectTerm,sch_yf,sch_JD,sch_TH,sch_ZB,ordamt,Remark,createuser,createdate,createtime,lastuser,lastudate,lastutime) VALUES('Y',N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{7}',N'{8}',N'{9}',N'{10}',N'{11}',N'{12}',N'{13}',N'{14}',N'{15}',N'{16}',N'{17}',N'{18}',N'{19}') ",
                 orNo, orName, custNo, custName, curr, signDate, deliverDate, term, yf, jd, th, zb, orAmt, remark, sysUsername, strDate, strTime, sysUsername, strDate, strTime
                 );
             return sql;
@@ -77,7 +80,7 @@ namespace RLFin.Models
         /// </summary>
         public string InsertContractDetailSql(string orNo, string seq, string itemNo, string orQty, string drawNo, string um, string price, string amt, string remark)
         {
-            string sql = string.Format("INSERT INTO contratdetail VALUES('Y',N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{7}',N'{8}' ",
+            string sql = string.Format("INSERT INTO contratdetail VALUES('Y',N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{7}',N'{8}') ",
                  orNo, seq, itemNo, orQty, drawNo, um, price, amt, remark
                 );
             return sql;
@@ -117,7 +120,7 @@ namespace RLFin.Models
         /// </summary>
         public string InsertArprocessSql(string orNo, string orName, string custNo, string custName, string curr, string orAmt, string sysUsername, string strDate, string strTime)
         {
-            string sql = string.Format("Insert into arprocess (sid,scust,scnme,ordno,scont,scurr,stotal,sref,createuser,createdate,createtime,lastuser,lastudate,lastutime) VALUES('SI',N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{7}',N'{8}',N'{9}',N'{10}',N'{11}',N'{12}' ",
+            string sql = string.Format("Insert into arprocess (sid,scust,scnme,ordno,scont,scurr,stotal,sref,createuser,createdate,createtime,lastuser,lastudate,lastutime) VALUES('SI',N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{7}',N'{8}',N'{9}',N'{10}',N'{11}',N'{12}') ",
                  custNo, custName, orNo, orName, curr, orAmt, " ", sysUsername, strDate, strTime, sysUsername, strDate, strTime
                 );
             return sql;
@@ -146,7 +149,7 @@ namespace RLFin.Models
         /// </summary>
         public string InsertArprocessDetailSql(string no, string Tflg, decimal Tamt, decimal Tper, string sysUsername, string strDate, string strTime)
         {
-            string sql = string.Format("Insert into arprocess_l( lid,lseq,ordno,lflag,lper,lsamt,createuser,createdate,createtime,lastuser, lastudate,lastutime ) Values( 'LI',1,N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{5}',N'{6}' ) ", no, Tflg, Tper, Math.Round(Tper * Tamt * 0.01m, 2), sysUsername, strDate, strTime, strDate, strTime);
+            string sql = string.Format("Insert into arprocess_l( lid,lseq,ordno,lflag,lper,lsamt,createuser,createdate,createtime,lastuser, lastudate,lastutime ) Values( 'LI',1,N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{7}',N'{8}',N'{9}' ) ", no, Tflg, Tper, Math.Round(Tper * Tamt * 0.01m, 2), sysUsername, strDate, strTime, sysUsername, strDate, strTime);
             return sql;  //this.Execute(sql);
         }
 
@@ -168,12 +171,103 @@ namespace RLFin.Models
             return sql;
         }
 
+        #endregion
+
+        #region 开票、发货、库存
+
         /// <summary>
-        /// 查询客户（按姓名模糊）
+        /// 新增开票记录Sql
         /// </summary>
-        public DataTable GetCustomerByName(string name)
+        public string InsertKpSql(string orNo, string orSeq, string kpSeq, string kpNo, string kpQty, string kpAmt, string kpDate)
         {
-            string sql = string.Format(" select * from salrcm where rcnam like N'%{0}%' order by rccust ", name);
+            string sql = string.Format("insert into conkp values(N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}') ", orNo, orSeq, kpSeq, kpNo, kpQty, kpAmt, kpDate);
+            return sql;
+        }
+
+        /// <summary>
+        ///删除开票记录Sql
+        /// </summary>
+        public string DeleteKpSql(string orNo)
+        {
+            string sql = string.Format("delete from conkp where kpordno=N'{0}' ", orNo);
+            return sql;
+        }
+
+        /// <summary>
+        /// 新增出库记录Sql
+        /// </summary>
+        public string InsertShipSql(string spNo, string seq, string orNo, string drawNo, string custNo, string custName, string itemNo, string um, string orQty, string planQty, string actQty, string spDate, string status)
+        {
+            string sql = string.Format("insert into shiping values(N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{7}',N'{8}',N'{9}',N'{10}',N'{11}',N'{12}',N'{13}') ", spNo, seq, orNo, orNo, drawNo, custNo, custName, itemNo, um, orQty, planQty, actQty, spDate, status);
+            return sql;
+        }
+
+        /// <summary>
+        ///删除出库记录Sql
+        /// </summary>
+        public string DeleteShipSql(string orNo)
+        {
+            string sql = string.Format("delete from shiping where shipsono=N'{0}' ", orNo);
+            return sql;
+        }
+
+        /// <summary>
+        /// 获取工件库存Sql
+        /// </summary>
+        public DataTable GetInventoryByItem(string whCode, string drawNo)
+        {
+            string sql = string.Format("select * from inventory where whcode=N'{0}' and pono=N'{1}' ", whCode, drawNo);
+
+            return this.Query(sql);
+        }
+
+        /// <summary>
+        /// 新增工件库存Sql
+        /// </summary>
+        public string InsertInventorySql(string whCode, string drawNo, string orNO, string procCode, string itemNo, string qty, string um)
+        {
+            string sql = string.Format("insert into inventory values(N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}') ", whCode, drawNo, orNO, procCode, itemNo, -1 * Util.ToDecimal(qty), um);
+            return sql;
+        }
+
+        /// <summary>
+        /// 更新工件库存Sql
+        /// </summary>
+        public string UpdateInventorySql(string whCode, string drawNo, string qty)
+        {
+            string sql = string.Format(" update inventory set qty=qty-{2} where whcode=N'{0}' and pono=N'{1}' ", whCode, drawNo, Util.ToDecimal(qty));
+
+            return sql;
+        }
+
+        /// <summary>
+        /// 新增出入库明细Sql
+        /// </summary>
+        public string InsertTransDetailSql(string orNo, string drawNo, string whCode, string qty, string kpNo, string orNo2, string type)
+        {
+            string sql = string.Format("insert into trans_detail values(N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{7}') ", orNo, drawNo, whCode, qty, DateTime.Now, kpNo, orNo2, type);
+            return sql;
+        }
+
+        /// <summary>
+        ///删除出入库明细Sql
+        /// </summary>
+        public string DeleteTransDetailSql(string orNo)
+        {
+            string sql = string.Format(" delete from trans_detail where orderno=N'{0}' ", orNo);
+            return sql;
+        }
+
+        #endregion
+
+        #region 工令号、配置
+
+        /// <summary>
+        /// 获取工令号
+        /// </summary>
+        public DataTable GetOrnoList()
+        {
+            string sql = "SELECT ordno FROM contract  order by 1 ";
 
             return this.Query(sql);
         }
@@ -191,19 +285,29 @@ namespace RLFin.Models
         /// <summary>
         /// 更新工令号配置信息
         /// </summary>
-        public DataTable UpdateSysOrnoInfo(string no, string year)
+        public int UpdateSysOrnoInfo(string no, string year)
         {
             string sql = string.Format(" UPDATE rbosys SET val2=N'{0}' WHERE sid='Y' AND category='ORDNO' AND val1= N'{1}'", no, year);
 
-            return this.Query(sql);
+            return this.Execute(sql);
         }
 
         /// <summary>
         /// 新增工令号配置信息
         /// </summary>
-        public DataTable InsertSysOrnoInfo(string year)
+        public int InsertSysOrnoInfo(string year)
         {
             string sql = string.Format(" INSERT INTO rbosys VALUES('Y','ORDNO','{0}','002',' ',' ',' ') ", year);
+
+            return this.Execute(sql);
+        }
+
+        /// <summary>
+        /// 查询客户（按姓名模糊）
+        /// </summary>
+        public DataTable GetCustomerByName(string name)
+        {
+            string sql = string.Format(" select * from salrcm where rcnam like N'%{0}%' order by rccust ", name);
 
             return this.Query(sql);
         }
@@ -211,11 +315,27 @@ namespace RLFin.Models
         /// <summary>
         /// 查询基础配置 UM单位 
         /// </summary>
-        public DataTable GetBaseParam(string type)
+        public DataTable GetBaseParam(string type, string code)
         {
             string sql = string.Format(" select * from baseparameter where type=N'{0}'", type);
-
+            if (!string.IsNullOrWhiteSpace(code))
+            {
+                sql += string.Format(" and code=N'{0}' ", code);
+            }
             return this.Query(sql);
         }
+
+        /// <summary>
+        /// 更新基础配置
+        /// </summary>
+        public int UpdateBaseParam(string type, string code, string desc)
+        {
+            string sql = string.Format("update baseparameter set description=N'{2}' where type=N'{0}' and code=N'{1}'", type, code, desc);
+
+            return this.Execute(sql);
+        }
+
+        #endregion
+
     }
 }

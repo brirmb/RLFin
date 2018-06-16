@@ -15,7 +15,7 @@
             <div class="Title">
                 <asp:Label ID="PageTitle" runat="server" Text="合同明细维护"></asp:Label>
             </div>
-            <div class="Operating">
+            <div id="dvCont" class="Operating">
                 <ul>
                     <li class="Caption">工令号
                     </li>
@@ -92,16 +92,18 @@
                     <li class="LineFeed"></li>
                     <li class="Caption">备注
                     </li>
-                    <li class="ContentLong">
+                    <li class="ContentBig">
                         <asp:TextBox ID="Remark" runat="server"></asp:TextBox>
+                    </li>
+                    <li id="cpFP" class="CaptionMiddle">发票号码
+                    </li>
+                    <li class="ContentMiddle">
+                        <asp:TextBox ID="FP" runat="server" CssClass="Required"></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                 </ul>
             </div>
-            <%-- <div style="padding-top: 20px; margin-bottom: -10px;">
-                <asp:Button ID="CreateRow" runat="server" Text="添加行" OnClick="CreateRow_Click" />
-                <asp:Button ID="DeleteRow" runat="server" Text="删除行" OnClick="DeleteRow_Click" />
-            </div>--%>
+
             <div class="List">
                 <div style="">
                     <asp:Button ID="CreateRow" runat="server" Text="添加行" OnClick="CreateRow_Click" />

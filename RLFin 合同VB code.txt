@@ -1,0 +1,368 @@
+
+//合同维护
+
+//单位
+strSql = "select * from baseparameter where type='UM'"
+
+If Trim(txtNo.Text) = "" Then
+labMsg.Caption = "请输入工令号！"
+
+//工令号下拉框
+strTxt = txtNo.Text
+strSql = "SELECT ordno FROM contract  order by 1"
+Set rsQuery = cnnAdmdb.Execute(strSql)
+
+//查询合同
+'***查询Head Infomation
+strSql_H = " SELECT ORDNO,ORDNAME,CUSTNO,CUSTNAME,CURR,SIGNDATE," & _
+           "        DELIVERYDATE,PROTECTTERM,SCH_YF,SCH_JD,SCH_TH,SCH_ZB,ORDAMT,REMARK " & _
+           "   FROM contract WHERE OHID='Y' AND ORDNO = '" & Trim(txtNo.Text) & "'"
+Set rsFind = cnnAdmdb.Execute(strSql_H)
+
+'***查询Detail Information
+strSql_D = " SELECT SEQ,ITEMNO,DRAWNO,ORDQTY,UM,UNITPRICE,AMT,REMARK FROM CONTRATDETAIL WHERE OLID='Y' AND ORDNO='" & Trim(txtNo.Text) & "'"
+Set rsFind = cnnAdmdb.Execute(strSql_D)
+
+//查询客户 按姓名
+strSql = "select * from salrcm where rcnam like '%" & Trim(Text3) & "%' order by rccust"
+
+//新工令号生成
+strSql = "select replace(replace(replace(CONVERT(varchar, getdate(), 120 ),'-',''),' ',''),':','')"
+Set rsSave = cnnAdmdb.Execute(strSql)
+strDate = Mid(rsSave.Fields(0).Value, 1, 8)
+strTime = Mid(rsSave.Fields(0).Value, 9, 6)
+StrYearMon = Mid(rsSave.Fields(0).Value, 3, 4)
+strSql = "SELECT val1,val2 FROM rbosys WHERE sid='Y' AND category='ORDNO' AND val1='" & Left(StrYearMon, 2) & "'"
+Set rsSave = cnnAdmdb.Execute(strSql)
+If Not rsSave.EOF Then
+    txtOrdno.Text = StrYearMon & rsSave.Fields("val2")
+'    StrSql = "UPDATE rbosys SET val2='" & Format(val(rsSave.Fields("val2").Value) + 1, "000") & "' " _
+'            & "WHERE sid='Y' AND category='ORDNO' AND val1='" & Left(StrYearMon, 2) & "'"
+'    cnnAdmdb.Execute (StrSql)
+Else
+    txtOrdno.Text = StrYearMon & "001"
+    strSql = "INSERT INTO rbosys VALUES('Y','ORDNO','" & Left(StrYearMon, 2) & "','002',' ',' ',' ')"
+    cnnAdmdb.Execute (strSql)
+End If
+
+//直接开票 仓库代码
+strSql = "select * from baseparameter where type='WH' and code='1'"
+Set rsSave = cnnAdmdb.Execute(strSql)
+If Not rsSave.EOF Then
+    StrWHS = Trim(rsSave("description"))
+End If
+
+//发货单号
+strSql = "select description from baseparameter where type='ST' and code='NO'"
+Set rsSave = cnnAdmdb.Execute(strSql)
+If Not rsSave.EOF Then
+    If Mid(rsSave.Fields(0).Value, 3, 2) = Mid(GetDate, 3, 2) Then
+        StrSTNO = Left(rsSave.Fields(0).Value, 4) + Format(Trim(val(Right(rsSave.Fields(0).Value, 5)) + 1), "00000")
+    Else
+        StrSTNO = Left(rsSave.Fields(0).Value, 2) + Mid(Trim(GetDate()), 3, 2) + Format(val(Right(rsSave.Fields(0).Value, 5) + 1), "00000")
+    End If
+Else
+    StrSTNO = "ST" + Mid(Trim(GetDate()), 3, 2) + "00001"
+End If
+
+strSql = "update baseparameter set description='" & StrSTNO & "' where type='ST' and code='NO'"
+cnnAdmdb.Execute strSql
+
+
+//保存合同
+If grdList.Rows = 0 Then
+    strValue = MsgBox("没有明细数据，确认保存么？", vbYesNo, "提示")
+    If strValue = vbNo Then
+        Exit Sub
+    End If
+End If
+If Trim(txtOrdName.Text) = "" Then
+    MsgBox "无法保存，请输入合同名称！", , "提示"
+    Exit Sub
+End If
+If Trim(cboCust.Text) = "" Then
+    MsgBox "无法保存，请输入客户代码！", , "提示"
+    Exit Sub
+End If
+If Trim(txtSign.Value) = "" Then
+    MsgBox "无法保存，请输入签约日期！", , "提示"
+    Exit Sub
+End If
+If Trim(txtDelivery.Value) = "" Then
+    MsgBox "无法保存，请输入交货日期！", , "提示"
+    Exit Sub
+End If
+If Trim(txtProtect.Text) = "" Then
+    MsgBox "无法保存，请输入质保期限！", , "提示"
+    Exit Sub
+End If
+If Trim(txtYF.Text) = "" Then
+    MsgBox "无法保存，请输预付款比例！", , "提示"
+    Exit Sub
+End If
+'If Trim(txtJD.Text) = "" Then
+'    LabInfo.Caption = "请输入进度款比例！"
+'    Exit Sub
+'End If
+If Trim(txtTH.Text) = "" Then
+    MsgBox "无法保存，请输提货款比例！", , "提示"
+    Exit Sub
+End If
+If Trim(txtZB.Text) = "" Then
+    MsgBox "无法保存，请输入质保金比例！", , "提示"
+    Exit Sub
+End If
+If val(txtYF.Text) + val(txtJD.Text) + val(txtTH.Text) + val(txtZB.Text) <> 100 Then
+    MsgBox "比例输入不正确，请确保各项总额为100！", , "提示"
+    Exit Sub
+End If
+cnnAdmdb.BeginTrans
+strSql = "select replace(replace(replace(CONVERT(varchar, getdate(), 120 ),'-',''),' ',''),':','')"
+Set rsSave = cnnAdmdb.Execute(strSql)
+strDate = Mid(rsSave.Fields(0).Value, 1, 8)
+strTime = Mid(rsSave.Fields(0).Value, 9, 6)
+StrYearMon = Mid(rsSave.Fields(0).Value, 3, 4)
+Set rsSave = Nothing
+If StrFlag = "A" Then
+    strSql = "SELECT val1,val2 FROM rbosys WHERE sid='Y' AND category='ORDNO' AND val1='" & Left(StrYearMon, 2) & "'"
+    Set rsSave = cnnAdmdb.Execute(strSql)
+    If Not rsSave.EOF Then
+        strOrdno = StrYearMon & rsSave.Fields("val2")
+        strSql = "UPDATE rbosys SET val2='" & Format(val(rsSave.Fields("val2").Value) + 1, "000") & "' " _
+                & "WHERE sid='Y' AND category='ORDNO' AND val1='" & Left(StrYearMon, 2) & "'"
+        cnnAdmdb.Execute (strSql)
+    Else
+        strOrdno = StrYearMon & "001"
+        strSql = "INSERT INTO rbosys VALUES('Y','ORDNO','" & Left(StrYearMon, 2) & "','002',' ',' ',' ')"
+        cnnAdmdb.Execute (strSql)
+    End If
+    Set rsSave = Nothing
+    txtOrdno.Text = strOrdno
+    'Insert Head Info
+    strSql = " INSERT INTO CONTRACT " & _
+         "  (ohid,ordno,ordname,custno,custname,curr,SignDate,DeliveryDate," & _
+         "   ProtectTerm,sch_yf,sch_JD,sch_TH,sch_ZB,ordamt,Remark,createuser," & _
+         "   createdate,createtime,lastuser,lastudate,lastutime) " & _
+         " VALUES('Y','" & strOrdno & "','" & Trim(txtOrdName.Text) & "','" & Trim(cboCust.Text) & "','" & Trim(txtCustName.Text) & "'," & _
+         "'" & Trim(cboCurr.Text) & "','" & Format(Trim(txtSign.Value), "yyyymmdd") & "','" & Format(Trim(txtDelivery.Value), "yyyymmdd") & "','" & Trim(txtProtect.Text) & "'," & _
+         "'" & val(txtYF.Text) & "','" & val(txtJD.Text) & "','" & val(txtTH.Text) & "','" & val(txtZB.Text) & "','" & val(txtAmt.Text) & "'," & _
+         "'" & Blank(txtRemark.Text) & "','" & sysUsername & "','" & strDate & "','" & strTime & "','" & sysUsername & "','" & strDate & "','" & strTime & "') "
+    cnnAdmdb.Execute (strSql)
+    'Insert AP Head
+    strSql = " Insert into arprocess " & _
+             "  (sid,scust,scnme,ordno,scont,scurr,stotal,sref, " & _
+             "   createuser,createdate,createtime,lastuser,lastudate,lastutime) " & _
+             " Values " & _
+             "  ('SI','" & Trim(cboCust.Text) & "','" & Trim(txtCustName.Text) & "','" & strOrdno & "'," & _
+             "   '" & Trim(txtOrdName.Text) & "','" & Trim(cboCurr.Text) & "','" & val(txtAmt.Text) & "'," & _
+             "   ' ','" & sysUsername & "','" & strDate & "','" & strTime & "'," & _
+             "   '" & sysUsername & "','" & strDate & "','" & strTime & "')"
+    
+    cnnAdmdb.Execute (strSql)
+    'Insert AP Detail
+    Call InsertAP(strOrdno, "T1", val(txtAmt.Text), val(Trim(txtYF.Text)))
+    Call InsertAP(strOrdno, "T2", val(txtAmt.Text), val(Trim(txtJD.Text)))
+    Call InsertAP(strOrdno, "T3", val(txtAmt.Text), val(Trim(txtTH.Text)))
+    Call InsertAP(strOrdno, "T4", val(txtAmt.Text), val(Trim(txtZB.Text)))
+    Call InsertAP(strOrdno, "T5", val(txtAmt.Text), 0)
+    'Insert Detail Info
+    grdList.MoveFirst
+    For intI = 0 To grdList.Rows - 1
+        strSql = "SELECT * FROM CONTRATDETAIL WHERE ORDNO='" & strOrdno & "' AND SEQ='" & grdList.Columns(0).Value & "'"
+        Set rsSave = cnnAdmdb.Execute(strSql)
+        If rsSave.EOF Then
+            strSql = " INSERT INTO contratdetail VALUES('Y','" & strOrdno & "','" & grdList.Columns(0).Value & "','" & grdList.Columns(1).Value & "','" & grdList.Columns(3).Value & "'," & _
+                     "'" & grdList.Columns(2).Value & "','" & grdList.Columns(4).Value & "','" & grdList.Columns(5).Value & "','" & grdList.Columns(6).Value & "','" & grdList.Columns(7).Value & "')"
+        Else
+            strSql = " UPDATE contratdetail SET ITEMNO='" & grdList.Columns(1).Value & "'," & _
+                     "   ORDQTY='" & grdList.Columns(3).Value & "'," & _
+                     "   DRAWNO='" & grdList.Columns(2).Value & "'," & _
+                     "       UM='" & grdList.Columns(4).Value & "'," & _
+                     "UNITPRICE='" & grdList.Columns(5).Value & "'," & _
+                     "     AMT='" & grdList.Columns(6).Value & "'," & _
+                     "   REMARK='" & grdList.Columns(7).Value & "' " & _
+                     " WHERE ORDNO='" & strOrdno & "' AND SEQ='" & grdList.Columns(0).Value & "' AND OLID='Y'"
+        End If
+        cnnAdmdb.Execute (strSql)
+        grdList.MoveNext
+    Next intI
+
+Else
+    strSql = " UPDATE CONTRACT SET ORDNAME='" & Trim(txtOrdName.Text) & "'," & _
+             "      CUSTNO='" & Trim(cboCust.Text) & "',CUSTNAME='" & Blank(txtCustName.Text) & "'," & _
+             "      CURR='" & Trim(cboCurr.Text) & "',SIGNDATE='" & Format(Trim(txtSign.Value), "yyyymmdd") & "'," & _
+             "      DELIVERYDATE='" & Format(Trim(txtDelivery.Value), "yyyymmdd") & "',PROTECTTERM='" & Trim(txtProtect.Text) & "'," & _
+             "      SCH_YF='" & val(txtYF.Text) & "',SCH_JD='" & val(txtJD.Text) & "',SCH_TH='" & val(txtTH.Text) & "',SCH_ZB='" & val(txtZB.Text) & "'," & _
+             "      ORDAMT='" & val(txtAmt.Text) & "',REMARK='" & Blank(txtRemark.Text) & "'," & _
+             "      LASTUSER='" & sysUsername & "',LASTUDATE='" & strDate & "',LASTUTIME='" & strTime & "'" & _
+             " WHERE OHID='Y' AND ORDNO='" & Trim(txtOrdno.Text) & "'"
+    cnnAdmdb.Execute (strSql)
+    'Update AP Head
+    strSql = " Update arprocess Set " & _
+             "  scust='" & Trim(cboCust.Text) & "'," & _
+             "  scnme='" & Trim(txtCustName.Text) & "'," & _
+             "  scont='" & Trim(txtOrdName.Text) & "'," & _
+             "  scurr='" & Trim(cboCurr.Text) & "'," & _
+             "  stotal='" & val(txtAmt.Text) & "'," & _
+             "  sref=' '," & _
+             "  createuser='" & sysUsername & "'," & _
+             "  createdate='" & strDate & "'," & _
+             "  createtime='" & strTime & "'," & _
+             "  lastuser='" & sysUsername & "'," & _
+             "  lastudate='" & strDate & "'," & _
+             "  lastutime='" & strTime & "'" & _
+             " Where sid='SI' and ordno='" & Trim(txtOrdno.Text) & "'"
+    cnnAdmdb.Execute (strSql)
+    
+    'Update AP Detail
+    Call UpdateAP(Trim(txtOrdno.Text), "T1", val(txtAmt.Text), val(Trim(txtYF.Text)))
+    Call UpdateAP(Trim(txtOrdno.Text), "T2", val(txtAmt.Text), val(Trim(txtJD.Text)))
+    Call UpdateAP(Trim(txtOrdno.Text), "T3", val(txtAmt.Text), val(Trim(txtTH.Text)))
+    Call UpdateAP(Trim(txtOrdno.Text), "T4", val(txtAmt.Text), val(Trim(txtZB.Text)))
+    
+    strSql = "delete from contratdetail where ORDNO='" & Trim(txtOrdno.Text) & "'"
+    cnnAdmdb.Execute strSql
+    grdList.MoveFirst
+    For intI = 0 To grdList.Rows - 1
+'        StrSql = "SELECT * FROM CONTRATDETAIL WHERE ORDNO='" & Trim(txtOrdno.Text) & "' AND SEQ='" & grdList.Columns(0).Value & "'"
+'        Set rsSave = cnnAdmdb.Execute(StrSql)
+'        If rsSave.EOF Then
+            strSql = " INSERT INTO contratdetail VALUES('Y','" & Trim(txtOrdno.Text) & "','" & grdList.Columns(0).Value & "','" & grdList.Columns(1).Value & "','" & grdList.Columns(3).Value & "'," & _
+                     "'" & grdList.Columns(2).Value & "','" & grdList.Columns(4).Value & "','" & grdList.Columns(5).Value & "','" & grdList.Columns(6).Value & "','" & grdList.Columns(7).Value & "')"
+'        Else
+'            StrSql = " UPDATE contratdetail SET ITEMNO='" & grdList.Columns(1).Value & "'," & _
+'                     "   ORDQTY='" & grdList.Columns(3).Value & "'," & _
+'                     "   DRAWNO='" & grdList.Columns(2).Value & "'," & _
+'                     "       UM='" & grdList.Columns(4).Value & "'," & _
+'                     "UNITPRICE='" & grdList.Columns(5).Value & "'," & _
+'                     "     AMT='" & grdList.Columns(6).Value & "'," & _
+'                     "   REMARK='" & grdList.Columns(7).Value & "' " & _
+'                     " WHERE ORDNO='" & Trim(txtOrdno.Text) & "' AND SEQ='" & grdList.Columns(0).Value & "' AND OLID='Y'"
+'        End If
+        cnnAdmdb.Execute (strSql)
+        grdList.MoveNext
+    Next intI
+End If
+cnnAdmdb.CommitTrans
+StrFlag = "U"
+MsgBox "保存成功！", vbInformation, "成功:"
+
+ strSql = "delete from conkp where kpordno='" & Trim(txtOrdno) & "'"
+    cnnAdmdb.Execute strSql
+    
+    strSql = "delete from shiping where shipsono='" & txtOrdno & "'"
+    cnnAdmdb.Execute strSql
+    
+    strSql = "delete from trans_detail where orderno='" & Trim(txtOrdno) & "'"
+    cnnAdmdb.Execute strSql
+
+  '当场开票，发货 begin
+         '1.扣减库存，写出库记录
+        strSql = "insert into shiping values('" & StrSTNO & "'," & intI + 1 & ",'" & Trim(txtOrdno) & "','" & Trim(txtOrdno) & "','" _
+                & Trim(grdList.Columns(2).Value) & "'," & Trim(cboCust) & ",'" & Trim(txtCustName) & "','" _
+                & Trim(grdList.Columns(1).Value) & "','" & Trim(grdList.Columns(4).Value) & "'," _
+                & Trim(grdList.Columns(3).Value) & "," & Trim(grdList.Columns(3).Value) & "," _
+                & Trim(grdList.Columns(3).Value) & ",'" & Format(txtDelivery.Value, "yyyymmdd") & "','1')"
+        cnnAdmdb.Execute strSql
+        
+        strSql = "select * from inventory where whcode='" & StrWHS & "' and pono='" & Trim(grdList.Columns(2).Value) & "'"
+        Set rsSave = cnnAdmdb.Execute(strSql)
+        If rsSave.EOF Then
+            strSql = "insert into inventory values('" & StrWHS & "','" & Trim(grdList.Columns(2).Value) _
+                & "','','','" & Trim(grdList.Columns(1).Value) & "'," & -1 * grdList.Columns(3).Value _
+                & ",'" & Trim(grdList.Columns(4).Value) & "')"
+        Else
+            strSql = "update inventory set qty=qty-" & grdList.Columns(3).Value _
+                & " where whcode='" & StrWHS & "' and pono='" & Trim(grdList.Columns(2).Value) & "'"
+        End If
+        cnnAdmdb.Execute strSql
+        
+        
+        strSql = "insert into trans_detail values('" & txtOrdno & "','" & Trim(grdList.Columns(2).Value) _
+            & "','" & StrWHS & "'," & Trim(grdList.Columns(3).Value) & ",'" & Date & "'," _
+            & "'" & StrSTNO & "','" & Left(Trim(txtOrdno), 7) & "','B')"
+        cnnAdmdb.Execute strSql
+        
+        '2.开票
+        strSql = "insert into conkp values('" _
+                & Trim(txtOrdno) & "'," _
+                & Trim(grdList.Columns(0).Value) & ",1,'" _
+                & Trim(TxtFP) & "'," _
+                & grdList.Columns(3).Value & "," _
+                & grdList.Columns(6).Value & ",'" _
+                & txtDelivery.Value & "')"
+        cnnAdmdb.Execute strSql
+        
+    '当场开票，发货 end
+
+//删除合同
+strValue = MsgBox("确定要删除这份合同吗？", vbYesNo, "提示")
+If strValue = vbNo Then
+    Exit Sub
+End If
+
+strSql = "select replace(replace(replace(CONVERT(varchar, getdate(), 120 ),'-',''),' ',''),':','')"
+Set rsDate = cnnAdmdb.Execute(strSql)
+strDate = Mid(rsDate.Fields(0).Value, 1, 8)
+strTime = Mid(rsDate.Fields(0).Value, 9, 6)
+Set rsDate = Nothing
+
+If Trim(txtOrdno.Text) = "" Then
+    Init_Control
+    grdList.RemoveAll
+Else
+    strSql = "DELETE FROM CONTRACT WHERE OHID='Y' AND ORDNO='" & Trim(txtOrdno.Text) & "'"
+    cnnAdmdb.Execute (strSql)
+    strSql = "DELETE FROM CONTRATDETAIL WHERE OLID='Y' AND ORDNO='" & Trim(txtOrdno.Text) & "'"
+    cnnAdmdb.Execute (strSql)
+    strSql = "UPDATE arprocess SET sid='SD'," & _
+             "   lastuser='" & sysUsername & "'," & _
+             "   lastudate='" & strDate & "'," & _
+             "   lastutime='" & strTime & "'" & _
+             " WHERE sid='SI' and ordno='" & Trim(txtOrdno.Text) & "'"
+    cnnAdmdb.Execute (strSql)
+    strSql = " UPDATE arprocess_l SET lid='LD', " & _
+             "   lastuser='" & sysUsername & "'," & _
+             "   lastudate='" & strDate & "'," & _
+             "   lastutime='" & strTime & "'" & _
+             " WHERE lid='LI' and ordno='" & Trim(txtOrdno.Text) & "'"
+    cnnAdmdb.Execute (strSql)
+
+//收款进度明细表
+Private Sub InsertAP(Tord As String, Tflg As String, Tamt As Double, Tper As Double)
+Dim strSql As String
+Dim strDate, strTime As String
+Dim rsDate As ADODB.Recordset
+strSql = "select replace(replace(replace(CONVERT(varchar, getdate(), 120 ),'-',''),' ',''),':','')"
+Set rsDate = cnnAdmdb.Execute(strSql)
+strDate = Mid(rsDate.Fields(0).Value, 1, 8)
+strTime = Mid(rsDate.Fields(0).Value, 9, 6)
+Set rsDate = Nothing
+strSql = " Insert into arprocess_l " & _
+             " ( lid,lseq,ordno,lflag,lper,lsamt,createuser,createdate," & _
+             "   createtime , lastuser, lastudate, lastutime ) " & _
+             " Values " & _
+             " ( 'LI',1,'" & Tord & "','" & Tflg & "','" & Tper & "','" & Round(Tper * Tamt * 0.01, 2) & "'," & _
+             "   '" & sysUsername & "','" & val(strDate) & "','" & val(strTime) & "'," & _
+             "   '" & sysUsername & "','" & val(strDate) & "','" & val(strTime) & "')"
+cnnAdmdb.Execute strSql
+End Sub
+
+Private Sub UpdateAP(Tord As String, Tflg As String, Tamt As Double, Tper As Double)
+Dim strSql As String
+Dim strDate, strTime As String
+Dim rsDate As ADODB.Recordset
+strSql = "select replace(replace(replace(CONVERT(varchar, getdate(), 120 ),'-',''),' ',''),':','')"
+Set rsDate = cnnAdmdb.Execute(strSql)
+strDate = Mid(rsDate.Fields(0).Value, 1, 8)
+strTime = Mid(rsDate.Fields(0).Value, 9, 6)
+Set rsDate = Nothing
+strSql = " Update arprocess_l Set " & _
+         " lper='" & Tper & "'," & _
+         " lsamt='" & Round(Tper * Tamt * 0.01, 2) & "'" & _
+         ", lastuser='" & sysUsername & "'," & _
+         " lastudate='" & strDate & "'," & _
+         " lastutime='" & strTime & "'" & _
+         " Where lid='LI' And ordno='" & Tord & "' And lflag='" & Tflg & "' And lseq='1'"
+cnnAdmdb.Execute strSql
+End Sub

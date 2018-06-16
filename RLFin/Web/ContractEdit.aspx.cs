@@ -34,6 +34,22 @@ namespace RLFin.Web
             }
         }
 
+        /// <summary>
+        /// 类型
+        /// </summary>
+        private string CurrentType
+        {
+            get
+            {
+                object tempObject = ViewState["CurrentType"];
+                return (tempObject != null) ? (string)tempObject : string.Empty;
+            }
+            set
+            {
+                ViewState["CurrentType"] = value;
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -57,6 +73,12 @@ namespace RLFin.Web
                     this.CurrentID = id;
                 }
 
+                string type = Request.QueryString["pageType"];
+                if (type != null && type.Trim().Length != 0)
+                {
+                    this.CurrentType = type;
+                }
+
                 #endregion
 
                 //初始化
@@ -65,6 +87,14 @@ namespace RLFin.Web
 
             #region 页面标题
 
+            if (CurrentType == "2")
+            {
+                PageTitle.Text = "直接开票明细";
+            }
+            else
+            {
+                PageTitle.Text = "合同明细维护";
+            }
             this.Title = PageTitle.Text;
 
             #endregion
@@ -92,6 +122,16 @@ namespace RLFin.Web
                 //新增
                 ORDNO.Text = LocalGlobal.NewOrno(true);
                 ORDNAME.Text = "加工定做合同";
+                SIGNDATE.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                DELIVERYDATE.Text = DateTime.Now.ToString("yyyy-MM-dd");
+
+                if (CurrentType == "2")
+                {
+                    SCH_YF.Text = "0";
+                    SCH_JD.Text = "0";
+                    SCH_TH.Text = "100";
+                    SCH_ZB.Text = "0";
+                }
             }
             else
             {
@@ -164,7 +204,7 @@ namespace RLFin.Web
                     DropDownList UM = (DropDownList)e.Row.FindControl("UM");
                     using (ContractProvider contProvider = new ContractProvider())
                     {
-                        var table = contProvider.GetBaseParam("UM");
+                        var table = contProvider.GetBaseParam("UM", "");
                         LocalGlobal.BindListItems(UM, table.DefaultView, "code", "code", false);
                     }
                     break;
@@ -275,8 +315,9 @@ namespace RLFin.Web
                 return;
             }
 
-            var signDate = Convert.ToDateTime(SIGNDATE.Text.Trim()).ToString("yyyyMMdd");
-            var deliverDate = Convert.ToDateTime(DELIVERYDATE.Text.Trim()).ToString("yyyyMMdd");
+            var signDate = LocalGlobal.ConvertDateFormat(SIGNDATE.Text.Trim()).ToString("yyyyMMdd");
+            var deliverDate = LocalGlobal.ConvertDateFormat(DELIVERYDATE.Text.Trim()).ToString("yyyyMMdd");
+            var deliverDateS = LocalGlobal.ConvertDateFormat(DELIVERYDATE.Text.Trim()).ToString("yyyy-MM-dd");
             var dateModel = LocalGlobal.GetDateModel();
 
             SqlConnection con = LocalGlobal.DbConnect();
@@ -290,6 +331,18 @@ namespace RLFin.Web
             {
                 using (ContractProvider contProvider = new ContractProvider())
                 {
+                    string stno = string.Empty, whCode = string.Empty;
+                    if (CurrentType == "2") //直接开票
+                    {
+                        stno = LocalGlobal.NewSTNo(); //发货单号
+
+                        var wh = contProvider.GetBaseParam("WH", "1");
+                        if (wh != null && wh.Rows.Count > 0)
+                        {
+                            whCode = wh.Rows[0]["description"].ToString().Trim();
+                        }
+                    }
+
                     string orno = string.Empty;
                     if (this.CurrentID.Length == 0)  //新增
                     {
@@ -297,25 +350,25 @@ namespace RLFin.Web
 
                         #region 合同、收款进度头表
 
-                        cmd.CommandText = contProvider.InsertContractSql(orno, ORDNAME.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), CURR.SelectedValue.Trim(), signDate, deliverDate, PROTECTTERM.SelectedValue.Trim(), SCH_YF.Text.Trim(), SCH_JD.Text.Trim(), SCH_TH.Text.Trim(), SCH_ZB.Text.Trim(), ORDAMT.Text.Trim(), Remark.Text.Trim(), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.InsertContractSql(orno, ORDNAME.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), CURR.SelectedValue.Trim(), signDate, deliverDate, PROTECTTERM.SelectedValue.Trim(), SCH_YF.Text.Trim(), SCH_JD.Text.Trim(), SCH_TH.Text.Trim(), SCH_ZB.Text.Trim(), ORDAMT.Text.Trim(), Remark.Text.Trim(), LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
 
-                        cmd.CommandText = contProvider.InsertArprocessSql(orno, ORDNAME.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), CURR.SelectedValue.Trim(), ORDAMT.Text.Trim(), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.InsertArprocessSql(orno, ORDNAME.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), CURR.SelectedValue.Trim(), ORDAMT.Text.Trim(), LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
 
                         #endregion
 
                         #region 收款进度明细
 
-                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T1", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_YF.Text.Trim()), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T1", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_YF.Text.Trim()), LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T2", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_JD.Text.Trim()), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T2", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_JD.Text.Trim()), LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T3", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_TH.Text.Trim()), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T3", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_TH.Text.Trim()), LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T4", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_ZB.Text.Trim()), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T4", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_ZB.Text.Trim()), LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T5", Util.ToDecimal(ORDAMT.Text.Trim()), 0, LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.InsertArprocessDetailSql(orno, "T5", Util.ToDecimal(ORDAMT.Text.Trim()), 0, LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
 
                         #endregion
@@ -326,26 +379,36 @@ namespace RLFin.Web
 
                         #region 合同、收款进度头表
 
-                        cmd.CommandText = contProvider.UpdateContractSql(orno, ORDNAME.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), CURR.SelectedValue.Trim(), signDate, deliverDate, PROTECTTERM.SelectedValue.Trim(), SCH_YF.Text.Trim(), SCH_JD.Text.Trim(), SCH_TH.Text.Trim(), SCH_ZB.Text.Trim(), ORDAMT.Text.Trim(), Remark.Text.Trim(), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.UpdateContractSql(orno, ORDNAME.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), CURR.SelectedValue.Trim(), signDate, deliverDate, PROTECTTERM.SelectedValue.Trim(), SCH_YF.Text.Trim(), SCH_JD.Text.Trim(), SCH_TH.Text.Trim(), SCH_ZB.Text.Trim(), ORDAMT.Text.Trim(), Remark.Text.Trim(), LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
 
-                        cmd.CommandText = contProvider.UpdateArprocessSql(orno, ORDNAME.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), CURR.SelectedValue.Trim(), ORDAMT.Text.Trim(), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.UpdateArprocessSql(orno, ORDNAME.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), CURR.SelectedValue.Trim(), ORDAMT.Text.Trim(), LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
 
                         #endregion
 
                         #region 收款进度明细
 
-                        cmd.CommandText = contProvider.UpdateArprocessDetailSql(orno, "T1", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_YF.Text.Trim()), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.UpdateArprocessDetailSql(orno, "T1", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_YF.Text.Trim()), LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = contProvider.UpdateArprocessDetailSql(orno, "T2", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_JD.Text.Trim()), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.UpdateArprocessDetailSql(orno, "T2", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_JD.Text.Trim()), LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = contProvider.UpdateArprocessDetailSql(orno, "T3", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_TH.Text.Trim()), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.UpdateArprocessDetailSql(orno, "T3", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_TH.Text.Trim()), LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = contProvider.UpdateArprocessDetailSql(orno, "T4", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_ZB.Text.Trim()), LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                        cmd.CommandText = contProvider.UpdateArprocessDetailSql(orno, "T4", Util.ToDecimal(ORDAMT.Text.Trim()), Util.ToDecimal(SCH_ZB.Text.Trim()), LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                         cmd.ExecuteNonQuery();
 
                         #endregion
+                    }
+
+                    if (CurrentType == "2") //直接开票
+                    {
+                        cmd.CommandText = contProvider.DeleteKpSql(orno);
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = contProvider.DeleteShipSql(orno);
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = contProvider.DeleteTransDetailSql(orno);
+                        cmd.ExecuteNonQuery();
                     }
 
                     #region 合同明细
@@ -378,9 +441,40 @@ namespace RLFin.Web
                     foreach (DataRow row in table.Rows)
                     {
                         seq++;
-                        cmd.CommandText = contProvider.InsertContractDetailSql(orno, seq.ToString(), row["ITEMNO"].ToString(), row["ORDQTY"].ToString(), row["DRAWNO"].ToString(), row["UM"].ToString(), row["UNITPRICE"].ToString(), row["AMT"].ToString(), row["Remark"].ToString());
+                        cmd.CommandText = contProvider.InsertContractDetailSql(orno, seq.ToString(), row["ITEMNO"].ToString().Trim(), row["ORDQTY"].ToString(), row["DRAWNO"].ToString(), row["UM"].ToString(), row["UNITPRICE"].ToString(), row["AMT"].ToString(), row["Remark"].ToString());
 
                         cmd.ExecuteNonQuery();
+
+                        #region 直接开票
+
+                        if (CurrentType == "2") //直接开票
+                        {
+                            //1.扣减库存，写出库记录
+                            cmd.CommandText = contProvider.InsertShipSql(stno, seq.ToString(), orno, row["DRAWNO"].ToString().Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), row["ITEMNO"].ToString(), row["UM"].ToString(), row["ORDQTY"].ToString(), row["ORDQTY"].ToString(), row["ORDQTY"].ToString(), deliverDate, "1");
+                            cmd.ExecuteNonQuery();
+
+                            var invTable = contProvider.GetInventoryByItem(whCode, row["DRAWNO"].ToString().Trim());
+                            if (invTable != null && invTable.Rows.Count > 0)
+                            {
+                                cmd.CommandText = contProvider.UpdateInventorySql(whCode, row["DRAWNO"].ToString().Trim(), row["ORDQTY"].ToString());
+                                cmd.ExecuteNonQuery();
+                            }
+                            else
+                            {
+                                cmd.CommandText = contProvider.InsertInventorySql(whCode, row["DRAWNO"].ToString().Trim(), "", "", row["ITEMNO"].ToString(), row["ORDQTY"].ToString(), row["UM"].ToString());
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            cmd.CommandText = contProvider.InsertTransDetailSql(orno, row["DRAWNO"].ToString().Trim(), whCode, row["ORDQTY"].ToString(), stno, orno, "B");
+                            cmd.ExecuteNonQuery();
+
+                            //2.开票
+                            cmd.CommandText = contProvider.InsertKpSql(orno, seq.ToString(), "1", FP.Text.Trim(), row["ORDQTY"].ToString(), row["AMT"].ToString(), deliverDateS);
+                            cmd.ExecuteNonQuery();
+
+                        }
+
+                        #endregion
                     }
 
                     #endregion

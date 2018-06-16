@@ -18,6 +18,23 @@ namespace RLFin.Web
     /// </summary>
     public partial class Contract : LocalPage
     {
+
+        /// <summary>
+        /// 类型
+        /// </summary>
+        private string CurrentType
+        {
+            get
+            {
+                object tempObject = ViewState["CurrentType"];
+                return (tempObject != null) ? (string)tempObject : string.Empty;
+            }
+            set
+            {
+                ViewState["CurrentType"] = value;
+            }
+        }
+
         /// <summary>
         /// 页面加载
         /// </summary>
@@ -33,6 +50,11 @@ namespace RLFin.Web
 
                 #region 获取参数
 
+                string type = Request.QueryString["pageType"];
+                if (type != null && type.Trim().Length != 0)
+                {
+                    this.CurrentType = type;
+                }
 
                 #endregion
 
@@ -42,6 +64,14 @@ namespace RLFin.Web
 
             #region 页面标题
 
+            if (CurrentType == "2")
+            {
+                PageTitle.Text = "直接开票";
+            }
+            else
+            {
+                PageTitle.Text = "合同维护";
+            }
             this.Title = PageTitle.Text;
 
             #endregion
@@ -74,7 +104,7 @@ namespace RLFin.Web
             #endregion
 
             //绑定列表
-            this.BindList();
+            //this.BindList();
         }
 
         #endregion
@@ -88,7 +118,7 @@ namespace RLFin.Web
         {
             using (ContractProvider contProvider = new ContractProvider())
             {
-                List.DataSource = contProvider.GetContractHeadInfo(ORDNO.Text.Trim());
+                List.DataSource = contProvider.GetContractHeadList(ORDNO.Text.Trim());
             }
             List.DataBind();
         }
@@ -96,8 +126,6 @@ namespace RLFin.Web
         /// <summary>
         /// 行绑定
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         protected void List_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             switch (e.Row.RowType)
@@ -127,11 +155,10 @@ namespace RLFin.Web
                     break;
             }
         }
+      
         /// <summary>
         /// 翻页
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         protected void List_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             List.PageIndex = e.NewPageIndex;
@@ -191,9 +218,9 @@ namespace RLFin.Web
                             cmd.ExecuteNonQuery();
 
                             //收款进度
-                            cmd.CommandText = contProvider.DeleteArprocessSql(orno, LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                            cmd.CommandText = contProvider.DeleteArprocessSql(orno, LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                             cmd.ExecuteNonQuery();
-                            cmd.CommandText = contProvider.DeleteArprocessDetailSql(orno, LocalGlobal.CurrentUser, dateModel.DateStr, dateModel.TimeStr);
+                            cmd.CommandText = contProvider.DeleteArprocessDetailSql(orno, LocalGlobal.CurrentUserID, dateModel.DateStr, dateModel.TimeStr);
                             cmd.ExecuteNonQuery();
 
                             //有项被删除

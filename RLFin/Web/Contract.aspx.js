@@ -17,11 +17,14 @@ function iiWeb_DialogCallback(command, args) {
 
 $(function () {
 
+    // 1合同维护，2直接开票
+    var pageType = getQueryStringByName('pageType');
+
     // 新增
 
     $("#CreateButton").click(function () {
         iiWeb_ShowDialog(
-            "ContractEdit.aspx",
+            "ContractEdit.aspx?pageType={0}".format(pageType),
             900,
             600
             );
@@ -32,7 +35,7 @@ $(function () {
 
     $(".ImageButtonEdit").click(function () {
         iiWeb_ShowDialog(
-            "ContractEdit.aspx?ID={0}".format(escape($(this).attr("title"))),
+            "ContractEdit.aspx?pageType={0}&ID={1}".format(pageType, escape($(this).attr("title"))),
             900,
             600
             );
@@ -45,5 +48,13 @@ $(function () {
         return confirm(iiWeb_ConfirmMessage);
     });
 
-
 });
+
+//根据QueryString参数名称获取值
+function getQueryStringByName(name) {
+    var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+    if (result == null || result.length < 1) {
+        return "";
+    }
+    return result[1];
+}

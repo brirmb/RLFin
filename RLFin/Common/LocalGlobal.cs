@@ -46,6 +46,24 @@ namespace RLFin.Common
         }
 
         /// <summary>
+        /// 日期格式转换
+        /// </summary>
+        /// <param name="dateStr">yyyyMMdd格式</param>
+        /// <returns></returns>
+        public static DateTime ConvertDateFormat(string dateStr)
+        {
+            DateTime dt;
+            DateTime.TryParse(dateStr, out dt);
+
+            if (dt == DateTime.MinValue)
+            {
+                dt = DateTime.ParseExact(dateStr, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
+            }
+
+            return dt; // dt.ToString("yyyyMMdd");
+        }
+
+        /// <summary>
         /// 生成新工令号
         /// </summary>
         /// <returns></returns>
@@ -73,6 +91,45 @@ namespace RLFin.Common
                     no = dateModel.YearMonStr + "001";
                     contProvider.InsertSysOrnoInfo(dateModel.YearStr);
                 }
+            }
+
+            return no;
+        }
+
+        /// <summary>
+        /// 生成新发货单号
+        /// </summary>
+        /// <returns></returns>
+        public static string NewSTNo()
+        {
+            var dateModel = GetDateModel();
+
+            string no = string.Empty;
+
+            using (ContractProvider contProvider = new ContractProvider())
+            {
+                var param = contProvider.GetBaseParam("ST", "NO");
+
+                if (param != null && param.Rows.Count > 0)
+                {
+                    string stno = param.Rows[0]["description"].ToString(); //ST1703997
+                    string year = stno.Substring(2, 2);
+                    string num = stno.Substring(4, 5);
+                    if (dateModel.YearStr == year)
+                    {
+                        no = "ST" + year + (Util.ToInt(num) + 1).ToString().PadLeft(5, '0');
+                    }
+                    else
+                    {
+                        no = "ST" + dateModel.YearStr + (Util.ToInt(num) + 1).ToString().PadLeft(5, '0');
+                    }
+                }
+                else
+                {
+                    no = "ST" + dateModel.YearStr + "00001";
+                }
+
+                contProvider.UpdateBaseParam("ST", "NO", no);
             }
 
             return no;
