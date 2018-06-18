@@ -32,6 +32,9 @@
                     <li class="ContentSmall">
                         <asp:DropDownList ID="CURR" runat="server" CssClass="Required">
                             <asp:ListItem>RMB</asp:ListItem>
+                            <asp:ListItem>USD</asp:ListItem>
+                            <asp:ListItem>EUR</asp:ListItem>
+                            <asp:ListItem>JPY</asp:ListItem>
                         </asp:DropDownList>
                     </li>
                     <li class="LineFeed"></li>
@@ -66,6 +69,8 @@
                     <li class="ContentSmall">
                         <asp:DropDownList ID="PROTECTTERM" runat="server" CssClass="Required">
                             <asp:ListItem>1</asp:ListItem>
+                            <asp:ListItem>0.5</asp:ListItem>
+                            <asp:ListItem>0.25</asp:ListItem>
                         </asp:DropDownList>年
                     </li>
                     <li class="LineFeed"></li>

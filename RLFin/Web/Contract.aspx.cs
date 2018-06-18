@@ -38,8 +38,6 @@ namespace RLFin.Web
         /// <summary>
         /// 页面加载
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!this.IsPostBack)

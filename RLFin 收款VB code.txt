@@ -1,33 +1,7 @@
 
 //收款
 
- Select Case strItem
-        Case "预收款": Cnn = "T1"
-        Case "进度款": Cnn = "T2"
-        Case "提货款": Cnn = "T3"
-        Case "质保金": Cnn = "T4"
-        Case "其它": Cnn = "T5"
-    End Select
-
-Private Sub cboItem_Click()
-    strSql = " select max(lseq)+1,lper,lsamt from arprocess_l " & _
-             " where lid='LI' and ordno='" & txt1SO.Text & "' and lflag='" & Cnn(cboItem.Text) & "' " & _
-             " group by lper,lsamt"
-    Set rsRs = cnnAdmdb.Execute(strSql)
-    If Not rsRs.EOF Then
-        txtSeq.Text = rsRs.Fields(0).Value
-        txtPer.Text = rsRs.Fields(1).Value
-        txtYamt.Text = rsRs.Fields(2).Value
-    End If
-End Sub
-
- If MsgBox("确定要删除吗？", vbYesNo, "系统信息") = vbYes Then
-        strSql = "delete from arprocess_l " & _
-                "where ordno='" & txt1SO & "' and lflag='" & Cnn(grdUnit.Columns(0).Value) & "' and lseq=" & grdUnit.Columns(1).Value
-        cnnAdmdb.Execute strSql
-        grdUnit.RemoveItem (grdUnit.Row)
-
-//查询
+//查询 收款进度头表 RMB USD EUR JPY
 Public Function ExeInquiry() As Boolean
     Dim strSql As String
     Dim rsInquiry As ADODB.Recordset
@@ -81,3 +55,231 @@ ErrInquiry:
     MsgBox "查询记录出错!" + Err.Description, vbExclamation, "提示:"
     Screen.MousePointer = vbDefault
 End Function
+
+//单击头表 查询收款明细 grdHead_Click()
+ strSql = "SELECT * FROM arprocess_l WHERE LID='LI' AND ordno='" & strSONo & "' ORDER BY lflag,lseq "
+        While Not RsDetail.EOF
+            If Len(Trim(RsDetail.Fields("lforcast").Value)) <> 8 And Len(Trim(RsDetail.Fields("lrdte").Value)) <> 8 Then
+                strDue = ""
+            Else
+                strDue = getDue(RsDetail.Fields("lforcast").Value, RsDetail.Fields("lrdte").Value)
+            End If
+            Select Case RsDetail.Fields("lflag").Value
+                Case "T1":  StrFlag = "预收款"
+                Case "T2":  StrFlag = "进度款"
+                Case "T3":  StrFlag = "提货款"
+                Case "T4":  StrFlag = "质保金"
+                Case "T5":  StrFlag = "其它"
+            End Select
+            grdDetail.AddItem StrFlag & vbTab & _
+                              RsDetail.Fields("lseq").Value & vbTab & _
+                              IIf(IsNull(RsDetail.Fields("lper").Value), "", RsDetail.Fields("lper").Value) & vbTab & _
+                              IIf(IsNull(RsDetail.Fields("lsamt").Value), "", Format(RsDetail.Fields("lsamt").Value, "#,###.0")) & vbTab & _
+                              IIf(IsNull(RsDetail.Fields("lrdte").Value), "", RsDetail.Fields("lrdte").Value) & vbTab & _
+                              IIf(IsNull(RsDetail.Fields("lramt").Value), "", Format(RsDetail.Fields("lramt").Value, "#,###.0")) & vbTab & _
+                              RsDetail.Fields("ltype").Value & vbTab & _
+                              IIf(IsNull(RsDetail.Fields("lnote").Value), "", RsDetail.Fields("lnote").Value)
+ 
+ Function getDue(RS1, RS2) As String
+  strSql = "select replace(replace(replace(CONVERT(varchar, getdate(), 120 ),'-',''),' ',''),':','')"
+    Set rsDate = cnnAdmdb.Execute(strSql)
+    strDate = Mid(rsDate.Fields(0).Value, 1, 8)
+    Set rsDate = Nothing
+    If Trim(RS1) = "" Then
+        getDue = " "
+        Exit Function
+    End If
+    
+    If Trim(RS2) = "0" Then
+        RS2 = strDate
+    End If
+    
+    If Len(RS1) = 8 And Len(RS2) = 8 Then
+        strAdate = CLng(RS1)
+        intYear = CLng(Mid(strAdate, 1, 4))
+        intMon = CLng(Mid(strAdate, 5, 2))
+        intDay = CLng(Mid(strAdate, 7, 2))
+        strAdate = intYear & "/" & intMon & "/" & intDay
+        If intMon = 2 Then
+            If (intYear Mod 4) = 0 Then
+                strAdate = intYear & "/" & intMon & "/" & 29
+            Else
+                strAdate = intYear & "/" & intMon & "/" & 28
+            End If
+        End If
+        Adate = strAdate
+        strBdate = CLng(RS2)
+        intYear = CLng(Mid(strBdate, 1, 4))
+        intMon = CLng(Mid(strBdate, 5, 2))
+        intDay = CLng(Mid(strBdate, 7, 2))
+        strBdate = intYear & "/" & intMon & "/" & intDay
+        Bdate = strBdate
+        intDue = Bdate - Adate
+        If intDue < 0 Then
+            intDue = 0
+        End If
+        strDue = CStr(intDue)
+    Else
+        strDue = "0"
+    End If
+    getDue = strDue
+End Function
+
+//双击头表 跳转收款明细维护页面 绑定页面数据grdUnit
+Public Function ExeUpdate() As Boolean
+   frmCR.Visible = True
+    txt1SO.Enabled = False
+    strSONo = Trim(grdHead.Columns("工单").Text)
+    strSql = "SELECT * FROM arprocess WHERE ordno ='" & strSONo & "' and  sid='SI' "
+    txt1Cust.Text = rsUpdate.Fields("scust").Value
+    txt1Cnme.Text = rsUpdate.Fields("scnme").Value
+    txt1SO.Text = rsUpdate.Fields("ordno").Value
+    txt1Cont.Text = rsUpdate.Fields("scont").Value
+    cbo1Curr.Text = rsUpdate.Fields("scurr").Value
+    txt1Amt.Text = Format(rsUpdate.Fields("stotal").Value, "#,###.0")
+
+    strSql = "SELECT * FROM arprocess_l WHERE LID='LI' AND ordno='" & strSONo & "' ORDER BY lflag,lseq "
+    grdUnit.RemoveAll
+    While Not RsDetail.EOF
+        If Len(Trim(RsDetail.Fields("lforcast").Value)) <> 8 And Len(Trim(RsDetail.Fields("lrdte").Value)) <> 8 Then
+            strDue = ""
+        Else
+            strDue = getDue(RsDetail.Fields("lforcast").Value, RsDetail.Fields("lrdte").Value)
+        End If
+        Select Case RsDetail.Fields("lflag").Value
+            Case "T1":  StrFlag = "预收款"
+            Case "T2":  StrFlag = "进度款"
+            Case "T3":  StrFlag = "提货款"
+            Case "T4":  StrFlag = "质保金"
+            Case "T5":  StrFlag = "其它"
+        End Select
+        grdUnit.AddItem StrFlag & vbTab & _
+                          RsDetail.Fields("lseq").Value & vbTab & _
+                          IIf(IsNull(RsDetail.Fields("lper").Value), "", RsDetail.Fields("lper").Value) & vbTab & _
+                          IIf(IsNull(RsDetail.Fields("lsamt").Value), "", Format(RsDetail.Fields("lsamt").Value, "#,###.0")) & vbTab & _
+                         IIf(IsNull(RsDetail.Fields("lrdte").Value), "", RsDetail.Fields("lrdte").Value) & vbTab & _
+                          IIf(IsNull(RsDetail.Fields("lramt").Value), "", Format(RsDetail.Fields("lramt").Value, "#,###.0")) & vbTab & _
+                          RsDetail.Fields("ltype").Value & vbTab & _
+                          IIf(IsNull(RsDetail.Fields("lnote").Value), "", RsDetail.Fields("lnote").Value)
+        RsDetail.MoveNext
+
+    CheckInput
+End Function
+
+
+//双击grdUnit行 跳转收款明细维护页 保存实收日期、金额等
+Private Sub grdUnit_DblClick()
+    frmNew.Visible = True
+    strStatus = Update
+    cboItem.Text = grdUnit.Columns(0).Value
+    txtSeq.Text = grdUnit.Columns(1).Value
+    txtPer.Text = grdUnit.Columns(2).Value
+    txtYamt.Text = grdUnit.Columns(3).Value
+    txtRdate.Text = grdUnit.Columns(4).Value
+    txtRamt.Text = grdUnit.Columns(5).Value
+    cboType.Text = grdUnit.Columns(6).Value  //银行汇款 银行承兑汇票 现金
+    txtNote.Text = grdUnit.Columns(7).Value
+End Sub
+
+//收款明细维护页
+//Cnn
+ Select Case strItem
+        Case "预收款": Cnn = "T1"
+        Case "进度款": Cnn = "T2"
+        Case "提货款": Cnn = "T3"
+        Case "质保金": Cnn = "T4"
+        Case "其它": Cnn = "T5"
+    End Select
+//点击收款项目下拉框 收款进度明细数据加载
+Private Sub cboItem_Click()
+    strSql = " select max(lseq)+1,lper,lsamt from arprocess_l " & _
+             " where lid='LI' and ordno='" & txt1SO.Text & "' and lflag='" & Cnn(cboItem.Text) & "' " & _
+             " group by lper,lsamt"
+    Set rsRs = cnnAdmdb.Execute(strSql)
+        txtSeq.Text = rsRs.Fields(0).Value
+        txtPer.Text = rsRs.Fields(1).Value
+        txtYamt.Text = rsRs.Fields(2).Value
+End Sub
+
+//新增明细项数据 cmdAdd_Click
+Private Sub cmdAdd_Click()
+    frmNew.Visible = True
+    strStatus = "Add"
+    cboItem.Text = ""
+    txtSeq.Text = ""
+    txtPer.Text = ""
+    txtYamt.Text = ""
+    txtFPdate.Text = ""
+    txtQS.Text = ""
+    txtMon.Text = ""
+    txtYdate.Text = ""
+    txtFP.Text = ""
+    txtOpen.Text = ""
+    txtRdate.Text = ""
+    txtdue.Text = ""
+    txtRamt.Text = ""
+    cboType.Text = ""
+    txtNote.Text = ""
+End Sub
+
+//保存维护的明细项
+Private Sub cmdTrue_Click()
+    strSql = "select replace(replace(replace(CONVERT(varchar, getdate(), 120 ),'-',''),' ',''),':','')"
+    strDate = Mid(rsDate.Fields(0).Value, 1, 8)
+    strTime = Mid(rsDate.Fields(0).Value, 9, 6)
+    frmNew.Visible = False
+    If strStatus = "Add" Then
+        strSql = " Insert into arprocess_l " & _
+             " ( lid,lseq,ordno,lflag,lper,lsamt," & _
+             "   lguidte,lfdte,lmon,lforcast,lguino,lopen,lrdte,lramt,ltype,lnote, " & _
+             "   createuser,createdate,createtime , lastuser, lastudate, lastutime ) " & _
+             " Values " & _
+             " ( 'LI'," & Trim(txtSeq.Text) & ",'" & txt1SO.Text & "','" & Cnn(cboItem.Text) & "','" & txtPer.Text & "','" & txtYamt.Text & "'," & _
+             "   '" & val(txtFPdate.Text) & "','" & val(txtQS.Text) & "','" & val(txtMon.Text) & "','" & val(txtYdate.Text) & "'," & _
+             "   '" & txtFP.Text & "','" & val(txtOpen.Text) & "','" & val(txtRdate.Text) & "','" & val(txtRamt.Text) & "'," & _
+             "   '" & cboType.Text & "','" & txtNote.Text & "'," & _
+             "   '" & sysUsername & "','" & val(strDate) & "','" & val(strTime) & "'," & _
+             "   '" & sysUsername & "','" & val(strDate) & "','" & val(strTime) & "')"
+        cnnAdmdb.Execute strSql
+        grdUnit.AddItem cboItem.Text & vbTab & _
+                        txtSeq.Text & vbTab & _
+                        txtPer.Text & vbTab & _
+                        txtYamt.Text & vbTab & _
+                        val(txtRdate.Text) & vbTab & _
+                        val(txtRamt.Text) & vbTab & _
+                        cboType.Text & vbTab & _
+                        txtNote.Text
+    Else
+        strSql = " Update arprocess_l Set " & _
+                 " lguidte='" & val(txtFPdate.Text) & "'," & _
+                 " lfdte='" & val(txtQS.Text) & "'," & _
+                 " lmon='" & val(txtMon.Text) & "'," & _
+                 " lforcast='" & val(txtYdate.Text) & "'," & _
+                 " lguino='" & txtFP.Text & "'," & _
+                 " lopen='" & val(txtOpen.Text) & "'," & _
+                 " lrdte='" & val(txtRdate.Text) & "'," & _
+                 " lramt='" & val(txtRamt.Text) & "'," & _
+                 " ltype='" & cboType.Text & "'," & _
+                 " lnote='" & txtNote.Text & "'," & _
+                 " lastuser='" & sysUsername & "'," & _
+                 " lastudate='" & strDate & "'," & _
+                 " lastutime='" & strTime & "'" & _
+                 " Where lid='LI' And ordno='" & txt1SO.Text & "' And lflag='" & Cnn(cboItem.Text) & "' And lseq='" & txtSeq.Text & "'"
+        cnnAdmdb.Execute strSql
+        grdUnit.Columns(0).Value = cboItem.Text
+        grdUnit.Columns(1).Value = txtSeq.Text
+        grdUnit.Columns(2).Value = txtPer.Text
+        grdUnit.Columns(3).Value = txtYamt.Text
+        grdUnit.Columns(4).Value = txtRdate.Text
+        grdUnit.Columns(5).Value = txtRamt.Text
+        grdUnit.Columns(6).Value = cboType.Text
+        grdUnit.Columns(7).Value = txtNote.Text
+    End If
+End Sub
+
+//删除明细
+ If MsgBox("确定要删除吗？", vbYesNo, "系统信息") = vbYes Then
+        strSql = "delete from arprocess_l " & _
+                "where ordno='" & txt1SO & "' and lflag='" & Cnn(grdUnit.Columns(0).Value) & "' and lseq=" & grdUnit.Columns(1).Value
+        cnnAdmdb.Execute strSql
+        grdUnit.RemoveItem (grdUnit.Row)

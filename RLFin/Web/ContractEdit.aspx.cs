@@ -55,8 +55,6 @@ namespace RLFin.Web
         /// <summary>
         /// 页面加载
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!this.IsPostBack)
@@ -170,6 +168,7 @@ namespace RLFin.Web
 
             ORDNO.Text = contract["ORDNO"].ToString().Trim();
             ORDNAME.Text = contract["ORDNAME"].ToString().Trim();
+            CURR.SelectedValue = contract["CURR"].ToString().Trim();
             SIGNDATE.Text = contract["SIGNDATE"].ToString().Trim();
             CUSTNO.Text = contract["CUSTNO"].ToString().Trim();
             CUSTNAME.Text = contract["CUSTNAME"].ToString().Trim();
@@ -179,7 +178,7 @@ namespace RLFin.Web
             SCH_JD.Text = contract["SCH_JD"].ToString().Trim();
             SCH_TH.Text = contract["SCH_TH"].ToString().Trim();
             SCH_ZB.Text = contract["SCH_ZB"].ToString().Trim();
-            PROTECTTERM.Text = contract["PROTECTTERM"].ToString().Trim();
+            PROTECTTERM.SelectedValue = contract["PROTECTTERM"].ToString().Trim();
             Remark.Text = contract["Remark"].ToString();
 
         }

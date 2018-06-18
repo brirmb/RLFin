@@ -10,7 +10,7 @@
 namespace RLFin.Web {
     
     
-    public partial class Receivable {
+    public partial class ReceivableEdit {
         
         /// <summary>
         /// form1 控件。
@@ -73,7 +73,7 @@ namespace RLFin.Web {
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList CURR;
+        protected global::System.Web.UI.WebControls.TextBox CURR;
         
         /// <summary>
         /// ORDAMT 控件。
@@ -85,22 +85,22 @@ namespace RLFin.Web {
         protected global::System.Web.UI.WebControls.TextBox ORDAMT;
         
         /// <summary>
-        /// OKButton 控件。
+        /// CreateRow 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button OKButton;
+        protected global::System.Web.UI.WebControls.Button CreateRow;
         
         /// <summary>
-        /// CancelButton 控件。
+        /// DeleteRow 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button CancelButton;
+        protected global::System.Web.UI.WebControls.Button DeleteRow;
         
         /// <summary>
         /// List 控件。
@@ -110,5 +110,14 @@ namespace RLFin.Web {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView List;
+        
+        /// <summary>
+        /// OKButton 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button OKButton;
     }
 }

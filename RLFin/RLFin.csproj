@@ -106,6 +106,11 @@
     <Content Include="Default.aspx" />
     <Content Include="Framework\AuthorityDetail.aspx" />
     <Content Include="Web\Contract.aspx" />
+    <EmbeddedResource Include="Web\Receivable.aspx.js" />
+    <Content Include="Web\ReceivableDetailEdit.aspx" />
+    <EmbeddedResource Include="Web\ReceivableDetailEdit.aspx.js" />
+    <Content Include="Web\ReceivableEdit.aspx" />
+    <EmbeddedResource Include="Web\ReceivableEdit.aspx.js" />
     <Content Include="Web\SelectCust.aspx" />
     <EmbeddedResource Include="Web\Contract.aspx.js" />
     <Content Include="Web\ContractEdit.aspx" />
@@ -290,6 +295,20 @@
     </Compile>
     <Compile Include="Web\Receivable.aspx.designer.cs">
       <DependentUpon>Receivable.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Web\ReceivableDetailEdit.aspx.cs">
+      <DependentUpon>ReceivableDetailEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\ReceivableDetailEdit.aspx.designer.cs">
+      <DependentUpon>ReceivableDetailEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Web\ReceivableEdit.aspx.cs">
+      <DependentUpon>ReceivableEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\ReceivableEdit.aspx.designer.cs">
+      <DependentUpon>ReceivableEdit.aspx</DependentUpon>
     </Compile>
     <Compile Include="Web\SelectCust.aspx.cs">
       <DependentUpon>SelectCust.aspx</DependentUpon>

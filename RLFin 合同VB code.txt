@@ -4,8 +4,9 @@
 //单位
 strSql = "select * from baseparameter where type='UM'"
 
-If Trim(txtNo.Text) = "" Then
-labMsg.Caption = "请输入工令号！"
+0.25
+0.5
+1
 
 //工令号下拉框
 strTxt = txtNo.Text

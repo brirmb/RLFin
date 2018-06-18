@@ -10,7 +10,7 @@
 namespace RLFin.Web {
     
     
-    public partial class Receivable {
+    public partial class ReceivableDetailEdit {
         
         /// <summary>
         /// form1 控件。
@@ -31,58 +31,76 @@ namespace RLFin.Web {
         protected global::System.Web.UI.WebControls.Label PageTitle;
         
         /// <summary>
-        /// ORDNO 控件。
+        /// cboItem 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ORDNO;
+        protected global::System.Web.UI.WebControls.DropDownList cboItem;
         
         /// <summary>
-        /// ORDNAME 控件。
+        /// Seq 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ORDNAME;
+        protected global::System.Web.UI.WebControls.TextBox Seq;
         
         /// <summary>
-        /// CUSTNO 控件。
+        /// Per 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox CUSTNO;
+        protected global::System.Web.UI.WebControls.TextBox Per;
         
         /// <summary>
-        /// CUSTNAME 控件。
+        /// SAmt 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox CUSTNAME;
+        protected global::System.Web.UI.WebControls.TextBox SAmt;
         
         /// <summary>
-        /// CURR 控件。
+        /// ActualDate 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList CURR;
+        protected global::System.Web.UI.WebControls.TextBox ActualDate;
         
         /// <summary>
-        /// ORDAMT 控件。
+        /// ActualAmt 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ORDAMT;
+        protected global::System.Web.UI.WebControls.TextBox ActualAmt;
+        
+        /// <summary>
+        /// cboType 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList cboType;
+        
+        /// <summary>
+        /// Remark 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox Remark;
         
         /// <summary>
         /// OKButton 控件。
@@ -101,14 +119,5 @@ namespace RLFin.Web {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button CancelButton;
-        
-        /// <summary>
-        /// List 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView List;
     }
 }

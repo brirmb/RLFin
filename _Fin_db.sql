@@ -14,3 +14,8 @@ INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Statu
 GO
 INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'DirectInvoice', N'Contract', N'直接开票', NULL, N'Web/Contract.aspx?pageType=2', 2, N'A', N'Admin', getdate())
 GO
+
+INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'Receivable', N'iiWeb', N'收款', NULL, NULL, 2, N'A', N'Admin', getdate())
+GO
+INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'ReceivableMaintain', N'Receivable', N'收款', NULL, N'Web/Receivable.aspx', 1, N'A', N'Admin', getdate())
+GO

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace RLFin.Models
@@ -116,6 +117,24 @@ namespace RLFin.Models
         }
 
         /// <summary>
+        /// 查询收款明细
+        /// </summary>
+        public DataRow GetArprocess(string no)
+        {
+            string sql = string.Format(" SELECT * FROM arprocess WHERE ordno=N'{0}' and sid='SI' ", no);
+
+            var table = this.Query(sql);
+            if (table != null && table.Rows.Count == 1)
+            {
+                return table.Rows[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// 新增收款进度头表sql
         /// </summary>
         public string InsertArprocessSql(string orNo, string orName, string custNo, string custName, string curr, string orAmt, string sysUsername, string strDate, string strTime)
@@ -145,12 +164,69 @@ namespace RLFin.Models
         }
 
         /// <summary>
+        /// 查询收款明细
+        /// </summary>
+        public DataTable GetArprocessDetail(string no)
+        {
+            string sql = string.Format(" SELECT * FROM arprocess_l WHERE LID='LI' AND ordno=N'{0}' ORDER BY lflag,lseq", no);
+
+            return this.Query(sql);
+        }
+
+        /// <summary>
+        /// 查询收款明细项最新序号
+        /// </summary>
+        public DataRow GetArprocessDetailItem(string no, string item, string seq)
+        {
+            string sql = string.Format("SELECT * FROM arprocess_l WHERE LID='LI' AND ordno=N'{0}' and lflag=N'{1}' and lseq=N'{2}' ", no, item, seq);
+
+            var table = this.Query(sql);
+
+            if (table != null && table.Rows.Count == 1)
+            {
+                return table.Rows[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 查询收款明细项最新序号
+        /// </summary>
+        public DataRow GetNewArprocessDetail(string no, string item)
+        {
+            string sql = string.Format("SELECT max(lseq)+1 lseq,lper,lsamt FROM arprocess_l WHERE LID='LI' AND ordno=N'{0}' and lflag=N'{1}' group by lper,lsamt ", no, item);
+
+            var table = this.Query(sql);
+
+            if (table != null && table.Rows.Count == 1)
+            {
+                return table.Rows[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// 新增收款进度明细Sql
         /// </summary>
         public string InsertArprocessDetailSql(string no, string Tflg, decimal Tamt, decimal Tper, string sysUsername, string strDate, string strTime)
         {
             string sql = string.Format("Insert into arprocess_l( lid,lseq,ordno,lflag,lper,lsamt,createuser,createdate,createtime,lastuser, lastudate,lastutime ) Values( 'LI',1,N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{7}',N'{8}',N'{9}' ) ", no, Tflg, Tper, Math.Round(Tper * Tamt * 0.01m, 2), sysUsername, strDate, strTime, sysUsername, strDate, strTime);
             return sql;  //this.Execute(sql);
+        }
+
+        /// <summary>
+        /// 新增收款进度明细
+        /// </summary>
+        public int InsertArprocessDetail(string seq, string no, string Tflg, string samt, string Tper, string aDate, string aAmt, string type, string remark, string sysUsername, string strDate, string strTime)
+        {
+            string sql = string.Format("Insert into arprocess_l( lid,lseq,ordno,lflag,lper,lsamt,lguidte,lfdte,lmon,lforcast,lguino,lopen,lrdte,lramt,ltype,lnote,createuser,createdate,createtime,lastuser,lastudate,lastutime ) Values( 'LI',N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',0,0,0,0,0,0,N'{5}',N'{6}',N'{7}',N'{8}',N'{9}',N'{10}',N'{11}',N'{12}',N'{13}',N'{14}' ) ", seq, no, Tflg, Tper, samt, aDate, aAmt, type, remark, sysUsername, strDate, strTime, sysUsername, strDate, strTime);
+            return this.Execute(sql);
         }
 
         /// <summary>
@@ -163,12 +239,31 @@ namespace RLFin.Models
         }
 
         /// <summary>
-        /// 删除收款进度明细表
+        /// 更新收款进度明细表
+        /// </summary>
+        public int UpdateArprocessDetail(string no, string Tflg, string seq, string aDate, string aAmt, string type, string remark, string sysUsername, string strDate, string strTime)
+        {
+            string sql = string.Format("UPDATE arprocess_l SET lrdte=N'{3}',lramt=N'{4}',ltype=N'{5}',lnote=N'{6}',lastuser=N'{7}',lastudate=N'{8}',lastutime=N'{9}' WHERE lid='LI' and ORDNO=N'{0}' And lflag=N'{1}' And lseq=N'{2}' ", no, Tflg, seq, aDate, aAmt, type, remark, sysUsername, strDate, strTime);
+            return this.Execute(sql);
+        }
+
+        /// <summary>
+        /// 删除收款进度明细表Sql
         /// </summary>
         public string DeleteArprocessDetailSql(string no, string sysUsername, string strDate, string strTime)
         {
             string sql = string.Format("UPDATE arprocess_l SET lid='LD',lastuser=N'{1}',lastudate=N'{2}',lastutime=N'{3}' WHERE lid='LI' and ORDNO=N'{0}' ", no, sysUsername, strDate, strTime);
             return sql;
+        }
+
+
+        /// <summary>
+        /// 删除收款进度明细表
+        /// </summary>
+        public int DeleteArprocessDetail(string no, string Tflg, string seq)
+        {
+            string sql = string.Format("delete from arprocess_l WHERE ORDNO=N'{0}' and lflag=N'{1}' and lseq=N'{2}' ", no, Tflg, seq);
+            return this.Execute(sql);
         }
 
         #endregion
@@ -334,6 +429,49 @@ namespace RLFin.Models
 
             return this.Execute(sql);
         }
+
+        #endregion
+
+        #region 收款
+
+        /// <summary>
+        /// 获取收款进度头表信息
+        /// </summary>
+        public DataTable GetReceivableInfo(string orNo, string orName, string custNo, string custName, string curr, string orAmt)
+        {
+            StringBuilder sql = new StringBuilder(@"SELECT *,
+                (select sum(lramt) from arprocess_l where arprocess_l.ordno=arprocess.ordno) amt, --收款总金额
+                (stotal-(select sum(lramt) from arprocess_l where arprocess_l.ordno=arprocess.ordno)) lamt --剩余总金额
+              FROM arprocess WHERE 1=1 ");
+
+            if (orNo.Trim().Length != 0)
+            {
+                sql.AppendFormat(" AND ordno like N'%{0}%' ", orNo);
+            }
+            if (orName.Trim().Length != 0)
+            {
+                sql.AppendFormat(" AND scont like N'%{0}%' ", orName);
+            }
+            if (custNo.Trim().Length != 0)
+            {
+                sql.AppendFormat(" AND scust like N'%{0}%' ", custNo);
+            }
+            if (custName.Trim().Length != 0)
+            {
+                sql.AppendFormat(" AND scnme like N'%{0}%' ", custName);
+            }
+            if (curr.Trim().Length != 0)
+            {
+                sql.AppendFormat(" AND scurr = N'{0}' ", curr);
+            }
+            if (orAmt.Trim().Length != 0)
+            {
+                sql.AppendFormat(" AND stotal like '%{0}%' ", orAmt);
+            }
+
+            return this.Query(sql.ToString());
+        }
+
 
         #endregion
 
