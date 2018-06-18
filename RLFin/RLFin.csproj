@@ -107,6 +107,7 @@
     <Content Include="Framework\AuthorityDetail.aspx" />
     <Content Include="Web\Contract.aspx" />
     <EmbeddedResource Include="Web\Receivable.aspx.js" />
+    <Content Include="Web\Invoice.aspx" />
     <Content Include="Web\ReceivableDetailEdit.aspx" />
     <EmbeddedResource Include="Web\ReceivableDetailEdit.aspx.js" />
     <Content Include="Web\ReceivableEdit.aspx" />
@@ -288,6 +289,13 @@
     </Compile>
     <Compile Include="Web\ContractEdit.aspx.designer.cs">
       <DependentUpon>ContractEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Invoice.aspx.cs">
+      <DependentUpon>Invoice.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\Invoice.aspx.designer.cs">
+      <DependentUpon>Invoice.aspx</DependentUpon>
     </Compile>
     <Compile Include="Web\Receivable.aspx.cs">
       <DependentUpon>Receivable.aspx</DependentUpon>
