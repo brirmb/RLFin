@@ -1,0 +1,324 @@
+
+//厂商
+
+//查询    
+strSql = "select * from puravm where avid='A' and avnam like '%" & Trim(Text1) & "%' order by avend"
+Set recRec = cnnAdmdb.Execute(strSql)
+If Not recRec.EOF Then
+    GrdVendor.RemoveAll
+    Do While Not recRec.EOF
+        GrdVendor.AddItem recRec!avend & vbTab & recRec!avnam & vbTab & IIf(IsNull(recRec!avarea), "", recRec!avarea) & vbTab & IIf(IsNull(recRec!avsalr), "", recRec!avsalr)
+        recRec.MoveNext
+    Loop
+
+//删除厂商
+j = MsgBox("确信要删除吗？", vbYesNo + vbQuestion, "系统信息")
+strSql = "update puravm set avid = 'Z' where avid = 'A' and avend='" & Trim$(GrdVendor.Columns(0).CellValue(BkMark)) & "'"
+cnnAdmdb.Execute strSql
+
+//交易条件下拉
+ strSql = "select code,description from baseparameter where type='TC' order by code"
+
+ //币别下拉
+strSql = "select code,description from baseparameter where type='CY' order by code"
+
+//区域下拉
+strSql = "select code,description from baseparameter where type='AR' order by 1"
+
+//付款方式下拉
+ strSql = "select code,description from baseparameter where type='PY' order by code"
+//业务员
+strSql = "select code,description from baseparameter where type='CK' order by code"
+//税率
+strSql = "select code,description from baseparameter where type='TX' order by code"
+//是否有额度限制
+ cboFlg.AddItem "Y"
+ cboFlg.AddItem "N"
+
+//加载厂商信息
+Private Sub Form_Load()
+    If PURPVEN.flagVen = 2 Then          'Update     1 Add
+        TxtVenCode = Trim$(PURPVEN.GrdVendor.Columns(0).Value)
+        strSql = "select * from puravm where avid='A' and avend='" & TxtVenCode & "'"
+        If Not recfilter.EOF Then
+            TxtProvince = IIf(IsNull(recfilter!avprov), "", recfilter!avprov)
+            TxtCity = IIf(IsNull(recfilter!avcoty), "", recfilter!avcoty)
+            TxtAdress1 = IIf(IsNull(recfilter!avadr1), "", recfilter!avadr1)
+            TxtAdress2 = IIf(IsNull(recfilter!avadr2), "", recfilter!avadr2)
+            TxtAdress3 = IIf(IsNull(recfilter!avadr3), "", recfilter!avadr3)
+            TxtTel1 = IIf(IsNull(recfilter!avpon1), "", recfilter!avpon1)
+            TxtTel2 = IIf(IsNull(recfilter!avpon2), "", recfilter!avpon2)
+            TxtTel3 = IIf(IsNull(recfilter!avpon3), "", recfilter!avpon3)
+            TxtFax1 = IIf(IsNull(recfilter!avfax1), "", recfilter!avfax1)
+            TxtFax2 = IIf(IsNull(recfilter!avfax2), "", recfilter!avfax2)
+            TxtMail1 = IIf(IsNull(recfilter!avemai1), "", recfilter!avemai1)
+            TxtMail2 = IIf(IsNull(recfilter!avemai2), "", recfilter!avemai2)
+            TxtConnect = IIf(IsNull(recfilter!avctat), "", recfilter!avctat)
+            TxtPur = IIf(IsNull(recfilter!avsalr), "", recfilter!avsalr)
+            CmbPay = IIf(IsNull(recfilter!avterm), "", recfilter!avterm)
+            cmbtrc = IIf(IsNull(recfilter!avtrc), "", recfilter!avtrc)
+            Cmbcurr = IIf(IsNull(recfilter!avcur), "", recfilter!avcur)
+            TxtBank = IIf(IsNull(recfilter!avbank), "", recfilter!avbank)
+            TxtCount = IIf(IsNull(recfilter!avacct), "", recfilter!avacct)
+            TxtType = IIf(IsNull(recfilter!avhyb), "", recfilter!avhyb)
+            TxtTax = IIf(IsNull(recfilter!atcod), "", recfilter!atcod)
+            txtTaxRate.Text = IIf(IsNull(recfilter.Fields("avtax").Value), "", recfilter!avtax)
+        End If
+        TxtVenName = Trim$(PURPVEN.GrdVendor.Columns(1).Value)
+        CmbPart = Trim$(PURPVEN.GrdVendor.Columns(2).Value)
+    End If
+End Sub
+
+//保存厂商信息
+Private Sub cmdOk_Click()
+    'Check 厂商名称
+    If Len(Trim$(TxtVenName)) = 0 Then
+        Screen.MousePointer = vbDefault
+        MsgBox "请输入厂商名称！", vbInformation, "系统信息"
+        TxtVenName.SetFocus
+        Exit Sub
+    End If
+    
+    'Check 区域
+    If Len(Trim$(CmbPart)) = 0 Then
+        Screen.MousePointer = vbDefault
+        MsgBox "请输入区域代码！", vbInformation, "系统信息"
+        CmbPart.SetFocus
+        Exit Sub
+    End If
+    
+    'Check 联系人
+    If Len(Trim$(TxtPur)) = 0 Then
+        Screen.MousePointer = vbDefault
+        MsgBox "请输入联系人！", vbInformation, "系统信息"
+        TxtPur.SetFocus
+        Exit Sub
+    End If
+    
+    'Check 付款方式
+    If Len(Trim$(CmbPay)) = 0 Then
+        Screen.MousePointer = vbDefault
+        MsgBox "请输入付款方式！", vbInformation, "系统信息"
+        CmbPay.SetFocus
+        Exit Sub
+    End If
+   
+    'Check 交易条件
+    If Len(Trim$(cmbtrc)) = 0 Then
+        Screen.MousePointer = vbDefault
+        MsgBox "请输入交易条件！", vbInformation, "系统信息"
+        cmbtrc.SetFocus
+        Exit Sub
+    End If
+    
+    'Check 币别
+    If Len(Trim$(Cmbcurr)) = 0 Then
+        Screen.MousePointer = vbDefault
+        MsgBox "请输入币别！", vbInformation, "系统信息"
+        Cmbcurr.SetFocus
+        Exit Sub
+    End If
+    
+    If Len(Trim$(txtTaxRate.Text)) = 0 Then
+        Screen.MousePointer = vbDefault
+        MsgBox "请输入税率！", vbInformation, "系统信息"
+        txtTaxRate.SetFocus
+        Exit Sub
+    End If
+      
+    If PURPVEN.flagVen = 1 Then     'Add
+        strSql = "select max(avend) from puravm"
+        Set recTmp = cnnAdmdb.Execute(strSql)
+        If IsNull(recTmp.Fields(0).Value) Then
+            IntVendor = 1
+        Else
+            IntVendor = recTmp.Fields(0).Value + 1
+        End If
+
+        strSql = "insert into puravm(avid,avend,avnam,avarea,avprov,avcoty,avadr1,avadr2,avadr3,avpon1,avpon2,avpon3,avfax1,avfax2,avemai1,avemai2,avctat,avsalr,avcur,avterm,avtrc,avbank,avacct,atcod,avhyb,avtax) values('A','" & IntVendor & "','" & Trim$(TxtVenName) & "','" & Trim$(CmbPart) & "','" & Trim$(TxtProvince) & "','" & Trim$(TxtCity) & "','" & Trim$(TxtAdress1) & "','" & _
+                 Trim$(TxtAdress2) & " ','" & Trim$(TxtAdress3) & "','" & Trim$(TxtTel1) & "','" & Trim$(TxtTel2) & "','" & Trim$(TxtTel3) & "','" & Trim$(TxtFax1) & "','" & Trim$(TxtFax2) & "','" & Trim$(TxtMail1) & "','" & _
+                 Trim$(TxtMail2) & "','" & Trim$(TxtConnect) & "','" & Trim$(TxtPur) & "','" & Trim$(Cmbcurr) & "','" & Trim$(CmbPay) & "','" & Trim$(cmbtrc) & "','" & Trim$(TxtBank) & "','" & Trim$(TxtCount) & "','" & Trim$(TxtTax) & "','" & Trim$(TxtType) & "'," & Trim(txtTaxRate.Text) & ")"
+
+        cnnAdmdb.Execute strSql
+        PURPVEN.GrdVendor.MoveLast
+        TxtVenCode = IntVendor
+        PURPVEN.GrdVendor.AddItem Trim$(TxtVenCode) & vbTab & Trim$(TxtVenName) & vbTab & Trim$(CmbPart) & vbTab & Trim$(TxtPur)
+
+        i = MsgBox("新增成功,是否继续新增?", vbYesNo + vbQuestion, "系统信息")
+        If i = vbYes Then
+            TxtVenCode = ""
+            TxtVenName = ""
+            CmbPart = ""
+            TxtProvince = ""
+            TxtCity = ""
+            TxtAdress1 = ""
+            TxtAdress2 = ""
+            TxtAdress3 = ""
+            TxtTel1 = ""
+            TxtTel2 = ""
+            TxtTel3 = ""
+            TxtFax1 = ""
+            TxtFax2 = ""
+            TxtMail1 = ""
+            TxtMail2 = ""
+            TxtConnect = ""
+            TxtPur = ""
+            CmbPay = ""
+            cmbtrc = ""
+            Cmbcurr = ""
+'            TxtPdes = ""
+            TxtBank = ""
+            TxtCount = ""
+            TxtType = ""
+            TxtTax = ""
+            txtTaxRate.Text = ""
+            TxtVenCode.SetFocus
+        Else
+            Screen.MousePointer = vbDefault
+            Set recfilter = Nothing
+            Unload Me
+        End If
+    End If
+    Set recfilter = Nothing
+    
+    If PURPVEN.flagVen = 2 Then     'Update
+        strSql = "update puravm set avnam='" & Trim$(TxtVenName) & "',avarea='" & Trim$(CmbPart) & "',avprov='" & Trim$(TxtProvince) & "',avcoty='" & Trim$(TxtCity) & "',avadr1='" & Trim$(TxtAdress1) & "',avadr2='" & _
+                 Trim$(TxtAdress2) & " ',avadr3='" & Trim$(TxtAdress3) & "',avpon1='" & Trim$(TxtTel1) & "',avpon2='" & Trim$(TxtTel2) & "',avpon3='" & Trim$(TxtTel3) & "',avfax1='" & Trim$(TxtFax1) & "',avfax2='" & Trim$(TxtFax2) & "',avemai1='" & Trim$(TxtMail1) & "',avemai2='" & _
+                 Trim$(TxtMail2) & "',avctat='" & Trim$(TxtConnect) & "',avsalr='" & Trim$(TxtPur) & "',avcur='" & Trim$(Cmbcurr) & "',avterm='" & Trim$(CmbPay) & "',avtrc='" & Trim$(cmbtrc) & "',avbank='" & Trim$(TxtBank) & "',avacct='" & Trim$(TxtCount) & "',atcod='" & _
+                 Trim$(TxtTax) & "',avtax=" & val(txtTaxRate.Text) & ",avhyb='" & Trim$(TxtType) & "' where avid ='A' and avend='" & TxtVenCode & "'"
+    
+        cnnAdmdb.Execute strSql
+        
+        PURPVEN.GrdVendor.Columns(1).Value = Trim$(TxtVenName)
+        PURPVEN.GrdVendor.Columns(2).Value = Trim$(CmbPart)
+        PURPVEN.GrdVendor.Columns(3).Value = Trim$(TxtConnect)
+        
+        Screen.MousePointer = vbDefault
+        MsgBox "厂商主档修改成功!", vbInformation, "系统信息"
+        
+        PURPVen1.TxtVenCode.Enabled = True
+        PURPVen1.TxtVenCode.BackColor = &H80000005
+        Unload Me
+    End If
+End Sub
+
+//客户
+//查询
+strSql = "select * from salrcm where rcnam like '%" & Trim(Text1) & "%' order by rccust"
+ GrdCust.AddItem recRec!rccust & vbTab & recRec!rcnam & vbTab & IIf(IsNull(recRec!rcarea), "", recRec!rcarea)
+
+ //删除客户
+  strSql = "delete from salrcm where rccust=" & Trim(GrdCust.Columns("客户代码").Value)
+        cnnAdmdb.Execute strSql
+
+//从 SALRCM(客户主档）中抓出其它数据
+strSql = "select * from salrcm where rcid='A' and rccust=" & val(.txtCust) & ""
+
+//保存客户
+ 'check 税号
+    If Len(Trim$(txtTcod)) = 0 Then
+        Screen.MousePointer = vbNormal
+        If MsgBox("你没有输入税号，因此该客户将不能打印增值税发票，你要继续吗？", vbQuestion + vbYesNo, "信息系统") = vbNo Then
+            Set recData = Nothing
+            Screen.MousePointer = vbDefault
+            txtTcod.SetFocus
+            Exit Sub
+        End If
+        Screen.MousePointer = vbHourglass
+    End If
+
+    '-----check 税率代码
+    If Len(Trim$(cboTax)) = 0 Then
+        Screen.MousePointer = vbNormal
+        If MsgBox("你没有选择税率代码，因此该客户将不能做应收帐款事务，你要继续吗？", vbQuestion + vbYesNo, "信息系统") = vbNo Then
+            Set recData = Nothing
+            Screen.MousePointer = vbDefault
+            cboTax.SetFocus
+            Exit Sub
+        End If
+        Screen.MousePointer = vbHourglass
+    End If
+
+    'check 信用额度
+    If Len(Trim$(txtCrd)) <> 0 Then
+        If Len(Trim$(ChgNumToNumstr(Trim$(txtCrd), 2))) = 0 Then
+            Set recData = Nothing
+            Screen.MousePointer = vbDefault
+            MsgBox "信用额度错误,请重新输入!", vbCritical, "系统信息"
+            txtCrd.SetFocus
+            Exit Sub
+        End If
+    End If
+    
+    'check credit limit
+    If Len(cboFlg) = 0 Then
+        cboFlg = "Y" '-------------credit limit系统默认为 "Y"
+    End If
+
+    '==========================check 各个输入的栏位 End====================
+    strSql = "select max(rccust) from salrcm"
+    Set recTmp = cnnAdmdb.Execute(strSql)
+    If IsNull(recTmp.Fields(0).Value) Then
+        IntCust = 1
+    Else
+        IntCust = recTmp.Fields(0).Value + 1
+    End If
+    Dim intQuestion As Integer  '表示是否继续新增记录
+    If txtCust.Enabled = True Then
+
+        strSql = "insert into salrcm(rcid,rccust,rcnam,rctrc,rcarea,rcprov,rccoty,rcadr1,rcadr2 , " & _
+                 "rcadr3,rcpon1,rcpon2,rcpon3,rcfax1,rcfax2,rcemai1,rcemai2,rcctat,rcsalr, " & _
+                 "rccur,rcterm,rcbank,rcacct,rctcod,rcamt,rccrd,rchyb,rcdflg,rcgrad,rckind,rctax) " & _
+                 "values('A'," & IntCust & ",'" & Trim$(txtNam) & "','" & Trim$(cboTrc) & "','" & Trim$(cboArea) & "','" & _
+                 Trim$(txtProv) & " ','" & Trim$(txtCity) & "','" & Trim$(txtAdr1) & "','" & Trim$(txtAdr2) & "','" & _
+                 Trim$(txtAdr3) & "','" & Trim$(txtPon1) & "','" & Trim$(txtPon2) & "','" & Trim$(txtPon3) & "','" & _
+                 Trim$(txtFax1) & "','" & Trim$(txtFax2) & "','" & Trim$(txtEmai1) & "','" & Trim$(txtEmai2) & "', '" & _
+                 Trim$(txtCtat) & "','" & Trim$(cboSalr) & "','" & Trim$(cboCur) & "','" & Trim$(cboTerm) & "','" & _
+                 Trim$(txtBank) & "','" & Trim$(txtAcct) & "' ,'" & Trim$(txtTcod) & "',0," & _
+                 val(ChgNumstrToNum(Trim$(txtCrd), ",")) & ",'" & Trim$(txtHyb) & "','" & Trim$(cboFlg) & "','" & Trim$(txtGrad) & "','" & Trim$(txtKind) & "','" & Trim$(cboTax) & "')"
+        cnnAdmdb.Execute strSql
+        
+        txtCust.Text = IntCust
+        SALMCMM0.GrdCust.AddItem Trim$(txtCust) & vbTab & Trim$(txtNam) & vbTab & Trim$(cboArea)
+        SALMCMM0.GrdCust.MoveLast
+        Screen.MousePointer = vbNormal
+        intQuestion = MsgBox("新增记录成功,是否继续新增?  ", vbYesNo + vbQuestion, "系统信息")
+
+        Dim ctlText As Control
+        If intQuestion = vbYes Then
+            For Each ctlText In Controls
+                If TypeOf ctlText Is TextBox Then ctlText = ""
+            Next
+            cboTrc = ""
+            cboArea = ""
+            cboCur = ""
+            cboTerm = ""
+            cboSalr = ""
+            cboFlg = ""
+            txtCust.SetFocus
+            Set recData = Nothing
+            Screen.MousePointer = vbDefault
+            Exit Sub
+        End If    
+    '========================================新增 End========================================    
+    Else    
+    '===========================================修改=========================================
+        
+        '更新 Table SALRCM 中的数据
+        strSql = "update salrcm set rcnam='" & Trim$(txtNam) & "',rctrc='" & Trim$(cboTrc) & "',rcarea='" & Trim$(cboArea) & "'," & _
+                 "rcprov='" & Trim$(txtProv) & "',rccoty='" & Trim$(txtCity) & "',rcadr1='" & Trim$(txtAdr1) & "',rcadr2='" & Trim$(txtAdr2) & "'," & _
+                 "rcadr3='" & Trim$(txtAdr3) & "',rcpon1='" & Trim$(txtPon1) & "',rcpon2='" & Trim$(txtPon2) & "',rcpon3='" & Trim$(txtPon3) & "'," & _
+                 "rcfax1='" & Trim$(txtFax1) & "',rcfax2='" & Trim$(txtFax2) & "',rcemai1='" & Trim$(txtEmai1) & "',rcemai2='" & Trim$(txtEmai2) & "'," & _
+                 "rcctat='" & Trim$(txtCtat) & "',rcsalr='" & Trim$(cboSalr) & "',rccur='" & Trim$(cboCur) & "',rcterm='" & Trim$(cboTerm) & "'," & _
+                 "rcbank='" & Trim$(txtBank) & "',rcacct='" & Trim$(txtAcct) & "',rctcod='" & Trim$(txtTcod) & "'," & _
+                 "rccrd=" & val(ChgNumstrToNum(Trim$(txtCrd), ",")) & ",rchyb='" & Trim$(txtHyb) & "',rcdflg='" & Trim$(cboFlg) & "',rcgrad='" & Trim$(txtGrad) & "'," & _
+                 "rckind='" & Trim$(txtKind) & "',rctax='" & Trim$(cboTax) & "' where rcid='A'and rccust=" & txtCust & ""
+'-------------------------------------------
+        cnnAdmdb.Execute strSql
+        '更新GrdCust 中相应的数据
+        SALMCMM0.GrdCust.Columns(1).Value = Trim$(txtNam)
+        SALMCMM0.GrdCust.Columns(2).Value = Trim$(cboArea)
+        Screen.MousePointer = vbDefault
+        MsgBox "更新数据成功!  ", vbInformation, "系统信息"
+    End If
+    

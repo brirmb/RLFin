@@ -1,0 +1,135 @@
+//开票vb code
+
+//查询
+Private Function Find()
+If Trim(CmbNO.Text) = "" Then
+    MsgBox "请输入合同号！", , "提示"
+End If
+'***查询Head Infomation
+strSql = " SELECT ORDNO,ORDNAME,CUSTNO,CUSTNAME,CURR,SIGNDATE," & _
+           "        DELIVERYDATE,PROTECTTERM,SCH_YF,SCH_JD,SCH_TH,SCH_ZB,ORDAMT,REMARK " & _
+           "   FROM contract WHERE OHID='Y' AND ORDNO = '" & Trim(CmbNO.Text) & "'"
+Set rsFind = cnnAdmdb.Execute(strSql)
+If Not rsFind.EOF Then
+    txtOrdName.Text = IIf(IsNull(rsFind.Fields("ordname").Value), "", rsFind.Fields("ordname").Value)
+    cboCurr.Text = IIf(IsNull(rsFind.Fields("curr").Value), "", rsFind.Fields("curr").Value)
+    cboCust.Text = IIf(IsNull(rsFind.Fields("custno").Value), "", rsFind.Fields("custno").Value)
+    txtCustName.Text = IIf(IsNull(rsFind.Fields("custname").Value), "", rsFind.Fields("custname").Value)
+    txtSign.Text = IIf(IsNull(rsFind.Fields("signdate").Value), "", rsFind.Fields("signdate").Value)
+    txtDelivery.Text = IIf(IsNull(rsFind.Fields("deliverydate").Value), "", rsFind.Fields("deliverydate").Value)
+    txtProtect.Text = IIf(IsNull(rsFind.Fields("protectterm").Value), "", rsFind.Fields("protectterm").Value)
+    txtYF.Text = IIf(IsNull(rsFind.Fields("sch_yf").Value), "", rsFind.Fields("sch_yf").Value)
+    txtJD.Text = IIf(IsNull(rsFind.Fields("sch_jd").Value), "", rsFind.Fields("sch_jd").Value)
+    txtTH.Text = IIf(IsNull(rsFind.Fields("sch_th").Value), "", rsFind.Fields("sch_th").Value)
+    txtZB.Text = IIf(IsNull(rsFind.Fields("sch_zb").Value), "", rsFind.Fields("sch_zb").Value)
+    txtAmt.Text = IIf(IsNull(rsFind.Fields("ordamt").Value), "", rsFind.Fields("ordamt").Value)
+    txtRemark.Text = IIf(IsNull(rsFind.Fields("remark").Value), "", rsFind.Fields("remark").Value)
+End If
+Set rsFind = Nothing
+
+'***查询Detail Information
+strSql = " SELECT SEQ,ITEMNO,DRAWNO,ORDQTY,UM,UNITPRICE,AMT,REMARK," _
+        & "(select sum(kpqty) from conkp where kpordno=ordno and kpordseq=seq) sumqty," _
+        & "(select sum(kpamt) from conkp where kpordno=ordno and kpordseq=seq) sumamt " _
+        & "FROM CONTRATDETAIL WHERE OLID='Y' AND ORDNO='" & Trim(CmbNO.Text) & "'"
+Set rsFind = cnnAdmdb.Execute(strSql)
+grdHead.RemoveAll
+While Not rsFind.EOF
+    grdHead.AddItem IIf(IsNull(rsFind.Fields("SEQ").Value), "", rsFind.Fields("SEQ").Value) & vbTab & _
+            IIf(IsNull(rsFind.Fields("ITEMNO").Value), "", rsFind.Fields("ITEMNO").Value) & vbTab & _
+            IIf(IsNull(rsFind.Fields("DRAWNO").Value), "", rsFind.Fields("DRAWNO").Value) & vbTab & _
+            IIf(IsNull(rsFind.Fields("ORDQTY").Value), "", rsFind.Fields("ORDQTY").Value) & vbTab & _
+            IIf(IsNull(rsFind.Fields("UM").Value), "", rsFind.Fields("UM").Value) & vbTab & _
+            IIf(IsNull(rsFind.Fields("UNITPRICE").Value), "", rsFind.Fields("UNITPRICE").Value) & vbTab & _
+            IIf(IsNull(rsFind.Fields("AMT").Value), "", rsFind.Fields("AMT").Value) & vbTab & _
+            IIf(IsNull(rsFind.Fields("sumqty").Value), 0, rsFind.Fields("sumqty").Value) & vbTab & _
+            IIf(IsNull(rsFind.Fields("sumamt").Value), 0, rsFind.Fields("sumamt").Value)
+    rsFind.MoveNext
+Wend
+Set rsFind = Nothing
+End Function
+
+//单击头表信息
+Private Sub grdHead_Click()
+    If NeedSave = True Then
+        If MsgBox("开票资料已修改，需要保存吗？", vbYesNo, "提示") = vbYes Then
+            Call SaveDate
+        Else
+            NeedSave = False
+        End If
+    End If
+    
+    If grdHead.Rows > 0 Then
+        grdDetail.RemoveAll
+        grdDetail.Redraw = False
+        Text5.Text = Trim(CmbNO)
+        Text4.Text = grdHead.Columns("序号").Value
+        strSql = "select * from conkp where kpordno='" & Trim(CmbNO) & "' and kpordseq=" & grdHead.Columns("序号").Value
+        Set RsDetail = cnnAdmdb.Execute(strSql)
+        While Not RsDetail.EOF
+            grdDetail.AddItem RsDetail.Fields("kpseq").Value & vbTab & _
+                    RsDetail.Fields("kpno").Value & vbTab & _
+                    RsDetail.Fields("kpqty").Value & vbTab & _
+                    RsDetail.Fields("kpamt").Value & vbTab & _
+                    RsDetail.Fields("kpdate").Value
+            RsDetail.MoveNext
+        Wend
+        Set RsDetail = Nothing
+        
+        grdDetail.Redraw = True
+        Text1.SetFocus
+    End If
+End Sub
+
+//双击明细行
+Private Sub grdDetail_DblClick()
+If grdDetail.SelBookmarks.Count > 0 Then
+    Text1.Text = grdDetail.Columns("发票号码").Value
+    Text2.Text = grdDetail.Columns("开票数量").Value
+    Text3.Text = grdDetail.Columns("开票金额").Value
+    DTPicker1.Value = grdDetail.Columns("开票日期").Value
+End If
+End Sub
+
+//保存
+Private Function SaveDate()
+    Dim i As Integer
+    i = 0
+    If Trim(CmbNO) = "" Then
+        MsgBox "请输入合同号！", , "提示"
+        Exit Function
+    End If
+    If Trim(Text5) = "" Then
+        Exit Function
+    End If
+
+    cnnAdmdb.BeginTrans
+    strSql = "delete from conkp where kpordno='" & Trim(Text5) & "' and kpordseq=" & Trim(Text4)
+    cnnAdmdb.Execute strSql
+    grdDetail.MoveFirst
+    For i = 1 To grdDetail.Rows
+        strSql = "insert into conkp values('" _
+                & Trim(Text5) & "'," _
+                & Trim(Text4) & "," _
+                & grdDetail.Columns("序号").Value & ",'" _
+                & grdDetail.Columns("发票号码").Value & "'," _
+                & grdDetail.Columns("开票数量").Value & "," _
+                & grdDetail.Columns("开票金额").Value & ",'" _
+                & grdDetail.Columns("开票日期").Value & "')"
+        cnnAdmdb.Execute strSql
+        grdDetail.MoveNext
+    Next i
+
+    cnnAdmdb.CommitTrans
+    NeedSave = False
+    Call Find
+    MsgBox "保存成功！", , "系统信息"
+    Exit Function
+
+    ErrHandle:
+        cnnAdmdb.RollbackTrans
+        ShowError
+End Function
+
+//删除 临时删除未保存
+
