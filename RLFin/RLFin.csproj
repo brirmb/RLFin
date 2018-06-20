@@ -108,6 +108,7 @@
     <Content Include="Web\Contract.aspx" />
     <EmbeddedResource Include="Web\Receivable.aspx.js" />
     <Content Include="Web\Invoice.aspx" />
+    <EmbeddedResource Include="Web\Invoice.aspx.js" />
     <Content Include="Web\ReceivableDetailEdit.aspx" />
     <EmbeddedResource Include="Web\ReceivableDetailEdit.aspx.js" />
     <Content Include="Web\ReceivableEdit.aspx" />
