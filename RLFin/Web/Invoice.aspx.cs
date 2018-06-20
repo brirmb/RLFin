@@ -113,6 +113,29 @@ namespace RLFin.Web
         {
             List.PageIndex = e.NewPageIndex;
             this.BindList();
+
+            this.List.SelectedIndex = -1;
+            DetailList.DataSource = null;
+            DetailList.DataBind();
+        }
+
+        protected void List_SelectedIndexChanging(object sender, GridViewSelectEventArgs e)
+        {
+            this.List.SelectedIndex = e.NewSelectedIndex;
+            string no = this.List.DataKeys[this.List.SelectedIndex]["ORDNO"].ToString();
+
+            //绑定详情列表
+            DetailLabel.Visible = true;
+            using (ContractProvider contProvider = new ContractProvider())
+            {
+                DetailList.DataSource = contProvider.GetContractDetailKp(no);
+            }
+            DetailList.DataBind();
+        }
+
+        protected void DetailList_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+
         }
 
         #endregion

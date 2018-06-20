@@ -51,10 +51,10 @@
                                     ToolTip='<%# Eval("avend").ToString().Trim() %>'></asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:BoundField DataField="avend" HeaderText="客户代码" />
-                        <asp:BoundField DataField="avnam" HeaderText="客户名称" />
+                        <asp:BoundField DataField="avend" HeaderText="厂商代码" />
+                        <asp:BoundField DataField="avnam" HeaderText="厂商名称" />
                         <asp:BoundField DataField="avarea" HeaderText="区域" />
-                        <asp:BoundField DataField="avsalr" HeaderText="区域" />
+                        <asp:BoundField DataField="avsalr" HeaderText="联络人" />
                     </Columns>
                 </asp:GridView>
             </div>

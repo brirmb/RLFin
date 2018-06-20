@@ -271,6 +271,16 @@ namespace RLFin.Models
         #region 开票、发货、库存
 
         /// <summary>
+        /// 查询合同明细开票信息
+        /// </summary>
+        public DataTable GetContractDetailKp(string no)
+        {
+            string sql = string.Format("SELECT ORDNO,SEQ,ITEMNO,DRAWNO,ORDQTY,UM,UNITPRICE,AMT,REMARK,(select sum(kpqty) from conkp where kpordno=ordno and kpordseq=seq) sumqty,(select sum(kpamt) from conkp where kpordno=ordno and kpordseq=seq) sumamt FROM CONTRATDETAIL WHERE OLID='Y' AND ORDNO=N'{0}' ", no);
+
+            return this.Query(sql);
+        }
+
+        /// <summary>
         /// 新增开票记录Sql
         /// </summary>
         public string InsertKpSql(string orNo, string orSeq, string kpSeq, string kpNo, string kpQty, string kpAmt, string kpDate)
