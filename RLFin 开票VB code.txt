@@ -91,6 +91,26 @@ If grdDetail.SelBookmarks.Count > 0 Then
 End If
 End Sub
 
+//新增 grid临时保存
+Private Sub SSCommand1_Click()
+    If Trim(Text1) = "" Then
+        MsgBox "请输入发票号码！", , "提示"
+        Exit Sub
+    End If
+    If Trim(Text2) = "" Then
+        MsgBox "请输入开票数量！", , "提示"
+        Exit Sub
+    End If
+    If Trim(Text3) = "" Then
+        MsgBox "请输入开票金额！", , "提示"
+        Exit Sub
+    End If
+
+    grdDetail.AddItem 0 & vbTab & Trim(Text1) & vbTab & Trim(Text2) & vbTab & Trim(Text3) & vbTab & Trim(DTPicker1.Value)
+    Call ReFreshGrid(grdDetail)
+    NeedSave = True
+End Sub
+
 //保存
 Private Function SaveDate()
     Dim i As Integer
@@ -131,5 +151,9 @@ Private Function SaveDate()
         ShowError
 End Function
 
-//删除 临时删除未保存
-
+//删除 临时删除grid未保存
+If grdDetail.SelBookmarks.Count > 0 Then
+            grdDetail.DeleteSelected
+            Call ReFreshGrid(grdDetail)
+            NeedSave = True
+End If
