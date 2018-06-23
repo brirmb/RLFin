@@ -21,8 +21,8 @@ $(function () {
     $("#CreateButton").click(function () {
         iiWeb_ShowDialog(
             "CustomerEdit.aspx",
-            900,
-            600
+            750,
+            550
             );
         return false;
     });
@@ -32,8 +32,8 @@ $(function () {
     $(".ImageButtonEdit").click(function () {
         iiWeb_ShowDialog(
             "CustomerEdit.aspx?ID={0}".format(escape($(this).attr("title"))),
-            900,
-            600
+            750,
+            550
             );
         return false;
     });

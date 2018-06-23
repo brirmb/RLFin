@@ -109,7 +109,7 @@ a {
     }
 
     .ContentMiddle input[type=file], .ContentMiddle select {
-        width: 84%;
+        width: 78%;
     }
 
 .ContentSmall {
@@ -149,6 +149,19 @@ a {
     }
 
     .ContentBig input[type=file], .ContentBig select {
+        width: 93.8%;
+    }
+
+.ContentLarge {
+    width: 320px;
+    height: 35px;
+}
+
+    .ContentLarge input[type=text], .ContentLarge input[type=password], .ContentLarge textarea, .ContentLarge .Panel {
+        width: 92.3%;
+    }
+
+    .ContentLarge input[type=file], .ContentLarge select {
         width: 93.8%;
     }
 
