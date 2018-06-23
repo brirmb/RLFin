@@ -1,0 +1,184 @@
+
+//默认当前日期
+Private Sub Form_Load()
+DTPicker1.Value = Date
+End Sub
+
+//质保金收款查询
+Private Sub grdList_DblClick()
+    Text2.Text = grdList.Columns(0).Value
+    Text7.Text = grdList.Columns(1).Value
+    Text14.Text = grdList.Columns(7).Value
+    Text4.Text = grdList.Columns(2).Value
+    Text8.Text = grdList.Columns(3).Value
+    Text11.Text = grdList.Columns("质保金总额").Value
+    Text5.Text = grdList.Columns("已收质保金额").Value
+    Text9.Text = grdList.Columns("未收质保金额").Value
+    Text6.Text = ""
+    Text10.Text = ""
+    DTPicker2.Value = Date
+    DBGrid1.RemoveAll
+    strSql = "select * from zhibaojin_shoukuan where zbsksono='" & Trim(Text2) & "' and zbsksoseq=" & Trim(Text7) & " and zbskstno='" & grdList.Columns("发货单号").Value & "'  order by zbskseq"
+    Set rsSave = cnnAdmdb.Execute(strSql)
+    Do While Not rsSave.EOF
+        DBGrid1.AddItem rsSave!zbskseq & vbTab & rsSave!zbskamt & vbTab & rsSave!zbskdate
+        rsSave.MoveNext
+    Loop
+End Sub
+
+//质保金收款新增
+Private Sub cmdAdd_Click()
+    Dim i As Integer
+    Dim DbAmt As Double
+
+    If val(Text10.Text) > 0 Then
+        DBGrid1.AddItem 0 & vbTab & Text10.Text & vbTab & DTPicker2.Value
+        Call ReFreshGrid(DBGrid1)
+        DBGrid1.MoveLast
+        strSql = "insert into zhibaojin_shoukuan values('" & Trim(Text2) & "'," & Trim(Text7) _
+                & "," & DBGrid1.Columns(0).Value _
+                & ",'" & grdList.Columns("发货单号").Value _
+                & "'," & DBGrid1.Columns(1).Value _
+                & ",'" & DBGrid1.Columns(2).Value & "')"
+        cnnAdmdb.Execute strSql
+        
+        Text5.Text = val(Text5.Text) + val(Text10.Text)
+        Text9.Text = val(Text11.Text) - val(Text5.Text)
+        
+        strSql = "update zhibaojin set zbskamt=" & Trim(Text5.Text) _
+                & " where zbordno='" & Trim(Text2) & "' and zbseq=" & Trim(Text7) & " and zbstno='" & grdList.Columns("发货单号").Value & "'"
+        cnnAdmdb.Execute strSql
+        
+                grdList.Columns("已收质保金额").Value = IIf(Trim(Text5) = "", 0, Trim(Text5))
+                grdList.Columns("未收质保金额").Value = IIf(Trim(Text9) = "", 0, Trim(Text9))
+
+    End If
+End Sub
+
+//质保金收款更新
+Private Sub CmdUpdate_Click()
+    Dim i As Integer
+    Dim DbAmt As Double
+
+    If Trim(Text6) <> "" Then
+        strSql = "update zhibaojin_shoukuan set zbskamt=" & IIf(Trim(Text10) = "", 0, Trim(Text10)) _
+                & " where zbsksono='" & Trim(Text2) & "' and zbsksoseq=" & Trim(Text7) & " and zbskseq=" & Trim(Text6) & " and zbskstno='" & grdList.Columns("发货单号").Value & "'"
+        cnnAdmdb.Execute strSql
+        strSql = "update zhibaojin set zbskamt=(select sum(zbskamt) from zhibaojin_shoukuan" _
+                & " where zbsksono='" & Trim(Text2) & "' and zbsksoseq=" & Trim(Text7) & ")" _
+                & " where zbordno='" & Trim(Text2) & "' and zbseq=" & Trim(Text7) & " and zbstno='" & grdList.Columns("发货单号").Value & "'"
+        cnnAdmdb.Execute strSql
+        
+        DBGrid1.MoveFirst
+        For i = 0 To DBGrid1.Rows - 1
+            If Trim(DBGrid1.Columns(0).Value) = Trim(Text6) Then
+                DBGrid1.Columns(1).Value = IIf(Trim(Text10) = "", 0, Trim(Text10))
+                Exit For
+            End If
+            DBGrid1.MoveNext
+        Next i
+        
+        DBGrid1.MoveFirst
+        For i = 0 To DBGrid1.Rows - 1
+            DbAmt = DbAmt + DBGrid1.Columns(1).Value
+            DBGrid1.MoveNext
+        Next i
+        Text5.Text = DbAmt
+        Text9.Text = val(Text11.Text) - val(Text5.Text)
+
+                grdList.Columns("已收质保金额").Value = IIf(Trim(Text5) = "", 0, Trim(Text5))
+                grdList.Columns("未收质保金额").Value = IIf(Trim(Text9) = "", 0, Trim(Text9))
+        MsgBox "修改成功！", , "系统信息"
+        
+    End If
+End Sub
+
+//质保金收款删除
+Private Sub CmdDelete_Click()
+    Dim i As Integer
+    Dim DbAmt As Double
+
+    If DBGrid1.SelBookmarks.Count = 1 Then
+        strSql = "delete from zhibaojin_shoukuan " _
+                & " where zbsksono='" & Trim(Text2) & "' and zbsksoseq=" & Trim(Text7) & " and zbskstno='" & grdList.Columns("发货单号").Value & "'"
+        cnnAdmdb.Execute strSql
+        DBGrid1.DeleteSelected
+        Call ReFreshGrid(DBGrid1)
+        
+        DBGrid1.MoveFirst
+        For i = 0 To DBGrid1.Rows - 1
+            strSql = "insert into zhibaojin_shoukuan values('" & Trim(Text2) & "'," & Trim(Text7) _
+                    & "," & DBGrid1.Columns(0).Value & ",'" & grdList.Columns("发货单号").Value & "'," & DBGrid1.Columns(1).Value _
+                    & ",'" & DBGrid1.Columns(2).Value & "')"
+            cnnAdmdb.Execute strSql
+            DbAmt = DbAmt + DBGrid1.Columns(1).Value
+            DBGrid1.MoveNext
+        Next i
+        
+        strSql = "update zhibaojin set zbskamt=" & DbAmt _
+                & " where zbordno='" & Trim(Text2) & "' and zbseq=" & Trim(Text7) & " and zbstno='" & grdList.Columns("发货单号").Value & "'"
+        cnnAdmdb.Execute strSql
+            
+        Text5.Text = DbAmt
+        Text9.Text = val(Text11.Text) - val(Text5.Text)
+
+                grdList.Columns("已收质保金额").Value = IIf(Trim(Text5) = "", 0, Trim(Text5))
+                grdList.Columns("未收质保金额").Value = IIf(Trim(Text9) = "", 0, Trim(Text9))
+        
+        MsgBox "删除成功！", , "系统信息"
+    End If
+End Sub
+
+//质保金提醒列表查询
+Private Function Inquiry()
+    Dim StrNextDate As String
+    Dim DbAmt As Double
+    grdList.RemoveAll
+    strSql = "select * from zhibaojin a,contract b,contratdetail c " _
+            & "where b.ordno=c.ordno and a.zbordno=b.ordno and zbseq=c.seq and b.sch_zb>0 " _
+            & "and a.zbamt* b.sch_zb * 0.01-a.zbskamt>0"
+    If Option1.Value = True Then
+        StrNextDate = DateAdd("d", 15, Date)
+    ElseIf Option2.Value = True Then
+        StrNextDate = DateAdd("d", 30, Date)
+    Else
+        StrNextDate = DTPicker1.Value
+    End If
+    If Trim(txtOrdno) <> "" Then
+        strSql = strSql & " and zbordno='" & Trim(txtOrdno) & "'"
+    End If
+    If Trim(cboCust) <> "" Then
+        strSql = strSql & " and zbcustno=" & Trim(cboCust)
+    End If
+    strSql = strSql & " and datediff(""d"",zblastdate,'" & StrNextDate & "')>=0 order by zbordno,zbseq"
+
+    Set rsSave = cnnAdmdb.Execute(strSql)
+    Do While Not rsSave.EOF
+        grdList.AddItem rsSave!zbordno & vbTab & _
+                        rsSave!zbseq & vbTab & _
+                        rsSave!zbcustno & vbTab & _
+                        rsSave!zbcustname & vbTab & _
+                        rsSave!zbstno & vbTab & _
+                        rsSave!zbqty & vbTab & _
+                        rsSave!zbamt & vbTab & _
+                        rsSave!zbname & vbTab & _
+                        rsSave!zbmapno & vbTab & _
+                        rsSave!um & vbTab & _
+                        rsSave!sch_zb & "%" & vbTab & _
+                        rsSave!zbamt * rsSave!sch_zb * 0.01 & vbTab & _
+                        rsSave!zbskamt & vbTab & _
+                        rsSave!zbamt * rsSave!sch_zb * 0.01 - rsSave!zbskamt & vbTab & _
+                        rsSave!zbshipdate & vbTab & _
+                        IIf(rsSave!zblimit < 1, rsSave!zblimit * 12 & "个月", rsSave!zblimit & "年") & vbTab & _
+                        rsSave!zblastdate
+        DbAmt = DbAmt + rsSave!zbamt * rsSave!sch_zb * 0.01 - rsSave!zbskamt
+        rsSave.MoveNext
+    Loop
+
+    Text1.Text = DbAmt
+End Function
+
+Private Sub txtOrdno_Click()
+cboCust = ""
+txtCustName = ""
+End Sub

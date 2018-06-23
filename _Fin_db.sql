@@ -1,5 +1,16 @@
-﻿delete from [dbo].[iiWeb_Module]
-go
+﻿DELETE FROM [dbo].[iiWeb_Module]
+GO
+
+INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'Config', N'Data', N'基础数据配置', N'基础数据配置', N'Framework/Config.aspx', 2, N'A', N'admin', CAST(0x0000A30701002A74 AS DateTime))
+GO
+INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'Password', N'System', N'密码修改', N'密码修改', N'Framework/Password.aspx', 8, N'S', N'admin', CAST(0x0000A30000000000 AS DateTime))
+GO
+INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'System', N'iiWeb', N'系统', N'系统管理', NULL, 9, N'S', N'admin', CAST(0x0000A30000000000 AS DateTime))
+GO
+INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'User', N'System', N'用户管理', N'用户管理', N'Framework/User.aspx', 2, N'S', N'admin', CAST(0x0000A30000000000 AS DateTime))
+GO
+INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'Data', N'iiWeb', N'基础数据', N'基础数据', NULL, 8, N'A', N'admin', CAST(0x0000A301010E5EEC AS DateTime))
+GO
 
 INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'BaseData', N'iiWeb', N'基础资料维护', NULL, NULL, 4, N'A', N'Admin', getdate())
 GO

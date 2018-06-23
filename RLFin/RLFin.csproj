@@ -107,6 +107,8 @@
     <Content Include="Framework\AuthorityDetail.aspx" />
     <Content Include="Web\Contract.aspx" />
     <Content Include="Web\ZBAlarm.aspx" />
+    <Content Include="Web\ZBAlarmEdit.aspx" />
+    <EmbeddedResource Include="Web\ZBAlarmEdit.aspx.js" />
     <EmbeddedResource Include="Web\ZBAlarm.aspx.js" />
     <EmbeddedResource Include="Web\Receivable.aspx.js" />
     <Content Include="Web\Customer.aspx" />
@@ -379,6 +381,13 @@
     </Compile>
     <Compile Include="Web\ZBAlarm.aspx.designer.cs">
       <DependentUpon>ZBAlarm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Web\ZBAlarmEdit.aspx.cs">
+      <DependentUpon>ZBAlarmEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\ZBAlarmEdit.aspx.designer.cs">
+      <DependentUpon>ZBAlarmEdit.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

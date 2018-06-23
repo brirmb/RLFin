@@ -630,5 +630,33 @@ namespace RLFin.Models
 
         #endregion
 
+        #region 质保金
+
+        /// <summary>
+        /// 查询质保金提醒列表
+        /// </summary>
+        public DataTable GetZbAlarmList(string orNo, string custNo, string date)
+        {
+            StringBuilder sql = new StringBuilder(" select *,a.zbamt*b.sch_zb * 0.01 zbtotal,a.zbamt* b.sch_zb * 0.01-a.zbskamt remainzb from zhibaojin a,contract b,contratdetail c where b.ordno=c.ordno and a.zbordno=b.ordno and zbseq=c.seq and b.sch_zb>0 and a.zbamt* b.sch_zb * 0.01-a.zbskamt>0 ");
+
+            if (!string.IsNullOrWhiteSpace(orNo))
+            {
+                sql.AppendFormat(" and zbordno=N'{0}' ", orNo);
+            }
+            if (!string.IsNullOrWhiteSpace(custNo))
+            {
+                sql.AppendFormat(" and zbcustno=N'{0}' ", custNo);
+            }
+            if (!string.IsNullOrWhiteSpace(orNo))
+            {
+                sql.AppendFormat(" and datediff(day,zblastdate,N'{0}')>=0 ", date);
+            }
+
+            sql.Append(" order by zbordno,zbseq ");
+            return this.Query(sql.ToString());
+        }
+
+        #endregion
+
     }
 }
