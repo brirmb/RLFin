@@ -3,7 +3,7 @@
 
 function iiWeb_DialogCallback(command, args) {
     switch (command) {
-        case "OK":
+        case "OK": //选择客户回调
             $(args.host.frameElement.parentNode).dialog("close");
 
             var returnStr = args.returnStr;

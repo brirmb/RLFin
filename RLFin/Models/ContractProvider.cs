@@ -656,6 +656,91 @@ namespace RLFin.Models
             return this.Query(sql.ToString());
         }
 
+        /// <summary>
+        /// 查询质保金收款信息
+        /// </summary>
+        public DataRow GetZbSkInfo(string orNo, string stNo, string seq)
+        {
+            StringBuilder sql = new StringBuilder(" select *,a.zbamt*b.sch_zb * 0.01 zbtotal,a.zbamt* b.sch_zb * 0.01-a.zbskamt remainzb from zhibaojin a,contract b,contratdetail c where b.ordno=c.ordno and a.zbordno=b.ordno and zbseq=c.seq ");
+
+            if (!string.IsNullOrWhiteSpace(orNo))
+            {
+                sql.AppendFormat(" and a.zbordno=N'{0}' ", orNo);
+            }
+            if (!string.IsNullOrWhiteSpace(stNo))
+            {
+                sql.AppendFormat(" and a.zbstno=N'{0}' ", stNo);
+            }
+            if (!string.IsNullOrWhiteSpace(seq))
+            {
+                sql.AppendFormat(" and a.zbseq=N'{0}' ", seq);
+            }
+
+            var table = this.Query(sql.ToString());
+            if (table != null && table.Rows.Count == 1)
+            {
+                return table.Rows[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 查询质保金收款明细列表
+        /// </summary>
+        public DataTable GetZbSkList(string orNo, string stNo, string seq)
+        {
+            StringBuilder sql = new StringBuilder("select * from zhibaojin_shoukuan where 1=1 ");
+
+            if (!string.IsNullOrWhiteSpace(orNo))
+            {
+                sql.AppendFormat(" and zbsksono=N'{0}' ", orNo);
+            }
+            if (!string.IsNullOrWhiteSpace(stNo))
+            {
+                sql.AppendFormat(" and zbskstno=N'{0}' ", stNo);
+            }
+            if (!string.IsNullOrWhiteSpace(orNo))
+            {
+                sql.AppendFormat(" and zbsksoseq=N'{0}' ", seq);
+            }
+
+            sql.Append(" order by zbskseq ");
+            return this.Query(sql.ToString());
+        }
+
+        /// <summary>
+        /// 新增质保金收款明细sql
+        /// </summary>
+        public string InsertZbSkSql(string orNo, string orSeq, string skSeq, string stNo, string skAmt, string skDate)
+        {
+            string sql = string.Format("insert into zhibaojin_shoukuan values(N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}') ", orNo, orSeq, skSeq, stNo, skAmt, skDate);
+
+            return sql;
+        }
+
+        /// <summary>
+        /// 更新质保金收款金额sql
+        /// </summary>
+        public string UpdateZbSkAmtSql(string orNo, string orSeq, string stNo, string skAmt)
+        {
+            string sql = string.Format("update zhibaojin set zbskamt=N'{3}' where zbordno=N'{0}' and zbseq=N'{1}' and zbstno=N'{2}' ", orNo, orSeq, stNo, skAmt);
+
+            return sql;
+        }
+
+        /// <summary>
+        /// 删除质保金收款明细sql
+        /// </summary>
+        public string DeleteZbSkSql(string orNo, string stNo, string seq)
+        {
+            string sql = string.Format("delete from zhibaojin_shoukuan where zbsksono=N'{0}' and zbsksoseq=N'{1}' and zbskstno=N'{2}' ", orNo, seq, stNo);
+
+            return sql;
+        }
+
         #endregion
 
     }

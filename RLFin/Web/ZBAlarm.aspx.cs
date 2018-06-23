@@ -52,6 +52,12 @@ namespace RLFin.Web
         {
             #region 页面内容
 
+            this.ORDNO.Text = string.Empty;
+            this.Limit.SelectedIndex = 0;
+            this.CUSTNO.Text = string.Empty;
+            this.CUSTNAME.Text = string.Empty;
+            this.ZbRemainTotal.Text = string.Empty;
+
             #endregion
 
             //绑定列表
@@ -62,6 +68,19 @@ namespace RLFin.Web
 
         #region 绑定数据
 
+        protected void Limit_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Limit.SelectedValue == "3")
+            {
+                LimitDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                LimitDate.Visible = true;
+            }
+            else
+            {
+                LimitDate.Visible = false;
+            }
+        }
+
         /// <summary>
         /// 绑定列表
         /// </summary>
@@ -69,7 +88,30 @@ namespace RLFin.Web
         {
             using (ContractProvider contProvider = new ContractProvider())
             {
-                //List.DataSource = contProvider.GetContractHeadInfo(ORDNO.Text.Trim());
+                string date = DateTime.Now.ToString("yyyy-MM-dd");
+                if (Limit.SelectedValue == "1")
+                {
+                    date = DateTime.Now.AddDays(15).ToString("yyyy-MM-dd");
+                }
+                else if (Limit.SelectedValue == "2")
+                {
+                    date = DateTime.Now.AddDays(30).ToString("yyyy-MM-dd");
+                }
+                else
+                {
+                    date = LimitDate.Text.Trim();
+                }
+
+                var table = contProvider.GetZbAlarmList(ORDNO.Text.Trim(), CUSTNO.Text.Trim(), date);
+                List.DataSource = table;
+
+                //剩余质保金总额
+                decimal remainTotal = 0;
+                foreach (DataRow row in table.Rows)
+                {
+                    remainTotal += Util.ToDecimal(row["remainzb"].ToString());
+                }
+                ZbRemainTotal.Text = remainTotal.ToString();
             }
             List.DataBind();
         }
@@ -131,7 +173,17 @@ namespace RLFin.Web
             this.BindList();
         }
 
+        /// <summary>
+        /// 取消
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void CancelButton_Click(object sender, EventArgs e)
+        {
+            this.Initialize();
+        }
         #endregion
+
 
     }
 }

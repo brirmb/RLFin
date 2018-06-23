@@ -20,10 +20,44 @@
                     <li class="Content">
                         <asp:TextBox ID="ORDNO" runat="server"></asp:TextBox>
                     </li>
+                    <li class="Caption">到期选择
+                    </li>
+                    <li class="Content">
+                        <asp:DropDownList ID="Limit" runat="server" AutoPostBack="True" OnSelectedIndexChanged="Limit_SelectedIndexChanged">
+                            <asp:ListItem Value="1">15天到期</asp:ListItem>
+                            <asp:ListItem Value="2">30天到期</asp:ListItem>
+                            <asp:ListItem Value="3">选择到期日</asp:ListItem>
+                        </asp:DropDownList>
+                    </li>
+                    <li class="ContentMiddle">
+                        <asp:TextBox ID="LimitDate" runat="server" CssClass="Date" Visible="False"></asp:TextBox>
+                    </li>
+                    <li class="LineFeed"></li>
+                    <li class="Caption">客户代码
+                    </li>
+                    <li class="Content">
+                        <asp:TextBox ID="CUSTNO" runat="server"></asp:TextBox><asp:LinkButton ID="selCust" Style="display: inline-block;" runat="server" CssClass="ImageButton ImageButtonDetail" ToolTip="选择客户"></asp:LinkButton>
+                    </li>
+                    <li class="Caption">客户名称
+                    </li>
+                    <li class="Content">
+                        <asp:TextBox ID="CUSTNAME" runat="server" Enabled="false"></asp:TextBox>
+                    </li>
+                    <li class="LineFeed"></li>
+
+                    <li class="Caption">未收质保金总额
+                    </li>
+                    <li class="Content">
+                        <asp:TextBox ID="ZbRemainTotal" runat="server" Enabled="False" ForeColor="#D32626"></asp:TextBox>元
+                    </li>
                     <li class="LineFeed"></li>
                     <li class="Button">
                         <asp:Button ID="OKButton" runat="server" Text="<%$ Resources:iiWeb, OKButton %>"
                             OnClick="OKButton_Click" />
+                        <asp:Button ID="CancelButton" runat="server" Text="<%$ Resources:iiWeb, CancelButton %>"
+                            OnClick="CancelButton_Click" />
+                        <asp:Button ID="ExportButton" runat="server" Text="导出"
+                            CssClass="Highlighted" />
                     </li>
                 </ul>
             </div>
