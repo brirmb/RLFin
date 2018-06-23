@@ -24,3 +24,8 @@ INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Statu
 GO
 INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'MakeInvoice', N'Invoice', N'开票', NULL, N'Web/Invoice.aspx', 1, N'A', N'Admin', getdate())
 GO
+
+INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'ReportQuery', N'iiWeb', N'查询与报表', NULL, NULL, 5, N'A', N'Admin', getdate())
+GO
+INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'ZBAlarm', N'ReportQuery', N'质保金到期提醒', NULL, N'Web/ZBAlarm.aspx', 1, N'A', N'Admin', getdate())
+GO

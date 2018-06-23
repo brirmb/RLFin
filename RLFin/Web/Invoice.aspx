@@ -29,14 +29,14 @@
             </div>
             <div class="List">
                 <asp:GridView ID="List" runat="server" EmptyDataText="<%$ Resources:iiWeb, EmptyData %>" PageSize="5"
-                    EnableModelValidation="True" OnPageIndexChanging="List_PageIndexChanging" DataKeyNames="ORDNO" OnRowDataBound="List_RowDataBound" OnSelectedIndexChanging="List_SelectedIndexChanging">
+                    EnableModelValidation="True" OnPageIndexChanging="List_PageIndexChanging" DataKeyNames="ORDNO" OnRowDataBound="List_RowDataBound">
                     <Columns>
-                        <asp:TemplateField HeaderText="详情">
+                        <%-- <asp:TemplateField HeaderText="详情">
                             <ItemTemplate>
                                 <asp:LinkButton ID="RowDetailButton" runat="server" CssClass="ImageButton ImageButtonDetail" CommandName="Select"
                                     ToolTip='<%# Eval("ORDNO").ToString().Trim() %>'></asp:LinkButton>
                             </ItemTemplate>
-                        </asp:TemplateField>
+                        </asp:TemplateField>--%>
                         <asp:BoundField DataField="ORDNO" HeaderText="工令号" />
                         <asp:BoundField DataField="ORDNAME" HeaderText="合同名称" />
                         <asp:BoundField DataField="CUSTNO" HeaderText="客户代码" />
@@ -48,7 +48,7 @@
                 </asp:GridView>
             </div>
             <div class="List">
-                <asp:Label ID="DetailLabel" runat="server" Text="合同明细" Font-Bold="True" Font-Size="15px" ForeColor="Red" Visible="False"></asp:Label>
+                <asp:Label ID="DetailLabel" runat="server" Text="合同明细" Font-Bold="True" Font-Size="15px" ForeColor="Red" Visible="false"></asp:Label>
                 <asp:GridView ID="DetailList" runat="server" EmptyDataText="<%$ Resources:iiWeb, EmptyData %>"
                     EnableModelValidation="True" DataKeyNames="SEQ,ITEMNO" AllowPaging="false" OnRowDataBound="DetailList_RowDataBound">
                     <Columns>

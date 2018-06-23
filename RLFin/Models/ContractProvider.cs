@@ -281,6 +281,19 @@ namespace RLFin.Models
         }
 
         /// <summary>
+        /// 查询开票信息
+        /// </summary>
+        public DataTable GetKpInfo(string orNo, string orSeq = "")
+        {
+            string sql = string.Format("select * from conkp where kpordno=N'{0}' ", orNo);
+            if (!string.IsNullOrWhiteSpace(orSeq))
+            {
+                sql += string.Format(" and kpordseq=N'{0}' ", orSeq);
+            }
+            return this.Query(sql);
+        }
+
+        /// <summary>
         /// 新增开票记录Sql
         /// </summary>
         public string InsertKpSql(string orNo, string orSeq, string kpSeq, string kpNo, string kpQty, string kpAmt, string kpDate)
@@ -292,9 +305,13 @@ namespace RLFin.Models
         /// <summary>
         ///删除开票记录Sql
         /// </summary>
-        public string DeleteKpSql(string orNo)
+        public string DeleteKpSql(string orNo, string orSeq = "")
         {
             string sql = string.Format("delete from conkp where kpordno=N'{0}' ", orNo);
+            if (!string.IsNullOrWhiteSpace(orSeq))
+            {
+                sql += string.Format(" and kpordseq=N'{0}' ", orSeq);
+            }
             return sql;
         }
 

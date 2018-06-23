@@ -66,11 +66,22 @@ namespace RLFin.Web
         /// </summary>
         private void BindList()
         {
+            DetailLabel.Visible = true;
             using (ContractProvider contProvider = new ContractProvider())
             {
-                List.DataSource = contProvider.GetContractHeadList(ORDNO.Text.Trim());
+                List.DataSource = contProvider.GetContractHeadInfo(ORDNO.Text.Trim());
+                DetailList.DataSource = contProvider.GetContractDetailKp(ORDNO.Text.Trim());
             }
             List.DataBind();
+            DetailList.DataBind();
+        }
+
+        /// <summary>
+        /// 绑定合同明细
+        /// </summary>
+        private void BindDetailList()
+        {
+
         }
 
         /// <summary>
@@ -114,24 +125,24 @@ namespace RLFin.Web
             List.PageIndex = e.NewPageIndex;
             this.BindList();
 
-            this.List.SelectedIndex = -1;
-            DetailList.DataSource = null;
-            DetailList.DataBind();
+            //this.List.SelectedIndex = -1;
+            //DetailList.DataSource = null;
+            //DetailList.DataBind();
         }
 
-        protected void List_SelectedIndexChanging(object sender, GridViewSelectEventArgs e)
-        {
-            this.List.SelectedIndex = e.NewSelectedIndex;
-            string no = this.List.DataKeys[this.List.SelectedIndex]["ORDNO"].ToString();
+        //protected void List_SelectedIndexChanging(object sender, GridViewSelectEventArgs e)
+        //{
+        //    this.List.SelectedIndex = e.NewSelectedIndex;
+        //    string no = this.List.DataKeys[this.List.SelectedIndex]["ORDNO"].ToString();
 
-            //绑定详情列表
-            DetailLabel.Visible = true;
-            using (ContractProvider contProvider = new ContractProvider())
-            {
-                DetailList.DataSource = contProvider.GetContractDetailKp(no);
-            }
-            DetailList.DataBind();
-        }
+        //    //绑定详情列表
+        //    DetailLabel.Visible = true;
+        //    using (ContractProvider contProvider = new ContractProvider())
+        //    {
+        //        DetailList.DataSource = contProvider.GetContractDetailKp(no);
+        //    }
+        //    DetailList.DataBind();
+        //}
 
         protected void DetailList_RowDataBound(object sender, GridViewRowEventArgs e)
         {

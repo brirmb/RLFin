@@ -22,8 +22,8 @@ $(function () {
         var seq = $(this).parent().parent().find('td:eq(1)').text();
         iiWeb_ShowDialog(
             "InvoiceEdit.aspx?ID={0}&Seq={1}".format(escape($(this).attr("title")), seq),
-            900,
-            600
+            800,
+            400
             );
         return false;
     });
