@@ -21,7 +21,7 @@ $(function () {
     $("#CreateButton").click(function () {
         iiWeb_ShowDialog(
             "FactoryEdit.aspx",
-            750,
+            760,
             480
             );
         return false;
@@ -32,7 +32,7 @@ $(function () {
     $(".ImageButtonEdit").click(function () {
         iiWeb_ShowDialog(
             "FactoryEdit.aspx?ID={0}".format(escape($(this).attr("title"))),
-            750,
+            760,
             480
             );
         return false;

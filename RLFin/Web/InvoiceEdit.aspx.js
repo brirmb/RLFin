@@ -14,5 +14,10 @@ $(function () {
         }
     });
 
+    // 删除
+
+    $("#DeleteRow").click(function () {
+        return confirm(iiWeb_ConfirmMessage);
+    });
 
 });

@@ -434,6 +434,7 @@ namespace RLFin.Models
             {
                 sql += string.Format(" and code=N'{0}' ", code);
             }
+            sql += " order by code ";
             return this.Query(sql);
         }
 
@@ -492,7 +493,7 @@ namespace RLFin.Models
 
         #endregion
 
-        #region 客户、厂商
+        #region 客户
 
         /// <summary>
         /// 查询客户（按姓名模糊）
@@ -525,18 +526,18 @@ namespace RLFin.Models
         /// <summary>
         /// 获取最大客户代码
         /// </summary>
-        public DataRow GetMaxCustNo()
+        public int GetMaxCustNo()
         {
-            string sql = " select max(rccust) maxCustNo from salrcm ";
+            string sql = " select max(rccust) from salrcm ";
 
-            var table = this.Query(sql);
-            if (table != null && table.Rows.Count == 1)
+            var obj = this.ExecuteScalar(sql);
+            if (obj != null)
             {
-                return table.Rows[0];
+                return Util.ToInt(obj.ToString()) + 1; ;
             }
             else
             {
-                return null;
+                return 1;
             }
         }
 
@@ -554,7 +555,7 @@ namespace RLFin.Models
         /// </summary>
         public int UpdateCustomer(string custNo, string custName, string tradeCond, string area, string prov, string city, string addr1, string addr2, string addr3, string phone1, string phone2, string phone3, string fax1, string fax2, string email1, string email2, string contact, string sales, string curr, string payType, string bank, string account, string taxNo, string creditAmt, string industryCat, string limit, string grade, string kind, string taxRate)
         {
-            string sql = string.Format("update salrcm set rcnam=N'{1}',rctrc=N'{2}',rcarea=N'{3}',rcprov=N'{4}',rccoty=N'{5}',rcadr1=N'{6}',rcadr2=N'{7}',rcadr3=N'{8}',rcpon1=N'{9}',rcpon2=N'{10}',rcpon3=N'{11}',rcfax1=N'{12}',rcfax2=N'{13}',rcemai1=N'{14}',rcemai2=N'{15}',rcctat=N'{16}',rcsalr=N'{17}',rccur=N'{18}',rcterm=N'{19}',rcbank=N'{20}',rcacct=N'{21}',rctcod=N'{22}',rccrd=N'{23}',rchyb=N'{24}',rcdflg=N'{25}',rcgrad=N'{26}',rckind=N'{27}',rctax=N'{28}' where rcid='A'and rccust=N'{0}' ", custNo, custName, tradeCond, area, prov, city, addr1, addr2, addr3, phone1, phone2, phone3, fax1, fax2, email1, email2, contact, sales, curr, payType, bank, account, taxNo, creditAmt, industryCat, limit, grade, kind, taxRate);
+            string sql = string.Format("update salrcm set rcnam=N'{1}',rctrc=N'{2}',rcarea=N'{3}',rcprov=N'{4}',rccoty=N'{5}',rcadr1=N'{6}',rcadr2=N'{7}',rcadr3=N'{8}',rcpon1=N'{9}',rcpon2=N'{10}',rcpon3=N'{11}',rcfax1=N'{12}',rcfax2=N'{13}',rcemai1=N'{14}',rcemai2=N'{15}',rcctat=N'{16}',rcsalr=N'{17}',rccur=N'{18}',rcterm=N'{19}',rcbank=N'{20}',rcacct=N'{21}',rctcod=N'{22}',rccrd=N'{23}',rchyb=N'{24}',rcdflg=N'{25}',rcgrad=N'{26}',rckind=N'{27}',rctax=N'{28}' where rcid='A' and rccust=N'{0}' ", custNo, custName, tradeCond, area, prov, city, addr1, addr2, addr3, phone1, phone2, phone3, fax1, fax2, email1, email2, contact, sales, curr, payType, bank, account, taxNo, creditAmt, industryCat, limit, grade, kind, taxRate);
             return this.Execute(sql);
         }
 
@@ -601,11 +602,29 @@ namespace RLFin.Models
         }
 
         /// <summary>
+        /// 查询最新的厂商代码
+        /// </summary>
+        public int GetMaxFactoryNo()
+        {
+            string sql = " select max(avend) from puravm ";
+
+            var obj = this.ExecuteScalar(sql);
+            if (obj != null)
+            {
+                return Util.ToInt(obj.ToString()) + 1; ;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+        /// <summary>
         /// 新增厂商
         /// </summary>
         public int InsertFactory(string no, string name, string area, string prov, string city, string addr1, string addr2, string addr3, string phone1, string phone2, string phone3, string fax1, string fax2, string email1, string email2, string contact, string sales, string curr, string payType, string tradeCond, string bank, string account, string taxNo, string industryCat, string taxRate)
         {
-            string sql = string.Format("insert into puravm(avid,avend,avnam,avarea,avprov,avcoty,avadr1,avadr2,avadr3,avpon1,avpon2,avpon3,avfax1,avfax2,avemai1,avemai2,avctat,avsalr,avcur,avterm,avtrc,avbank,avacct,atcod,avhyb,avtax) Values( 'A',N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{7}',N'{8}',N'{9}',N'{10}',N'{11}',N'{12}',N'{13}',N'{14}',N'{15}',N'{16}',N'{17}',N'{18}',N'{19}',N'{20}',N'{21}',N'{22}',0,N'{23}',N'{24}' ) ", no, name, area, prov, city, addr1, addr2, addr3, phone1, phone2, phone3, fax1, fax2, email1, email2, contact, sales, curr, payType, tradeCond, bank, account, taxNo, industryCat, taxRate);
+            string sql = string.Format("insert into puravm(avid,avend,avnam,avarea,avprov,avcoty,avadr1,avadr2,avadr3,avpon1,avpon2,avpon3,avfax1,avfax2,avemai1,avemai2,avctat,avsalr,avcur,avterm,avtrc,avbank,avacct,atcod,avhyb,avtax) Values( 'A',N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}',N'{7}',N'{8}',N'{9}',N'{10}',N'{11}',N'{12}',N'{13}',N'{14}',N'{15}',N'{16}',N'{17}',N'{18}',N'{19}',N'{20}',N'{21}',N'{22}',N'{23}',N'{24}' ) ", no, name, area, prov, city, addr1, addr2, addr3, phone1, phone2, phone3, fax1, fax2, email1, email2, contact, sales, curr, payType, tradeCond, bank, account, taxNo, industryCat, taxRate);
             return this.Execute(sql);
         }
 
@@ -614,7 +633,7 @@ namespace RLFin.Models
         /// </summary>
         public int UpdateFactory(string no, string name, string area, string prov, string city, string addr1, string addr2, string addr3, string phone1, string phone2, string phone3, string fax1, string fax2, string email1, string email2, string contact, string sales, string curr, string payType, string tradeCond, string bank, string account, string taxNo, string industryCat, string taxRate)
         {
-            string sql = string.Format("update puravm set avnam=N'{1}',avarea=N'{2}',avprov=N'{3}',avcoty=N'{4}',avadr1=N'{5}',avadr2=N'{6}',avadr3=N'{7}',avpon1=N'{8}',avpon2=N'{9}',avpon3=N'{10}',avfax1=N'{11}',avfax2=N'{12}',avemai1=N'{13}',avemai2=N'{14}',avctat=N'{15}',avsalr=N'{16}',avcur=N'{17}',avterm=N'{18}',avtrc=N'{19}',avbank=N'{20}',avacct=N'{21}',atcod=N'{22}',avhyb=N'{23}',avtax=N'{24}' and avend=N'{0}' ", no, name, area, prov, city, addr1, addr2, addr3, phone1, phone2, phone3, fax1, fax2, email1, email2, contact, sales, curr, payType, tradeCond, bank, account, taxNo, industryCat, taxRate);
+            string sql = string.Format("update puravm set avnam=N'{1}',avarea=N'{2}',avprov=N'{3}',avcoty=N'{4}',avadr1=N'{5}',avadr2=N'{6}',avadr3=N'{7}',avpon1=N'{8}',avpon2=N'{9}',avpon3=N'{10}',avfax1=N'{11}',avfax2=N'{12}',avemai1=N'{13}',avemai2=N'{14}',avctat=N'{15}',avsalr=N'{16}',avcur=N'{17}',avterm=N'{18}',avtrc=N'{19}',avbank=N'{20}',avacct=N'{21}',atcod=N'{22}',avhyb=N'{23}',avtax=N'{24}' where avid ='A' and avend=N'{0}' ", no, name, area, prov, city, addr1, addr2, addr3, phone1, phone2, phone3, fax1, fax2, email1, email2, contact, sales, curr, payType, tradeCond, bank, account, taxNo, industryCat, taxRate);
             return this.Execute(sql);
         }
 

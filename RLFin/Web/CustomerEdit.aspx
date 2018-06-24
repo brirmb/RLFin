@@ -18,147 +18,149 @@
                     <li class="CaptionMiddle">客户代码
                     </li>
                     <li class="ContentMiddle">
-                        <asp:TextBox ID="ORDNO" runat="server" CssClass="Required"></asp:TextBox>
+                        <asp:TextBox ID="rccust" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="CaptionMiddle">客户名称
                     </li>
                     <li class="ContentBig">
-                        <asp:TextBox ID="Seq" runat="server" CssClass="Required"></asp:TextBox>
+                        <asp:TextBox ID="rcnam" runat="server" CssClass="Required"></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="CaptionMiddle">区域
                     </li>
                     <li class="ContentMiddle">
-                        <asp:DropDownList ID="CURR" runat="server" CssClass="Required">
+                        <asp:DropDownList ID="rcarea" runat="server" CssClass="Required">
                         </asp:DropDownList>
                     </li>
                     <li class="CaptionMiddle">省份
                     </li>
                     <li class="ContentMiddle">
-                        <asp:TextBox ID="TextBox2" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcprov" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="CaptionMiddle">县市
                     </li>
                     <li class="ContentMiddle">
-                        <asp:TextBox ID="TextBox1" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rccoty" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="CaptionMiddle">地址
                     </li>
                     <li class="ContentLarge">
-                        <asp:TextBox ID="TextBox3" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcadr1" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="CaptionMiddle">电话号码</li>
                     <li class="Content">
-                        <asp:TextBox ID="TextBox6" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcpon1" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="CaptionMiddle"></li>
                     <li class="ContentLarge">
-                        <asp:TextBox ID="TextBox4" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcadr2" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="CaptionMiddle"></li>
                     <li class="Content">
-                        <asp:TextBox ID="TextBox7" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcpon2" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="CaptionMiddle"></li>
                     <li class="ContentLarge">
-                        <asp:TextBox ID="TextBox5" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcadr3" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="CaptionMiddle"></li>
                     <li class="Content">
-                        <asp:TextBox ID="TextBox8" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcpon3" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="CaptionMiddle">传真号码</li>
                     <li class="Content">
-                        <asp:TextBox ID="TextBox9" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcfax1" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="Content">
-                        <asp:TextBox ID="TextBox10" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcfax2" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="CaptionMiddle">业务员</li>
                     <li class="ContentMiddle">
-                        <asp:DropDownList ID="DropDownList4" runat="server" CssClass="Required">
+                        <asp:DropDownList ID="rcsalr" runat="server" CssClass="">
                         </asp:DropDownList>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="CaptionMiddle">电子邮件</li>
                     <li class="Content">
-                        <asp:TextBox ID="TextBox11" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcemai1" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="Content">
-                        <asp:TextBox ID="TextBox12" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcemai2" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="CaptionMiddle">联络人</li>
                     <li class="ContentMiddle">
-                        <asp:TextBox ID="TextBox14" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcctat" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="CaptionMiddle">付款方式
                     </li>
                     <li class="ContentMiddle">
-                        <asp:DropDownList ID="DropDownList1" runat="server" CssClass="Required">
+                        <asp:DropDownList ID="rcterm" runat="server" CssClass="">
                         </asp:DropDownList>
                     </li>
                     <li class="CaptionMiddle">交易条件
                     </li>
                     <li class="ContentMiddle">
-                        <asp:DropDownList ID="DropDownList2" runat="server" CssClass="Required">
+                        <asp:DropDownList ID="rctrc" runat="server" CssClass="">
                         </asp:DropDownList>
                     </li>
                     <li class="CaptionMiddle">币别
                     </li>
                     <li class="ContentMiddle">
-                        <asp:DropDownList ID="DropDownList3" runat="server" CssClass="Required">
+                        <asp:DropDownList ID="rccur" runat="server" CssClass="">
                         </asp:DropDownList>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="CaptionMiddle">开户银行</li>
                     <li class="ContentLarge">
-                        <asp:TextBox ID="TextBox15" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcbank" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="CaptionMiddle">银行账号</li>
                     <li class="Content">
-                        <asp:TextBox ID="TextBox17" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcacct" runat="server" CssClass="Integer"></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="CaptionMiddle">行业别</li>
                     <li class="ContentMiddle">
-                        <asp:TextBox ID="TextBox18" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rchyb" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="CaptionMiddle">税率代码</li>
                     <li class="ContentMiddle">
-                        <asp:DropDownList ID="DropDownList5" runat="server" CssClass="Required">
+                        <asp:DropDownList ID="rctax" runat="server" CssClass="">
                         </asp:DropDownList>
                     </li>
                     <li class="CaptionMiddle">税号</li>
                     <li class="Content">
-                        <asp:TextBox ID="TextBox16" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rctcod" runat="server" CssClass="Integer"></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="CaptionMiddle">可用额度</li>
                     <li class="ContentMiddle">
-                        <asp:TextBox ID="TextBox13" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcamt" runat="server" CssClass="Float"></asp:TextBox>
                     </li>
                     <li class="CaptionMiddle">信用额度</li>
                     <li class="ContentMiddle">
-                        <asp:TextBox ID="TextBox19" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rccrd" runat="server" CssClass="Float"></asp:TextBox>
                     </li>
                     <li class="CaptionMiddle">客户级别</li>
                     <li class="ContentMiddle">
-                        <asp:TextBox ID="TextBox20" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rcgrad" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="CaptionMiddle">是否有额度限制</li>
                     <li class="ContentMiddle">
-                        <asp:DropDownList ID="DropDownList6" runat="server" CssClass="Required">
+                        <asp:DropDownList ID="rcdflg" runat="server" CssClass="">
+                            <asp:ListItem>Y</asp:ListItem>
+                            <asp:ListItem>N</asp:ListItem>
                         </asp:DropDownList>
                     </li>
                     <li class="CaptionMiddle">行销通路类别</li>
                     <li class="ContentMiddle">
-                        <asp:TextBox ID="TextBox21" runat="server" CssClass=""></asp:TextBox>
+                        <asp:TextBox ID="rckind" runat="server" CssClass=""></asp:TextBox>
                     </li>
                     <li class="Button">
                         <asp:Button ID="OKButton" runat="server" Text="<%$ Resources:iiWeb, OKButton %>"
