@@ -1,0 +1,466 @@
+
+//合同台账
+//查询
+Case "find"
+            strSql = " select ordno,custno,custname,curr,ordamt From contract Where ohid='Y' "
+            If Trim(txtOrdno.Text) <> "" Then
+                strSql = strSql & " AND ordno = '" & Trim(txtOrdno.Text) & "'"
+            End If
+            If Trim(cboCust.Text) <> "" Then
+                strSql = strSql & " AND custno = '" & Trim(cboCust.Text) & "'"
+            End If
+            If Trim(txtCustName.Text) <> "" Then
+                strSql = strSql & " AND custname like '%" & Trim(txtCustName.Text) & "%'"
+            End If
+            
+            strSql = strSql & " AND signdate >= '" & Format(Trim(txtFrom.Value), "yyyymmdd") & "'"
+        
+        
+            strSql = strSql & " AND signdate <= '" & Format(Trim(txtTo.Value), "yyyymmdd") & "'"
+        
+            strSql = strSql & " order by ordno"
+            Set rsFind = cnnAdmdb.Execute(strSql)
+            grdList.RemoveAll
+            grdDetail.RemoveAll
+            While Not rsFind.EOF
+                grdList.AddItem rsFind.Fields(0).Value & vbTab & _
+                                rsFind.Fields(1).Value & vbTab & _
+                                rsFind.Fields(2).Value & vbTab & _
+                                rsFind.Fields(3).Value & vbTab & _
+                                rsFind.Fields(4).Value
+                rsFind.MoveNext
+            Wend
+            Set rsFind = Nothing
+
+//单击合同查询详情
+Private Sub grdList_Click()
+    intTotalSelRows = grdList.SelBookmarks.Count
+    If intTotalSelRows = 0 Then
+        MsgBox "请选中一行!", vbInformation, "提示"
+        Screen.MousePointer = vbDefault
+        Exit Sub
+    End If
+    varBMark = grdList.SelBookmarks(0)
+    grdList.Bookmark = grdList.SelBookmarks(0)
+    strSONo = Trim(grdList.Columns("工令号").Text)
+    strSql = "select seq,itemno,drawno,ordqty,um,unitprice,amt,deliverydate," _
+            & "isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0) shipqty," _
+            & "isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpqty," _
+            & "isnull((select sum(kpamt) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpamt,contratdetail.remark " _
+            & "from contratdetail,contract where olid='Y' and contratdetail.ordno='" & strSONo & "'" _
+            & "and contratdetail.ordno=contract.ordno"
+    Set rsFind = cnnAdmdb.Execute(strSql)
+    grdDetail.RemoveAll
+    While Not rsFind.EOF
+        grdDetail.AddItem rsFind.Fields(0).Value & vbTab & _
+                rsFind.Fields(1).Value & vbTab & _
+                rsFind.Fields(2).Value & vbTab & _
+                rsFind.Fields(3).Value & vbTab & _
+                rsFind.Fields(4).Value & vbTab & _
+                rsFind.Fields(5).Value & vbTab & _
+                rsFind.Fields(6).Value & vbTab & _
+                rsFind.Fields(7).Value & vbTab & _
+                rsFind.Fields(8).Value & vbTab & _
+                rsFind.Fields(9).Value & vbTab & _
+                rsFind.Fields(10).Value & vbTab & _
+                IIf(rsFind.Fields(6).Value - rsFind.Fields(10).Value < 0, "", rsFind.Fields(6).Value - rsFind.Fields(10).Value) & vbTab & _
+                IIf(rsFind.Fields(8).Value - rsFind.Fields(9).Value < 0, "", rsFind.Fields(8).Value - rsFind.Fields(9).Value) & vbTab & _
+                IIf(rsFind.Fields(5).Value * rsFind.Fields(8).Value - rsFind.Fields(10).Value < 0, "", rsFind.Fields(5).Value * rsFind.Fields(8).Value - rsFind.Fields(10).Value) & vbTab & _
+                IIf(rsFind.Fields(9).Value - rsFind.Fields(8).Value < 0, "", rsFind.Fields(9).Value - rsFind.Fields(8).Value) & vbTab & _
+                IIf(rsFind.Fields(10).Value - rsFind.Fields(5).Value * rsFind.Fields(8).Value < 0, "", rsFind.Fields(10).Value - rsFind.Fields(5).Value * rsFind.Fields(8).Value) & vbTab & _
+                rsFind.Fields(11).Value
+        rsFind.MoveNext
+    Wend
+End Sub
+
+
+//开票交货明细页面
+//已开票未交货
+Private Sub Command2_Click()
+Dim str As String
+    
+    dbTotalAmt = 0
+    
+    If Trim(txtOrdno.Text) <> "" Then
+        str = str & " AND contract.ordno = '" & Trim(txtOrdno.Text) & "'"
+    End If
+    If Trim(cboCust.Text) <> "" Then
+        str = str & " AND custno = '" & Trim(cboCust.Text) & "'"
+    End If
+    If Trim(txtCustName.Text) <> "" Then
+        str = str & " AND custname like '%" & Trim(txtCustName.Text) & "%'"
+    End If
+    str = str & " AND signdate >= '" & Format(Trim(txtFrom.Value), "yyyymmdd") & "'"
+    str = str & " AND signdate <= '" & Format(Trim(txtTo.Value), "yyyymmdd") & "' "
+            
+    SSDBGrid1.RemoveAll
+    strSql = "select contract.ordno,seq,custno,custname,itemno,drawno,ordqty,um,unitprice,amt,deliverydate," _
+            & "isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0) shipqty," _
+            & "isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpqty," _
+            & "isnull((select sum(kpamt) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpamt,contratdetail.remark,signdate " _
+            & "from contratdetail,contract where olid='Y' " _
+            & "and contratdetail.ordno=contract.ordno " & str _
+            & "and isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0)<" _
+            & "isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0)" _
+            & " order by 1,2"
+    Set rsFind = cnnAdmdb.Execute(strSql)
+    SSDBGrid1.RemoveAll
+    While Not rsFind.EOF
+        SSDBGrid1.AddItem rsFind.Fields(0).Value & vbTab & _
+                rsFind.Fields(15).Value & vbTab & _
+                rsFind.Fields(2).Value & vbTab & _
+                rsFind.Fields(3).Value & vbTab & _
+                rsFind.Fields(1).Value & vbTab & _
+                rsFind.Fields(4).Value & vbTab & _
+                rsFind.Fields(5).Value & vbTab & _
+                rsFind.Fields(6).Value & vbTab & _
+                rsFind.Fields(7).Value & vbTab & _
+                rsFind.Fields(8).Value & vbTab & _
+                rsFind.Fields(9).Value & vbTab & _
+                rsFind.Fields(10).Value & vbTab & _
+                rsFind.Fields(11).Value & vbTab & _
+                rsFind.Fields(12).Value & vbTab & _
+                rsFind.Fields(13).Value & vbTab & _
+                Round(IIf(rsFind.Fields(9).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(9).Value - rsFind.Fields(13).Value), 2) & vbTab & _
+                IIf(rsFind.Fields(11).Value - rsFind.Fields(12).Value < 0, "", rsFind.Fields(11).Value - rsFind.Fields(12).Value) & vbTab & _
+                Round(IIf(rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value), 2) & vbTab & _
+                IIf(rsFind.Fields(12).Value - rsFind.Fields(11).Value < 0, "", rsFind.Fields(12).Value - rsFind.Fields(11).Value) & vbTab & _
+                Round(IIf(rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value < 0, "0", rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value), 2) & vbTab & _
+                rsFind.Fields(14).Value
+        dbTotalAmt = dbTotalAmt + Round(IIf(rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value < 0, "0", rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value), 2)
+        rsFind.MoveNext
+        
+    Wend
+    Set rsFind = Nothing
+    
+    TxtTotalAmt = dbTotalAmt
+    Label3.Caption = Command2.Caption + "总金额"
+End Sub
+
+//已交货未开票
+Private Sub Command4_Click()
+Dim str As String
+    
+    dbTotalAmt = 0
+    
+    If Trim(txtOrdno.Text) <> "" Then
+        str = str & " AND contract.ordno = '" & Trim(txtOrdno.Text) & "'"
+    End If
+    If Trim(cboCust.Text) <> "" Then
+        str = str & " AND custno = '" & Trim(cboCust.Text) & "'"
+    End If
+    If Trim(txtCustName.Text) <> "" Then
+        str = str & " AND custname like '%" & Trim(txtCustName.Text) & "%'"
+    End If
+    str = str & " AND signdate >= '" & Format(Trim(txtFrom.Value), "yyyymmdd") & "'"
+    str = str & " AND signdate <= '" & Format(Trim(txtTo.Value), "yyyymmdd") & "' "
+            
+    SSDBGrid1.RemoveAll
+    strSql = "select contract.ordno,seq,custno,custname,itemno,drawno,ordqty,um,unitprice,amt,deliverydate," _
+            & "isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0) shipqty," _
+            & "isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpqty," _
+            & "isnull((select sum(kpamt) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpamt,contratdetail.remark,signdate " _
+            & "from contratdetail,contract where olid='Y' " _
+            & "and contratdetail.ordno=contract.ordno " & str _
+            & "and isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0)>" _
+            & "isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0)" _
+            & " order by 1,2"
+    Set rsFind = cnnAdmdb.Execute(strSql)
+    SSDBGrid1.RemoveAll
+    While Not rsFind.EOF
+        SSDBGrid1.AddItem rsFind.Fields(0).Value & vbTab & _
+                rsFind.Fields(15).Value & vbTab & _
+                rsFind.Fields(2).Value & vbTab & _
+                rsFind.Fields(3).Value & vbTab & _
+                rsFind.Fields(1).Value & vbTab & _
+                rsFind.Fields(4).Value & vbTab & _
+                rsFind.Fields(5).Value & vbTab & _
+                rsFind.Fields(6).Value & vbTab & _
+                rsFind.Fields(7).Value & vbTab & _
+                rsFind.Fields(8).Value & vbTab & _
+                rsFind.Fields(9).Value & vbTab & _
+                rsFind.Fields(10).Value & vbTab & _
+                rsFind.Fields(11).Value & vbTab & _
+                rsFind.Fields(12).Value & vbTab & _
+                rsFind.Fields(13).Value & vbTab & _
+                Round(IIf(rsFind.Fields(9).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(9).Value - rsFind.Fields(13).Value), 2) & vbTab & _
+                IIf(rsFind.Fields(11).Value - rsFind.Fields(12).Value < 0, "", rsFind.Fields(11).Value - rsFind.Fields(12).Value) & vbTab & _
+                Round(IIf(rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value), 2) & vbTab & _
+                IIf(rsFind.Fields(12).Value - rsFind.Fields(11).Value < 0, "", rsFind.Fields(12).Value - rsFind.Fields(11).Value) & vbTab & _
+                Round(IIf(rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value < 0, "0", rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value), 2) & vbTab & _
+                rsFind.Fields(14).Value
+        dbTotalAmt = dbTotalAmt + Round(IIf(rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value), 2)
+        rsFind.MoveNext
+    Wend
+    Set rsFind = Nothing
+    
+    TxtTotalAmt = dbTotalAmt
+    Label3.Caption = Command4.Caption + "总金额"
+End Sub
+
+//未开票未交货
+Private Sub Command7_Click()
+Dim str As String
+
+    dbTotalAmt = 0
+    
+    If Trim(txtOrdno.Text) <> "" Then
+        str = str & " AND contract.ordno = '" & Trim(txtOrdno.Text) & "'"
+    End If
+    If Trim(cboCust.Text) <> "" Then
+        str = str & " AND custno = '" & Trim(cboCust.Text) & "'"
+    End If
+    If Trim(txtCustName.Text) <> "" Then
+        str = str & " AND custname like '%" & Trim(txtCustName.Text) & "%'"
+    End If
+    str = str & " AND signdate >= '" & Format(Trim(txtFrom.Value), "yyyymmdd") & "'"
+    str = str & " AND signdate <= '" & Format(Trim(txtTo.Value), "yyyymmdd") & "' "
+            
+    SSDBGrid1.RemoveAll
+    strSql = "select contract.ordno,seq,custno,custname,itemno,drawno,ordqty,um,unitprice,amt,deliverydate," _
+            & "isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0) shipqty," _
+            & "isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpqty," _
+            & "isnull((select sum(kpamt) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpamt,contratdetail.remark,signdate " _
+            & "from contratdetail,contract where olid='Y' " _
+            & "and contratdetail.ordno=contract.ordno " & str _
+            & "and isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0)=0 " _
+            & "and isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0)=0 " _
+            & " order by 1,2"
+    Set rsFind = cnnAdmdb.Execute(strSql)
+    SSDBGrid1.RemoveAll
+    While Not rsFind.EOF
+        SSDBGrid1.AddItem rsFind.Fields(0).Value & vbTab & _
+                rsFind.Fields(15).Value & vbTab & _
+                rsFind.Fields(2).Value & vbTab & _
+                rsFind.Fields(3).Value & vbTab & _
+                rsFind.Fields(1).Value & vbTab & _
+                rsFind.Fields(4).Value & vbTab & _
+                rsFind.Fields(5).Value & vbTab & _
+                rsFind.Fields(6).Value & vbTab & _
+                rsFind.Fields(7).Value & vbTab & _
+                rsFind.Fields(8).Value & vbTab & _
+                rsFind.Fields(9).Value & vbTab & _
+                rsFind.Fields(10).Value & vbTab & _
+                rsFind.Fields(11).Value & vbTab & _
+                rsFind.Fields(12).Value & vbTab & _
+                rsFind.Fields(13).Value & vbTab & _
+                Round(IIf(rsFind.Fields(9).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(9).Value - rsFind.Fields(13).Value), 2) & vbTab & _
+                IIf(rsFind.Fields(11).Value - rsFind.Fields(12).Value < 0, "", rsFind.Fields(11).Value - rsFind.Fields(12).Value) & vbTab & _
+                Round(IIf(rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value), 2) & vbTab & _
+                IIf(rsFind.Fields(12).Value - rsFind.Fields(11).Value < 0, "", rsFind.Fields(12).Value - rsFind.Fields(11).Value) & vbTab & _
+                Round(IIf(rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value < 0, "0", rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value), 2) & vbTab & _
+                rsFind.Fields(14).Value
+        dbTotalAmt = dbTotalAmt + rsFind.Fields(9).Value
+        rsFind.MoveNext
+    Wend
+    Set rsFind = Nothing
+    TxtTotalAmt = dbTotalAmt
+    Label3.Caption = Command7.Caption + "总金额"
+End Sub
+
+//已开票已交货
+Private Sub Command8_Click()
+Dim str As String
+
+    dbTotalAmt = 0
+    
+    If Trim(txtOrdno.Text) <> "" Then
+        str = str & " AND contract.ordno = '" & Trim(txtOrdno.Text) & "'"
+    End If
+    If Trim(cboCust.Text) <> "" Then
+        str = str & " AND custno = '" & Trim(cboCust.Text) & "'"
+    End If
+    If Trim(txtCustName.Text) <> "" Then
+        str = str & " AND custname like '%" & Trim(txtCustName.Text) & "%'"
+    End If
+    str = str & " AND signdate >= '" & Format(Trim(txtFrom.Value), "yyyymmdd") & "'"
+    str = str & " AND signdate <= '" & Format(Trim(txtTo.Value), "yyyymmdd") & "' "
+            
+    SSDBGrid1.RemoveAll
+    strSql = "select contract.ordno,seq,custno,custname,itemno,drawno,ordqty,um,unitprice,amt,deliverydate," _
+            & "isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0) shipqty," _
+            & "isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpqty," _
+            & "isnull((select sum(kpamt) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpamt,contratdetail.remark,signdate " _
+            & "from contratdetail,contract where olid='Y' " _
+            & "and contratdetail.ordno=contract.ordno " & str _
+            & "and isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0)=" _
+            & "isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0) " _
+            & "and isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0)=ordqty " _
+            & " order by 1,2"
+    Set rsFind = cnnAdmdb.Execute(strSql)
+    SSDBGrid1.RemoveAll
+    While Not rsFind.EOF
+        SSDBGrid1.AddItem rsFind.Fields(0).Value & vbTab & _
+                rsFind.Fields(15).Value & vbTab & _
+                rsFind.Fields(2).Value & vbTab & _
+                rsFind.Fields(3).Value & vbTab & _
+                rsFind.Fields(1).Value & vbTab & _
+                rsFind.Fields(4).Value & vbTab & _
+                rsFind.Fields(5).Value & vbTab & _
+                rsFind.Fields(6).Value & vbTab & _
+                rsFind.Fields(7).Value & vbTab & _
+                rsFind.Fields(8).Value & vbTab & _
+                rsFind.Fields(9).Value & vbTab & _
+                rsFind.Fields(10).Value & vbTab & _
+                rsFind.Fields(11).Value & vbTab & _
+                rsFind.Fields(12).Value & vbTab & _
+                rsFind.Fields(13).Value & vbTab & _
+                Round(IIf(rsFind.Fields(9).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(9).Value - rsFind.Fields(13).Value), 2) & vbTab & _
+                IIf(rsFind.Fields(11).Value - rsFind.Fields(12).Value < 0, "", rsFind.Fields(11).Value - rsFind.Fields(12).Value) & vbTab & _
+                Round(IIf(rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value), 2) & vbTab & _
+                IIf(rsFind.Fields(12).Value - rsFind.Fields(11).Value < 0, "", rsFind.Fields(12).Value - rsFind.Fields(11).Value) & vbTab & _
+                Round(IIf(rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value < 0, "0", rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value), 2) & vbTab & _
+                rsFind.Fields(14).Value
+        dbTotalAmt = dbTotalAmt + rsFind.Fields(9).Value
+        rsFind.MoveNext
+    Wend
+    Set rsFind = Nothing
+    TxtTotalAmt = dbTotalAmt
+    Label3.Caption = Command8.Caption + "总金额"
+End Sub
+
+//全部
+Private Sub Command9_Click()
+Dim str As String
+    
+    dbTotalAmt = 0
+    
+    If Trim(txtOrdno.Text) <> "" Then
+        str = str & " AND contract.ordno = '" & Trim(txtOrdno.Text) & "'"
+    End If
+    If Trim(cboCust.Text) <> "" Then
+        str = str & " AND custno = '" & Trim(cboCust.Text) & "'"
+    End If
+    If Trim(txtCustName.Text) <> "" Then
+        str = str & " AND custname like '%" & Trim(txtCustName.Text) & "%'"
+    End If
+    str = str & " AND signdate >= '" & Format(Trim(txtFrom.Value), "yyyymmdd") & "'"
+    str = str & " AND signdate <= '" & Format(Trim(txtTo.Value), "yyyymmdd") & "' "
+            
+    SSDBGrid1.RemoveAll
+    strSql = "select contract.ordno,seq,custno,custname,itemno,drawno,ordqty,um,unitprice,amt,deliverydate," _
+            & "isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0) shipqty," _
+            & "isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpqty," _
+            & "isnull((select sum(kpamt) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpamt,contratdetail.remark,signdate " _
+            & "from contratdetail,contract where olid='Y' " _
+            & "and contratdetail.ordno=contract.ordno " & str _
+            & " order by 1,2"
+    Set rsFind = cnnAdmdb.Execute(strSql)
+    SSDBGrid1.RemoveAll
+    While Not rsFind.EOF
+        SSDBGrid1.AddItem rsFind.Fields(0).Value & vbTab & _
+                rsFind.Fields(15).Value & vbTab & _
+                rsFind.Fields(2).Value & vbTab & _
+                rsFind.Fields(3).Value & vbTab & _
+                rsFind.Fields(1).Value & vbTab & _
+                rsFind.Fields(4).Value & vbTab & _
+                rsFind.Fields(5).Value & vbTab & _
+                rsFind.Fields(6).Value & vbTab & _
+                rsFind.Fields(7).Value & vbTab & _
+                rsFind.Fields(8).Value & vbTab & _
+                rsFind.Fields(9).Value & vbTab & _
+                rsFind.Fields(10).Value & vbTab & _
+                rsFind.Fields(11).Value & vbTab & _
+                rsFind.Fields(12).Value & vbTab & _
+                rsFind.Fields(13).Value & vbTab & _
+                Round(IIf(rsFind.Fields(9).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(9).Value - rsFind.Fields(13).Value), 2) & vbTab & _
+                IIf(rsFind.Fields(11).Value - rsFind.Fields(12).Value < 0, "", rsFind.Fields(11).Value - rsFind.Fields(12).Value) & vbTab & _
+                Round(IIf(rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value), 2) & vbTab & _
+                IIf(rsFind.Fields(12).Value - rsFind.Fields(11).Value < 0, "", rsFind.Fields(12).Value - rsFind.Fields(11).Value) & vbTab & _
+                Round(IIf(rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value < 0, "0", rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value), 2) & vbTab & _
+                rsFind.Fields(14).Value
+        dbTotalAmt = dbTotalAmt + rsFind.Fields(9).Value
+        rsFind.MoveNext
+    Wend
+    Set rsFind = Nothing
+    TxtTotalAmt = dbTotalAmt
+    Label3.Caption = "总金额"
+End Sub
+
+
+//合同汇总
+//查询
+ Case "find"
+            strSql = " select ordno,ordname,custno,custname,signdate,deliverydate,curr,ordamt, " & _
+                     " ordamt*sch_yf*0.01,ordamt*sch_jd*0.01,ordamt*sch_th*0.01,ordamt*sch_zb*0.01, " & _
+                     " protectterm , remark " & _
+                     " From contract " & _
+                     " Where ohid='Y' "
+                     
+            If Trim(CmbSoFr.Text) <> "" Then
+                strSql = strSql & " AND ordno >= '" & Trim(CmbSoFr.Text) & "'"
+            End If
+            If Trim(CmbSoTo.Text) <> "" Then
+                strSql = strSql & " AND ordno <= '" & Trim(CmbSoTo.Text) & "'"
+            End If
+            
+            If Trim(cboCust.Text) <> "" Then
+                strSql = strSql & " AND custno = '" & Trim(cboCust.Text) & "'"
+            End If
+            If Trim(txtCustName.Text) <> "" Then
+                strSql = strSql & " AND custname like '%" & Trim(txtCustName.Text) & "%'"
+            End If
+            If Trim(txtFrom.Value) <> "" Then
+                strSql = strSql & " AND signdate >= '" & Format(txtFrom.Value, "yyyymmdd") & "'"
+            End If
+            If Trim(txtTo.Value) <> "" Then
+                strSql = strSql & " AND signdate <= '" & Format(txtTo.Value, "yyyymmdd") & "'"
+            End If
+            If Trim(Text4) <> "" Then
+                strSql = strSql & " and ordno in(select ordno from contratdetail where itemno like '%" & Trim(Text4) & "%')"
+            End If
+            
+            strSql = strSql & " order by ordno"
+            Set rsFind = cnnAdmdb.Execute(strSql)
+            grdList.RemoveAll
+            grdDetail.RemoveAll
+            While Not rsFind.EOF
+                intI = intI + 1
+                DbAmt = DbAmt + rsFind.Fields(7).Value
+                grdList.AddItem rsFind.Fields(0).Value & vbTab & _
+                                rsFind.Fields(1).Value & vbTab & _
+                                rsFind.Fields(2).Value & vbTab & _
+                                rsFind.Fields(3).Value & vbTab & _
+                                rsFind.Fields(4).Value & vbTab & _
+                                rsFind.Fields(5).Value & vbTab & _
+                                rsFind.Fields(6).Value & vbTab & _
+                                rsFind.Fields(7).Value & vbTab & _
+                                rsFind.Fields(8).Value & vbTab & _
+                                rsFind.Fields(9).Value & vbTab & _
+                                rsFind.Fields(10).Value & vbTab & _
+                                rsFind.Fields(11).Value & vbTab & _
+                                rsFind.Fields(12).Value & vbTab & _
+                                rsFind.Fields(13).Value
+                rsFind.MoveNext
+            Wend
+            Set rsFind = Nothing
+            Text1.Text = intI
+            Text2.Text = DbAmt
+
+
+//单击合同查询详情
+Private Sub grdList_Click()
+    intTotalSelRows = grdList.SelBookmarks.Count
+    If intTotalSelRows = 0 Then
+        MsgBox "请选中一行!", vbInformation, "提示"
+        Screen.MousePointer = vbDefault
+        Exit Sub
+    End If
+    varBMark = grdList.SelBookmarks(0)
+    grdList.Bookmark = grdList.SelBookmarks(0)
+    strSONo = Trim(grdList.Columns("工令号").Text)
+    strSql = "select seq,itemno,drawno,ordqty,um,unitprice,amt,remark from contratdetail where olid='Y' and ordno='" & strSONo & "'"
+    Set rsFind = cnnAdmdb.Execute(strSql)
+    grdDetail.RemoveAll
+    While Not rsFind.EOF
+        grdDetail.AddItem rsFind.Fields(0).Value & vbTab & _
+                        rsFind.Fields(1).Value & vbTab & _
+                        rsFind.Fields(2).Value & vbTab & _
+                        rsFind.Fields(3).Value & vbTab & _
+                        rsFind.Fields(4).Value & vbTab & _
+                        rsFind.Fields(5).Value & vbTab & _
+                        rsFind.Fields(6).Value & vbTab & _
+                        rsFind.Fields(7).Value
+        rsFind.MoveNext
+    Wend
+End Sub
