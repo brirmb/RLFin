@@ -666,7 +666,7 @@ namespace RLFin.Models
             {
                 sql.AppendFormat(" and zbcustno=N'{0}' ", custNo);
             }
-            if (!string.IsNullOrWhiteSpace(orNo))
+            if (!string.IsNullOrWhiteSpace(date))
             {
                 sql.AppendFormat(" and datediff(day,zblastdate,N'{0}')>=0 ", date);
             }
@@ -721,7 +721,7 @@ namespace RLFin.Models
             {
                 sql.AppendFormat(" and zbskstno=N'{0}' ", stNo);
             }
-            if (!string.IsNullOrWhiteSpace(orNo))
+            if (!string.IsNullOrWhiteSpace(seq))
             {
                 sql.AppendFormat(" and zbsksoseq=N'{0}' ", seq);
             }
@@ -758,6 +758,161 @@ namespace RLFin.Models
             string sql = string.Format("delete from zhibaojin_shoukuan where zbsksono=N'{0}' and zbsksoseq=N'{1}' and zbskstno=N'{2}' ", orNo, seq, stNo);
 
             return sql;
+        }
+
+        #endregion
+
+        #region 报表查询
+
+        /// <summary>
+        /// 合同台帐列表
+        /// </summary>
+        public DataTable GetContractList(string orNo, string custNo, string custName, string dateFrom, string dateTo)
+        {
+            StringBuilder sql = new StringBuilder(" select ordno,custno,custname,curr,ordamt From contract Where ohid='Y' ");
+
+            if (!string.IsNullOrWhiteSpace(orNo))
+            {
+                sql.AppendFormat(" and ordno=N'{0}' ", orNo);
+            }
+            if (!string.IsNullOrWhiteSpace(custNo))
+            {
+                sql.AppendFormat(" and custno=N'{0}' ", custNo);
+            }
+            if (!string.IsNullOrWhiteSpace(custName))
+            {
+                sql.AppendFormat(" and custname like N'%{0}%' ", custName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dateFrom))
+            {
+                sql.AppendFormat(" AND signdate >=N'{0}' ", dateFrom);
+            }
+            if (!string.IsNullOrWhiteSpace(dateTo))
+            {
+                sql.AppendFormat(" AND signdate <=N'{0}' ", dateTo);
+            }
+
+            sql.Append(" order by ordno ");
+            return this.Query(sql.ToString());
+        }
+
+        /// <summary>
+        /// 合同发货开票详情
+        /// </summary>
+        public DataTable GetContractStatsDetail(string orNo)
+        {
+            StringBuilder sql = new StringBuilder(@"
+                        select seq,itemno,drawno,ordqty,um,unitprice,amt,deliverydate,
+                            isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0) shipqty,
+                            isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpqty,
+                            isnull((select sum(kpamt) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpamt,contratdetail.remark
+                        from contratdetail,contract where olid='Y' and contratdetail.ordno=contract.ordno
+                        ");
+
+            if (!string.IsNullOrWhiteSpace(orNo))
+            {
+                sql.AppendFormat(" and contratdetail.ordno=N'{0}' ", orNo);
+            }
+
+            return this.Query(sql.ToString());
+        }
+
+        /// <summary>
+        /// 开票交货明细 type 全部0，已开票未交货1，已交货未开票2，未开票未交货3，已开票已交货4
+        /// </summary>
+        public DataTable GetShipKpDetailList(int type, string orNo, string custNo, string custName, string dateFrom, string dateTo)
+        {
+            StringBuilder sql = new StringBuilder(@"
+                                    select contract.ordno,seq,custno,custname,itemno,drawno,ordqty,um,unitprice,amt,deliverydate,
+                                        isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0) shipqty,
+                                        isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpqty,
+                                        isnull((select sum(kpamt) from conkp where contract.ordno=kpordno and kpordseq=seq),0) kpamt,
+                                        contratdetail.remark,signdate
+                                    from contratdetail,contract 
+                                    where olid='Y'
+                                    and contratdetail.ordno=contract.ordno
+                                    ");
+
+            if (!string.IsNullOrWhiteSpace(orNo))
+            {
+                sql.AppendFormat(" and contract.ordno=N'{0}' ", orNo);
+            }
+            if (!string.IsNullOrWhiteSpace(custNo))
+            {
+                sql.AppendFormat(" and custno=N'{0}' ", custNo);
+            }
+            if (!string.IsNullOrWhiteSpace(custName))
+            {
+                sql.AppendFormat(" and custname like N'%{0}%' ", custName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dateFrom))
+            {
+                sql.AppendFormat(" AND signdate >=N'{0}' ", dateFrom);
+            }
+            if (!string.IsNullOrWhiteSpace(dateTo))
+            {
+                sql.AppendFormat(" AND signdate <=N'{0}' ", dateTo);
+            }
+            switch (type)
+            {
+                case 0: //全部
+                    break;
+                case 1: //已开票未交货1
+                    sql.Append(" and isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0)<isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0) ");
+                    break;
+                case 2: //已交货未开票2
+                    sql.Append(" and isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0)>isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0) ");
+                    break;
+                case 3: //未开票未交货3
+                    sql.Append(" and isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0)=0 and isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0)=0 ");
+                    break;
+                case 4: //已开票已交货4
+                    sql.Append(" and isnull((select sum(shipqact) from shiping where shipsono=contract.ordno and shipseq=seq),0)=isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0) and isnull((select sum(kpqty) from conkp where contract.ordno=kpordno and kpordseq=seq),0)=ordqty ");
+                    break;
+            }
+
+            sql.Append(@" order by 1, 2 ");
+            return this.Query(sql.ToString());
+        }
+
+        /// <summary>
+        /// 合同汇总
+        /// </summary>
+        public DataTable GetContractSummary(string orNo, string custNo, string custName, string dateFrom, string dateTo, string itemNo)
+        {
+            StringBuilder sql = new StringBuilder(" select ordno,ordname,custno,custname,signdate,deliverydate,curr,ordamt,ordamt*sch_yf*0.01,ordamt*sch_jd*0.01,ordamt*sch_th*0.01,ordamt*sch_zb*0.01,protectterm , remark From contract Where ohid='Y' ");
+
+            if (!string.IsNullOrWhiteSpace(orNo))
+            {
+                sql.AppendFormat(" and ordno=N'{0}' ", orNo);
+            }
+            if (!string.IsNullOrWhiteSpace(custNo))
+            {
+                sql.AppendFormat(" and custno=N'{0}' ", custNo);
+            }
+            if (!string.IsNullOrWhiteSpace(custName))
+            {
+                sql.AppendFormat(" and custname like N'%{0}%' ", custName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dateFrom))
+            {
+                sql.AppendFormat(" AND signdate >=N'{0}' ", dateFrom);
+            }
+            if (!string.IsNullOrWhiteSpace(dateTo))
+            {
+                sql.AppendFormat(" AND signdate <=N'{0}' ", dateTo);
+            }
+
+            if (!string.IsNullOrWhiteSpace(itemNo))
+            {
+                sql.AppendFormat(" and ordno in(select ordno from contratdetail where itemno like '%N'{0}'%') ", itemNo);
+            }
+
+            sql.Append(" order by ordno ");
+            return this.Query(sql.ToString());
         }
 
         #endregion

@@ -40,7 +40,7 @@ INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Statu
 GO
 INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'ZBAlarm', N'ReportQuery', N'质保金到期提醒', NULL, N'Web/ZBAlarm.aspx', 1, N'A', N'Admin', getdate())
 GO
-INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'ZBAlarm', N'ReportQuery', N'合同台帐', NULL, N'Web/ContractStats.aspx', 2, N'A', N'Admin', getdate())
+INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'ContractStats', N'ReportQuery', N'合同台帐', NULL, N'Web/ContractStats.aspx', 2, N'A', N'Admin', getdate())
 GO
-INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'ZBAlarm', N'ReportQuery', N'合同汇总', NULL, N'Web/ContractSummary.aspx', 3, N'A', N'Admin', getdate())
+INSERT [dbo].[iiWeb_Module] ([ID], [PID], [Name], [Remark], [URL], [SEQ], [Status], [MUser], [MTime]) VALUES (N'ContractSummary', N'ReportQuery', N'合同汇总', NULL, N'Web/ContractSummary.aspx', 3, N'A', N'Admin', getdate())
 GO
