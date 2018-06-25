@@ -1,17 +1,17 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ContractStats.aspx.cs" Inherits="RLFin.Web.ContractStats" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ContractKpShip.aspx.cs" Inherits="RLFin.Web.ContractKpShip" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>合同台帐</title>
+    <title>开票交货明细</title>
 </head>
 <body>
     <form id="form1" runat="server">
         <div class="Page">
             <div class="Title">
-                <asp:Label ID="PageTitle" runat="server" Text="合同台帐"></asp:Label>
+                <asp:Label ID="PageTitle" runat="server" Text="开票交货明细"></asp:Label>
             </div>
             <div class="Operating">
                 <ul>
@@ -22,8 +22,12 @@
                     </li>
                     <li class="LineFeed"></li>
                     <li class="Button">
-                        <asp:Button ID="OKButton" runat="server" Text="<%$ Resources:iiWeb, OKButton %>"
+                        <asp:Button ID="OKButton" runat="server" Text="全部"
                             OnClick="OKButton_Click" />
+                        <asp:Button ID="KpNoShip" runat="server" Text="已开票未交货" OnClick="KpNoShip_Click" />
+                        <asp:Button ID="ShipNoKp" runat="server" Text="已交货未开票" OnClick="ShipNoKp_Click" />
+                        <asp:Button ID="NoKpNoShip" runat="server" Text="未开票未交货" OnClick="NoKpNoShip_Click" />
+                        <asp:Button ID="KpShip" runat="server" Text="已开票已交货" OnClick="KpShip_Click" />
                         <asp:Button ID="CancelButton" runat="server" Text="<%$ Resources:iiWeb, CancelButton %>"
                             OnClick="CancelButton_Click" />
                     </li>
@@ -43,30 +47,6 @@
                         <asp:BoundField DataField="avnam" HeaderText="厂商名称" />
                         <asp:BoundField DataField="avarea" HeaderText="区域" />
                         <asp:BoundField DataField="avsalr" HeaderText="联络人" />
-                    </Columns>
-                </asp:GridView>
-            </div>
-
-            <div class="List">
-                <asp:Label ID="DetailLabel" runat="server" Text="合同明细" Font-Bold="True" Font-Size="15px" ForeColor="Red" Visible="false"></asp:Label>
-                <asp:GridView ID="DetailList" runat="server" EmptyDataText="<%$ Resources:iiWeb, EmptyData %>"
-                    EnableModelValidation="True" DataKeyNames="SEQ,ITEMNO" AllowPaging="false" OnRowDataBound="DetailList_RowDataBound">
-                    <Columns>
-                        <asp:TemplateField HeaderText="<%$ Resources:iiWeb, EditCaption %>">
-                            <ItemTemplate>
-                                <asp:LinkButton ID="RowEditButton" runat="server" CssClass="ImageButton ImageButtonEdit"
-                                    ToolTip='<%# Eval("ORDNO").ToString().Trim() %>'></asp:LinkButton>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:BoundField DataField="SEQ" HeaderText="序号" />
-                        <asp:BoundField DataField="ITEMNO" HeaderText="名称" />
-                        <asp:BoundField DataField="DRAWNO" HeaderText="图号/代号" />
-                        <asp:BoundField DataField="ORDQTY" HeaderText="数量" />
-                        <asp:BoundField DataField="UM" HeaderText="单位" />
-                        <asp:BoundField DataField="UNITPRICE" HeaderText="单价" />
-                        <asp:BoundField DataField="AMT" HeaderText="总价" />
-                        <asp:BoundField DataField="sumqty" HeaderText="已开票数量" />
-                        <asp:BoundField DataField="sumamt" HeaderText="已开票金额" />
                     </Columns>
                 </asp:GridView>
             </div>

@@ -10,7 +10,7 @@
 namespace RLFin.Web {
     
     
-    public partial class ContractSummary {
+    public partial class ContractKpShip {
         
         /// <summary>
         /// form1 控件。
@@ -49,6 +49,42 @@ namespace RLFin.Web {
         protected global::System.Web.UI.WebControls.Button OKButton;
         
         /// <summary>
+        /// KpNoShip 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button KpNoShip;
+        
+        /// <summary>
+        /// ShipNoKp 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ShipNoKp;
+        
+        /// <summary>
+        /// NoKpNoShip 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button NoKpNoShip;
+        
+        /// <summary>
+        /// KpShip 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button KpShip;
+        
+        /// <summary>
         /// CancelButton 控件。
         /// </summary>
         /// <remarks>
@@ -65,23 +101,5 @@ namespace RLFin.Web {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView List;
-        
-        /// <summary>
-        /// DetailLabel 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label DetailLabel;
-        
-        /// <summary>
-        /// DetailList 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView DetailList;
     }
 }

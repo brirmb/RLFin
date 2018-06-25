@@ -106,8 +106,12 @@
     <Content Include="Default.aspx" />
     <Content Include="Framework\AuthorityDetail.aspx" />
     <Content Include="Web\Contract.aspx" />
+    <Content Include="Web\ContractKpShip.aspx" />
+    <Content Include="Web\ContractKpShip.aspx.js" />
     <Content Include="Web\ContractStats.aspx" />
+    <EmbeddedResource Include="Web\ContractStats.aspx.js" />
     <Content Include="Web\ContractSummary.aspx" />
+    <EmbeddedResource Include="Web\ContractSummary.aspx.js" />
     <Content Include="Web\ZBAlarm.aspx" />
     <Content Include="Web\ZBAlarmEdit.aspx" />
     <EmbeddedResource Include="Web\ZBAlarmEdit.aspx.js" />
@@ -306,6 +310,13 @@
     </Compile>
     <Compile Include="Web\ContractEdit.aspx.designer.cs">
       <DependentUpon>ContractEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Web\ContractKpShip.aspx.cs">
+      <DependentUpon>ContractKpShip.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\ContractKpShip.aspx.designer.cs">
+      <DependentUpon>ContractKpShip.aspx</DependentUpon>
     </Compile>
     <Compile Include="Web\ContractStats.aspx.cs">
       <DependentUpon>ContractStats.aspx</DependentUpon>
