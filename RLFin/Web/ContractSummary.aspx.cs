@@ -68,7 +68,7 @@ namespace RLFin.Web
         {
             using (ContractProvider contProvider = new ContractProvider())
             {
-                List.DataSource = contProvider.GetFactoryByName(FactName.Text.Trim());
+                List.DataSource = contProvider.GetFactoryByName(ORDNO.Text.Trim());
             }
             List.DataBind();
         }

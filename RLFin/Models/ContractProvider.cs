@@ -882,7 +882,7 @@ namespace RLFin.Models
         /// </summary>
         public DataTable GetContractSummary(string orNo, string custNo, string custName, string dateFrom, string dateTo, string itemNo)
         {
-            StringBuilder sql = new StringBuilder(" select ordno,ordname,custno,custname,signdate,deliverydate,curr,ordamt,ordamt*sch_yf*0.01,ordamt*sch_jd*0.01,ordamt*sch_th*0.01,ordamt*sch_zb*0.01,protectterm , remark From contract Where ohid='Y' ");
+            StringBuilder sql = new StringBuilder(" select ordno,ordname,custno,custname,signdate,deliverydate,curr,ordamt,ordamt*sch_yf*0.01 yf,ordamt*sch_jd*0.01 jd,ordamt*sch_th*0.01 th,ordamt*sch_zb*0.01 zb,protectterm , remark From contract Where ohid='Y' ");
 
             if (!string.IsNullOrWhiteSpace(orNo))
             {

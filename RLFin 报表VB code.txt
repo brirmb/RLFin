@@ -57,17 +57,17 @@ Private Sub grdList_Click()
                 rsFind.Fields(2).Value & vbTab & _
                 rsFind.Fields(3).Value & vbTab & _
                 rsFind.Fields(4).Value & vbTab & _
-                rsFind.Fields(5).Value & vbTab & _
-                rsFind.Fields(6).Value & vbTab & _
+                rsFind.Fields(5).Value & vbTab & _  //单价
+                rsFind.Fields(6).Value & vbTab & _  //明细 总价
                 rsFind.Fields(7).Value & vbTab & _
-                rsFind.Fields(8).Value & vbTab & _
-                rsFind.Fields(9).Value & vbTab & _
-                rsFind.Fields(10).Value & vbTab & _
-                IIf(rsFind.Fields(6).Value - rsFind.Fields(10).Value < 0, "", rsFind.Fields(6).Value - rsFind.Fields(10).Value) & vbTab & _
-                IIf(rsFind.Fields(8).Value - rsFind.Fields(9).Value < 0, "", rsFind.Fields(8).Value - rsFind.Fields(9).Value) & vbTab & _
-                IIf(rsFind.Fields(5).Value * rsFind.Fields(8).Value - rsFind.Fields(10).Value < 0, "", rsFind.Fields(5).Value * rsFind.Fields(8).Value - rsFind.Fields(10).Value) & vbTab & _
-                IIf(rsFind.Fields(9).Value - rsFind.Fields(8).Value < 0, "", rsFind.Fields(9).Value - rsFind.Fields(8).Value) & vbTab & _
-                IIf(rsFind.Fields(10).Value - rsFind.Fields(5).Value * rsFind.Fields(8).Value < 0, "", rsFind.Fields(10).Value - rsFind.Fields(5).Value * rsFind.Fields(8).Value) & vbTab & _
+                rsFind.Fields(8).Value & vbTab & _  //已交货数量
+                rsFind.Fields(9).Value & vbTab & _  //已开票数量
+                rsFind.Fields(10).Value & vbTab & _  //已开票金额
+                IIf(rsFind.Fields(6).Value - rsFind.Fields(10).Value < 0, "", rsFind.Fields(6).Value - rsFind.Fields(10).Value) & vbTab & _  //未开票金额
+                IIf(rsFind.Fields(8).Value - rsFind.Fields(9).Value < 0, "", rsFind.Fields(8).Value - rsFind.Fields(9).Value) & vbTab & _  //已交货未开票数量
+                IIf(rsFind.Fields(5).Value * rsFind.Fields(8).Value - rsFind.Fields(10).Value < 0, "", rsFind.Fields(5).Value * rsFind.Fields(8).Value - rsFind.Fields(10).Value) & vbTab & _ //已交货未开票金额
+                IIf(rsFind.Fields(9).Value - rsFind.Fields(8).Value < 0, "", rsFind.Fields(9).Value - rsFind.Fields(8).Value) & vbTab & _  //已开票未交货数量
+                IIf(rsFind.Fields(10).Value - rsFind.Fields(5).Value * rsFind.Fields(8).Value < 0, "", rsFind.Fields(10).Value - rsFind.Fields(5).Value * rsFind.Fields(8).Value) & vbTab & _  //已开票未交货金额
                 rsFind.Fields(11).Value
         rsFind.MoveNext
     Wend
@@ -115,19 +115,19 @@ Dim str As String
                 rsFind.Fields(5).Value & vbTab & _
                 rsFind.Fields(6).Value & vbTab & _
                 rsFind.Fields(7).Value & vbTab & _
-                rsFind.Fields(8).Value & vbTab & _
-                rsFind.Fields(9).Value & vbTab & _
+                rsFind.Fields(8).Value & vbTab & _  //单价
+                rsFind.Fields(9).Value & vbTab & _  //明细 总价
                 rsFind.Fields(10).Value & vbTab & _
-                rsFind.Fields(11).Value & vbTab & _
-                rsFind.Fields(12).Value & vbTab & _
-                rsFind.Fields(13).Value & vbTab & _
-                Round(IIf(rsFind.Fields(9).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(9).Value - rsFind.Fields(13).Value), 2) & vbTab & _
-                IIf(rsFind.Fields(11).Value - rsFind.Fields(12).Value < 0, "", rsFind.Fields(11).Value - rsFind.Fields(12).Value) & vbTab & _
-                Round(IIf(rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value), 2) & vbTab & _
-                IIf(rsFind.Fields(12).Value - rsFind.Fields(11).Value < 0, "", rsFind.Fields(12).Value - rsFind.Fields(11).Value) & vbTab & _
-                Round(IIf(rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value < 0, "0", rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value), 2) & vbTab & _
+                rsFind.Fields(11).Value & vbTab & _  //已交货数量
+                rsFind.Fields(12).Value & vbTab & _  //已开票数量
+                rsFind.Fields(13).Value & vbTab & _  //已开票金额
+                Round(IIf(rsFind.Fields(9).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(9).Value - rsFind.Fields(13).Value), 2) & vbTab & _   //未开票金额
+                IIf(rsFind.Fields(11).Value - rsFind.Fields(12).Value < 0, "", rsFind.Fields(11).Value - rsFind.Fields(12).Value) & vbTab & _   //已交货未开票数量
+                Round(IIf(rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value < 0, "0", rsFind.Fields(8).Value * rsFind.Fields(11).Value - rsFind.Fields(13).Value), 2) & vbTab & _  //已交货未开票金额
+                IIf(rsFind.Fields(12).Value - rsFind.Fields(11).Value < 0, "", rsFind.Fields(12).Value - rsFind.Fields(11).Value) & vbTab & _  //已开票未交货数量
+                Round(IIf(rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value < 0, "0", rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value), 2) & vbTab & _   //已开票未交货金额
                 rsFind.Fields(14).Value
-        dbTotalAmt = dbTotalAmt + Round(IIf(rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value < 0, "0", rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value), 2)
+        dbTotalAmt = dbTotalAmt + Round(IIf(rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value < 0, "0", rsFind.Fields(13).Value - rsFind.Fields(8).Value * rsFind.Fields(11).Value), 2)  //已开票未交货总金额
         rsFind.MoveNext
         
     Wend

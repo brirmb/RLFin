@@ -15,10 +15,29 @@
             </div>
             <div class="Operating">
                 <ul>
-                    <li class="Caption">厂商名称
+                    <li class="Caption">工令号
                     </li>
                     <li class="Content">
-                        <asp:TextBox ID="FactName" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="ORDNO" runat="server"></asp:TextBox>
+                    </li>
+                    <li class="Caption">合同日期
+                    </li>
+                    <li class=" ContentMiddle">
+                        <asp:TextBox ID="DateFrom" runat="server" CssClass="Date"></asp:TextBox>~
+                    </li>
+                    <li class=" ContentMiddle">
+                        <asp:TextBox ID="DateTo" runat="server" CssClass="Date"></asp:TextBox>
+                    </li>
+                    <li class="LineFeed"></li>
+                    <li class="Caption">客户代码
+                    </li>
+                    <li class="Content">
+                        <asp:TextBox ID="CUSTNO" runat="server"></asp:TextBox><asp:LinkButton ID="selCust" Style="display: inline-block;" runat="server" CssClass="ImageButton ImageButtonDetail" ToolTip="选择客户"></asp:LinkButton>
+                    </li>
+                    <li class="Caption">客户名称
+                    </li>
+                    <li class="Content">
+                        <asp:TextBox ID="CUSTNAME" runat="server" Enabled="false"></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="Button">
@@ -31,18 +50,19 @@
             </div>
             <div class="List">
                 <asp:GridView ID="List" runat="server" EmptyDataText="<%$ Resources:iiWeb, EmptyData %>"
-                    EnableModelValidation="True" OnPageIndexChanging="List_PageIndexChanging" DataKeyNames="avend" OnRowDataBound="List_RowDataBound" OnSelectedIndexChanging="List_SelectedIndexChanging">
+                    EnableModelValidation="True" OnPageIndexChanging="List_PageIndexChanging" DataKeyNames="ordno" OnRowDataBound="List_RowDataBound" OnSelectedIndexChanging="List_SelectedIndexChanging">
                     <Columns>
                         <asp:TemplateField HeaderText="详情">
                             <ItemTemplate>
                                 <asp:LinkButton ID="RowDetailButton" runat="server" CssClass="ImageButton ImageButtonDetail" CommandName="Select"
-                                    ToolTip='<%# Eval("ORDNO").ToString().Trim() %>'></asp:LinkButton>
+                                    ToolTip='<%# Eval("ordno").ToString().Trim() %>'></asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:BoundField DataField="avend" HeaderText="厂商代码" />
-                        <asp:BoundField DataField="avnam" HeaderText="厂商名称" />
-                        <asp:BoundField DataField="avarea" HeaderText="区域" />
-                        <asp:BoundField DataField="avsalr" HeaderText="联络人" />
+                        <asp:BoundField DataField="ordno" HeaderText="工令号" />
+                        <asp:BoundField DataField="custno" HeaderText="客户代码" />
+                        <asp:BoundField DataField="custname" HeaderText="客户名称" />
+                        <asp:BoundField DataField="curr" HeaderText="币别" />
+                        <asp:BoundField DataField="ordamt" HeaderText="金额" />
                     </Columns>
                 </asp:GridView>
             </div>
@@ -52,21 +72,31 @@
                 <asp:GridView ID="DetailList" runat="server" EmptyDataText="<%$ Resources:iiWeb, EmptyData %>"
                     EnableModelValidation="True" DataKeyNames="SEQ,ITEMNO" AllowPaging="false" OnRowDataBound="DetailList_RowDataBound">
                     <Columns>
-                        <asp:TemplateField HeaderText="<%$ Resources:iiWeb, EditCaption %>">
+                        <%--<asp:TemplateField HeaderText="<%$ Resources:iiWeb, EditCaption %>">
                             <ItemTemplate>
                                 <asp:LinkButton ID="RowEditButton" runat="server" CssClass="ImageButton ImageButtonEdit"
-                                    ToolTip='<%# Eval("ORDNO").ToString().Trim() %>'></asp:LinkButton>
+                                    ToolTip='<%# Eval("ITEMNO").ToString().Trim() %>'></asp:LinkButton>
                             </ItemTemplate>
-                        </asp:TemplateField>
+                        </asp:TemplateField>--%>
                         <asp:BoundField DataField="SEQ" HeaderText="序号" />
                         <asp:BoundField DataField="ITEMNO" HeaderText="名称" />
                         <asp:BoundField DataField="DRAWNO" HeaderText="图号/代号" />
                         <asp:BoundField DataField="ORDQTY" HeaderText="数量" />
                         <asp:BoundField DataField="UM" HeaderText="单位" />
                         <asp:BoundField DataField="UNITPRICE" HeaderText="单价" />
-                        <asp:BoundField DataField="AMT" HeaderText="总价" />
-                        <asp:BoundField DataField="sumqty" HeaderText="已开票数量" />
-                        <asp:BoundField DataField="sumamt" HeaderText="已开票金额" />
+                        <asp:BoundField DataField="AMT" HeaderText="金额" />
+                        <asp:BoundField DataField="deliverydate" HeaderText="约定交货" />
+                        <asp:BoundField DataField="shipqty" HeaderText="已交货数量" />
+                        <asp:BoundField DataField="kpqty" HeaderText="已开票数量" />
+                        <asp:BoundField DataField="kpamt" HeaderText="已开票金额" />
+
+                        <asp:BoundField DataField="" HeaderText="未开票金额" />
+                        <asp:BoundField DataField="" HeaderText="已交货未开票数量" />
+                        <asp:BoundField DataField="" HeaderText="已交货未开票金额" />
+                        <asp:BoundField DataField="" HeaderText="已开票未交货数量" />
+                        <asp:BoundField DataField="" HeaderText="已开票未交货金额" />
+
+                        <asp:BoundField DataField="remark" HeaderText="备注" />
                     </Columns>
                 </asp:GridView>
             </div>
