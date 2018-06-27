@@ -23,7 +23,7 @@
                     <li class="Caption">已开票未交货总金额
                     </li>
                     <li class="Content">
-                        <asp:TextBox ID="TotalAmt" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="TotalAmt" runat="server" Enabled="False" ForeColor="#AE1526"></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="Caption">客户代码
@@ -34,7 +34,7 @@
                     <li class="Caption">客户名称
                     </li>
                     <li class="Content">
-                        <asp:TextBox ID="CUSTNAME" runat="server" Enabled="false"></asp:TextBox>
+                        <asp:TextBox ID="CUSTNAME" runat="server"></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="Caption">合同日期
@@ -62,7 +62,7 @@
             </div>
             <div class="List">
                 <asp:GridView ID="List" runat="server" EmptyDataText="<%$ Resources:iiWeb, EmptyData %>"
-                    EnableModelValidation="True" OnPageIndexChanging="List_PageIndexChanging" DataKeyNames="avend" OnRowDataBound="List_RowDataBound" OnSelectedIndexChanging="List_SelectedIndexChanging">
+                    EnableModelValidation="True" OnPageIndexChanging="List_PageIndexChanging" DataKeyNames="ordno" OnRowDataBound="List_RowDataBound">
                     <Columns>
                         <asp:BoundField DataField="ordno" HeaderText="工令号" />
                         <asp:BoundField DataField="signdate" HeaderText="签订日期" />

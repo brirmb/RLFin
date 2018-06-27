@@ -37,7 +37,7 @@
                     <li class="Caption">客户名称
                     </li>
                     <li class="Content">
-                        <asp:TextBox ID="CUSTNAME" runat="server" Enabled="false"></asp:TextBox>
+                        <asp:TextBox ID="CUSTNAME" runat="server"></asp:TextBox>
                     </li>
                     <li class="LineFeed"></li>
                     <li class="Button">

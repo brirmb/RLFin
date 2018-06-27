@@ -107,7 +107,7 @@
     <Content Include="Framework\AuthorityDetail.aspx" />
     <Content Include="Web\Contract.aspx" />
     <Content Include="Web\ContractKpShip.aspx" />
-    <Content Include="Web\ContractKpShip.aspx.js" />
+    <EmbeddedResource Include="Web\ContractKpShip.aspx.js" />
     <Content Include="Web\ContractStats.aspx" />
     <EmbeddedResource Include="Web\ContractStats.aspx.js" />
     <Content Include="Web\ContractSummary.aspx" />
