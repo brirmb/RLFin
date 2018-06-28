@@ -57,7 +57,7 @@
                         <asp:Button ID="CancelButton" runat="server" Text="<%$ Resources:iiWeb, CancelButton %>"
                             OnClick="CancelButton_Click" />
                         <asp:Button ID="ExportButton" runat="server" Text="导出"
-                            CssClass="Highlighted" />
+                            CssClass="Highlighted" OnClick="ExportButton_Click" />
                     </li>
                 </ul>
             </div>

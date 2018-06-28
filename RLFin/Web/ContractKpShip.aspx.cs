@@ -246,5 +246,16 @@ namespace RLFin.Web
         }
 
         #endregion
+
+        protected void ExportButton_Click(object sender, EventArgs e)
+        {
+            this.List.AllowPaging = false;
+            //this.List.Columns[0].Visible = false;
+            this.BindList();
+            LocalGlobal.ToExcel(this.List, "开票交货明细列表");
+            this.List.AllowPaging = true;
+            this.BindList();
+            //this.List.Columns[0].Visible = true;
+        }
     }
 }

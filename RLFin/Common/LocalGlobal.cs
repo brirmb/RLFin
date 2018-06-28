@@ -3,10 +3,14 @@ using RLFin.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 namespace RLFin.Common
@@ -134,6 +138,69 @@ namespace RLFin.Common
 
             return no;
         }
+
+        #region Excel
+        public static void ToExcel(System.Web.UI.Control gv, string name)
+        {
+            HttpContext.Current.Response.AppendHeader("Content-Disposition", string.Format("attachment;filename={0}.xls", name));
+            HttpContext.Current.Response.Charset = "GB2312";
+            HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
+            HttpContext.Current.Response.ContentType = "application/ms-excel";
+            HttpContext.Current.Response.Write("<meta http-equiv=Content-Type content=\"text/html; charset=GB2312\">");
+            System.IO.StringWriter tw = new System.IO.StringWriter();
+            System.Web.UI.HtmlTextWriter hw = new System.Web.UI.HtmlTextWriter(tw);
+            Page page = new Page();
+            HtmlForm form = new HtmlForm();
+            page.EnableEventValidation = false;
+            gv.EnableViewState = false;
+            page.DesignerInitialize();
+            page.Controls.Add(form);
+            form.Controls.Add(gv);
+            page.RenderControl(hw);
+            //gv.RenderControl(hw);
+            HttpContext.Current.Response.Write(tw.ToString());
+            HttpContext.Current.Response.End();
+        }
+
+        public static string TableToExcel(DataTable table)
+        {
+            string title = "";
+            //string fileName = name + ".xls";
+            string fileName = Guid.NewGuid() + ".xls";
+            if (!Directory.Exists(TempPhysicalPath))
+            {
+                Directory.CreateDirectory(TempPhysicalPath);
+            }
+            string filePhysicalPath = string.Format("{0}\\{1}",
+                TempPhysicalPath,
+                fileName);
+            string fileVirtualPath = string.Format("{0}/{1}",
+                TempVirtualPath,
+                fileName);
+            FileStream fs = new FileStream(filePhysicalPath, FileMode.OpenOrCreate);
+            //FileStream fs1 = File.Open(file, FileMode.Open, FileAccess.Read);
+            StreamWriter sw = new StreamWriter(new BufferedStream(fs), System.Text.Encoding.Default);
+            for (int i = 0; i < table.Columns.Count; i++)
+            {
+                title += table.Columns[i].ColumnName + "\t"; //栏位：自动跳到下一单元格
+            }
+            title = title.Substring(0, title.Length - 1) + "\n";  //换行
+            sw.Write(title);
+            foreach (DataRow row in table.Rows)
+            {
+                string line = "";
+                for (int i = 0; i < table.Columns.Count; i++)
+                {
+                    line += row[i].ToString().Trim() + "\t"; //内容：自动跳到下一单元格
+                }
+                line = line.Substring(0, line.Length - 1) + "\n";
+                sw.Write(line);
+            }
+            sw.Close();
+            fs.Close();
+            return fileVirtualPath;
+        }
+        #endregion
 
     }
 

@@ -208,5 +208,15 @@ namespace RLFin.Web
 
         #endregion
 
+        protected void ExportButton_Click(object sender, EventArgs e)
+        {
+            this.List.AllowPaging = false;
+            this.List.Columns[0].Visible = false;
+            this.BindList();
+            LocalGlobal.ToExcel(this.List, "合同台帐");
+            this.List.AllowPaging = true;
+            this.BindList();
+            this.List.Columns[0].Visible = true;
+        }
     }
 }
