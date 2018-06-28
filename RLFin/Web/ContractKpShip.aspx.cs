@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -100,7 +101,52 @@ namespace RLFin.Web
                 string dTo = string.IsNullOrWhiteSpace(DateTo.Text.Trim()) ? string.Empty :
                     LocalGlobal.ConvertDateFormat(DateTo.Text.Trim()).ToString("yyyyMMdd");
 
-                List.DataSource = contProvider.GetShipKpDetailList(this.CurrentType, ORDNO.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), dFrom, dTo);
+                decimal totalAmt = 0;
+                DataTable table = contProvider.GetShipKpDetailList(this.CurrentType, ORDNO.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), dFrom, dTo);
+
+                table.Columns.Add("NoKpAmt");  //未开票金额
+                table.Columns.Add("ShipNoKpQty");  //已交货未开票数量
+                table.Columns.Add("ShipNoKpAmt");  //已交货未开票金额
+                table.Columns.Add("KpNoShipQty");  //已开票未交货数量
+                table.Columns.Add("KpNoShipAmt");  //已开票未交货金额
+                foreach (DataRow row in table.Rows)
+                {
+                    var unitPrice = Util.ToDecimal(row["UNITPRICE"].ToString()); //单价
+                    var amt = Util.ToDecimal(row["amt"].ToString());       //明细 总价
+                    var shipqty = Util.ToDecimal(row["shipqty"].ToString());   //已交货数量
+                    var kpqty = Util.ToDecimal(row["kpqty"].ToString()); //已开票数量
+                    var kpamt = Util.ToDecimal(row["kpamt"].ToString()); //已开票金额
+
+                    //未开票金额
+                    row["NoKpAmt"] = (amt - kpamt) < 0 ? "" : (amt - kpamt).ToString();
+                    //已交货未开票数量
+                    row["ShipNoKpQty"] = (shipqty - kpqty) < 0 ? "" : (shipqty - kpqty).ToString();
+                    //已交货未开票金额
+                    row["ShipNoKpAmt"] = (unitPrice * shipqty - kpamt) < 0 ? "" : (unitPrice * shipqty - kpamt).ToString();
+                    //已开票未交货数量
+                    row["KpNoShipQty"] = (kpqty - shipqty) < 0 ? "" : (kpqty - shipqty).ToString();
+                    //已开票未交货金额
+                    row["KpNoShipAmt"] = (kpamt - unitPrice * shipqty) < 0 ? "" : (kpamt - unitPrice * shipqty).ToString();
+
+                    switch (this.CurrentType)
+                    {
+                        case 0: //全部
+                        case 3: //未开票未交货
+                        case 4: //已开票已交货
+                            totalAmt += amt;
+                            break;
+                        case 1: //已开票未交货
+                            totalAmt += Util.ToDecimal(row["KpNoShipAmt"].ToString());
+                            break;
+                        case 2: //已交货未开票
+                            totalAmt += Util.ToDecimal(row["ShipNoKpAmt"].ToString());
+                            break;
+                    }
+                }
+
+                TotalAmt.Text = totalAmt.ToString();
+
+                List.DataSource = table;
             }
             List.DataBind();
         }
@@ -116,22 +162,22 @@ namespace RLFin.Web
                 case DataControlRowType.DataRow:
                     #region 数据绑定
 
-                    var unitPrice = Util.ToDecimal(e.Row.Cells[9].Text.Trim()); //单价
-                    var amt = Util.ToDecimal(e.Row.Cells[10].Text.Trim());       //明细 总价
-                    var shipqty = Util.ToDecimal(e.Row.Cells[12].Text.Trim());   //已交货数量
-                    var kpqty = Util.ToDecimal(e.Row.Cells[13].Text.Trim()); //已开票数量
-                    var kpamt = Util.ToDecimal(e.Row.Cells[14].Text.Trim()); //已开票金额
+                    //var unitPrice = Util.ToDecimal(e.Row.Cells[9].Text.Trim()); //单价
+                    //var amt = Util.ToDecimal(e.Row.Cells[10].Text.Trim());       //明细 总价
+                    //var shipqty = Util.ToDecimal(e.Row.Cells[12].Text.Trim());   //已交货数量
+                    //var kpqty = Util.ToDecimal(e.Row.Cells[13].Text.Trim()); //已开票数量
+                    //var kpamt = Util.ToDecimal(e.Row.Cells[14].Text.Trim()); //已开票金额
 
-                    //未开票金额
-                    e.Row.Cells[15].Text = (amt - kpamt) < 0 ? "" : (amt - kpamt).ToString();
-                    //已交货未开票数量
-                    e.Row.Cells[16].Text = (shipqty - kpqty) < 0 ? "" : (shipqty - kpqty).ToString();
-                    //已交货未开票金额
-                    e.Row.Cells[17].Text = (unitPrice * shipqty - kpamt) < 0 ? "" : (unitPrice * shipqty - kpamt).ToString();
-                    //已开票未交货数量
-                    e.Row.Cells[18].Text = (kpqty - shipqty) < 0 ? "" : (kpqty - shipqty).ToString();
-                    //已开票未交货金额
-                    e.Row.Cells[19].Text = (kpamt - unitPrice * shipqty) < 0 ? "" : (kpamt - unitPrice * shipqty).ToString();
+                    ////未开票金额
+                    //e.Row.Cells[15].Text = (amt - kpamt) < 0 ? "" : (amt - kpamt).ToString();
+                    ////已交货未开票数量
+                    //e.Row.Cells[16].Text = (shipqty - kpqty) < 0 ? "" : (shipqty - kpqty).ToString();
+                    ////已交货未开票金额
+                    //e.Row.Cells[17].Text = (unitPrice * shipqty - kpamt) < 0 ? "" : (unitPrice * shipqty - kpamt).ToString();
+                    ////已开票未交货数量
+                    //e.Row.Cells[18].Text = (kpqty - shipqty) < 0 ? "" : (kpqty - shipqty).ToString();
+                    ////已开票未交货金额
+                    //e.Row.Cells[19].Text = (kpamt - unitPrice * shipqty) < 0 ? "" : (kpamt - unitPrice * shipqty).ToString();
 
                     #endregion
                     break;
@@ -163,30 +209,35 @@ namespace RLFin.Web
         {
             this.CurrentType = 0;
             this.BindList();
+            this.LblTotalAmt.Text = "总金额";
         }
 
         protected void KpNoShip_Click(object sender, EventArgs e)
         {
             this.CurrentType = 1;
             this.BindList();
+            this.LblTotalAmt.Text = KpNoShip.Text + "总金额";
         }
 
         protected void ShipNoKp_Click(object sender, EventArgs e)
         {
             this.CurrentType = 2;
             this.BindList();
+            this.LblTotalAmt.Text = ShipNoKp.Text + "总金额";
         }
 
         protected void NoKpNoShip_Click(object sender, EventArgs e)
         {
             this.CurrentType = 3;
             this.BindList();
+            this.LblTotalAmt.Text = NoKpNoShip.Text + "总金额";
         }
 
         protected void KpShip_Click(object sender, EventArgs e)
         {
             this.CurrentType = 4;
             this.BindList();
+            this.LblTotalAmt.Text = KpShip.Text + "总金额";
         }
 
         protected void CancelButton_Click(object sender, EventArgs e)

@@ -63,7 +63,7 @@
                         <asp:TemplateField HeaderText="详情">
                             <ItemTemplate>
                                 <asp:LinkButton ID="RowDetailButton" runat="server" CssClass="ImageButton ImageButtonDetail" CommandName="Select"
-                                    ToolTip='<%# Eval("ORDNO").ToString().Trim() %>'></asp:LinkButton>
+                                    ToolTip='<%# Eval("ordno").ToString().Trim() %>'></asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField DataField="ordno" HeaderText="工令号" />

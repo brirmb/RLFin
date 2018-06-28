@@ -82,6 +82,10 @@ namespace RLFin.Web
                 List.DataSource = contProvider.GetContractList(ORDNO.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), dFrom, dTo);
             }
             List.DataBind();
+
+            this.List.SelectedIndex = -1;
+            DetailList.DataSource = null;
+            DetailList.DataBind();
         }
 
         /// <summary>
@@ -125,9 +129,9 @@ namespace RLFin.Web
             List.PageIndex = e.NewPageIndex;
             this.BindList();
 
-            this.List.SelectedIndex = -1;
-            DetailList.DataSource = null;
-            DetailList.DataBind();
+            //this.List.SelectedIndex = -1;
+            //DetailList.DataSource = null;
+            //DetailList.DataBind();
         }
 
         protected void List_SelectedIndexChanging(object sender, GridViewSelectEventArgs e)

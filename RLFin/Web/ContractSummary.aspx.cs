@@ -51,6 +51,13 @@ namespace RLFin.Web
         {
             #region 页面内容
 
+            this.ORDNO.Text = string.Empty;
+            this.CUSTNO.Text = string.Empty;
+            this.CUSTNAME.Text = string.Empty;
+            this.DateFrom.Text = string.Empty;
+            this.DateTo.Text = string.Empty;
+            this.ItemNo.Text = string.Empty;
+
             #endregion
 
             //绑定列表
@@ -68,9 +75,17 @@ namespace RLFin.Web
         {
             using (ContractProvider contProvider = new ContractProvider())
             {
-                List.DataSource = contProvider.GetFactoryByName(ORDNO.Text.Trim());
+                string dFrom = string.IsNullOrWhiteSpace(DateFrom.Text.Trim()) ? string.Empty :
+                   LocalGlobal.ConvertDateFormat(DateFrom.Text.Trim()).ToString("yyyyMMdd");
+                string dTo = string.IsNullOrWhiteSpace(DateTo.Text.Trim()) ? string.Empty :
+                    LocalGlobal.ConvertDateFormat(DateTo.Text.Trim()).ToString("yyyyMMdd");
+                List.DataSource = contProvider.GetContractSummary(ORDNO.Text.Trim(), CUSTNO.Text.Trim(), CUSTNAME.Text.Trim(), dFrom, dTo, ItemNo.Text.Trim());
             }
             List.DataBind();
+
+            this.List.SelectedIndex = -1;
+            DetailList.DataSource = null;
+            DetailList.DataBind();
         }
 
         /// <summary>
@@ -121,16 +136,16 @@ namespace RLFin.Web
 
         protected void List_SelectedIndexChanging(object sender, GridViewSelectEventArgs e)
         {
-            //    this.List.SelectedIndex = e.NewSelectedIndex;
-            //    string no = this.List.DataKeys[this.List.SelectedIndex]["ORDNO"].ToString();
+            this.List.SelectedIndex = e.NewSelectedIndex;
+            string no = this.List.DataKeys[this.List.SelectedIndex]["ordno"].ToString();
 
-            //    //绑定详情列表
-            //    DetailLabel.Visible = true;
-            //    using (ContractProvider contProvider = new ContractProvider())
-            //    {
-            //        DetailList.DataSource = contProvider.GetContractDetailKp(no);
-            //    }
-            //    DetailList.DataBind();
+            //绑定详情列表
+            DetailLabel.Visible = true;
+            using (ContractProvider contProvider = new ContractProvider())
+            {
+                DetailList.DataSource = contProvider.GetContractDetailInfo(no);
+            }
+            DetailList.DataBind();
         }
 
         protected void DetailList_RowDataBound(object sender, GridViewRowEventArgs e)

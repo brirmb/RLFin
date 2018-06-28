@@ -20,7 +20,8 @@
                     <li class="Content">
                         <asp:TextBox ID="ORDNO" runat="server"></asp:TextBox>
                     </li>
-                    <li class="Caption">已开票未交货总金额
+                    <li class="Caption">
+                        <asp:Label ID="LblTotalAmt" runat="server" Text="已开票未交货总金额"></asp:Label>
                     </li>
                     <li class="Content">
                         <asp:TextBox ID="TotalAmt" runat="server" Enabled="False" ForeColor="#AE1526"></asp:TextBox>
@@ -80,11 +81,11 @@
                         <asp:BoundField DataField="kpqty" HeaderText="已开票数量" />
                         <asp:BoundField DataField="kpamt" HeaderText="已开票金额" />
 
-                        <asp:BoundField DataField="" HeaderText="未开票金额" />
-                        <asp:BoundField DataField="" HeaderText="已交货未开票数量" />
-                        <asp:BoundField DataField="" HeaderText="已交货未开票金额" />
-                        <asp:BoundField DataField="" HeaderText="已开票未交货数量" />
-                        <asp:BoundField DataField="" HeaderText="已开票未交货金额" />
+                        <asp:BoundField DataField="NoKpAmt" HeaderText="未开票金额" />
+                        <asp:BoundField DataField="ShipNoKpQty" HeaderText="已交货未开票数量" />
+                        <asp:BoundField DataField="ShipNoKpAmt" HeaderText="已交货未开票金额" />
+                        <asp:BoundField DataField="KpNoShipQty" HeaderText="已开票未交货数量" />
+                        <asp:BoundField DataField="KpNoShipAmt" HeaderText="已开票未交货金额" />
 
                         <asp:BoundField DataField="remark" HeaderText="备注" />
                     </Columns>
