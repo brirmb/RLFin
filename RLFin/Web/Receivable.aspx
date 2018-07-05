@@ -90,7 +90,7 @@
                         <asp:BoundField DataField="scurr" HeaderText="币别" />
                         <asp:BoundField DataField="stotal" HeaderText="合同总金额" />
                         <asp:BoundField DataField="amt" HeaderText="收款总金额" />
-                        <asp:BoundField DataField="lamt" HeaderText="剩余总金额" />
+                        <asp:BoundField DataField="lamt" HeaderText="未收总金额" />
                     </Columns>
                 </asp:GridView>
             </div>
