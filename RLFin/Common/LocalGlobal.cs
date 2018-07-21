@@ -142,7 +142,7 @@ namespace RLFin.Common
         #region Excel
         public static void ToExcel(System.Web.UI.Control gv, string name)
         {
-            HttpContext.Current.Response.AppendHeader("Content-Disposition", string.Format("attachment;filename={0}.xls", name));
+            HttpContext.Current.Response.AppendHeader("Content-Disposition", string.Format("attachment;filename={0}.xls", HttpUtility.UrlEncode(name)));
             HttpContext.Current.Response.Charset = "GB2312";
             HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
             HttpContext.Current.Response.ContentType = "application/ms-excel";

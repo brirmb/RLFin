@@ -464,7 +464,7 @@ namespace RLFin.Web
                                 cmd.ExecuteNonQuery();
                             }
 
-                            cmd.CommandText = contProvider.InsertTransDetailSql(orno, row["DRAWNO"].ToString().Trim(), whCode, row["ORDQTY"].ToString(), stno, orno, "B");
+                            cmd.CommandText = contProvider.InsertTransDetailSql(orno, row["DRAWNO"].ToString().Trim(), whCode, row["ORDQTY"].ToString(), stno, orno.Substring(0, 7), "B");
                             cmd.ExecuteNonQuery();
 
                             //2.开票
